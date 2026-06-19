@@ -37,7 +37,7 @@ export const ACTIVITY_TYPES = {
 };
 
 export const ACTIVITY_LABELS = {
-  [ACTIVITY_TYPES.IMAGE_MATCH]:   { icon: '🖼️', title: 'Match Images', desc: 'Tap an image, then tap the correct word' },
+  [ACTIVITY_TYPES.IMAGE_MATCH]:   { icon: '🖼️', title: 'Match Images', desc: 'Match pictures to gym objects and body parts (nouns only)' },
   [ACTIVITY_TYPES.TRANSLATION]: { icon: '🇫🇷', title: 'Translations', desc: 'Tap a translation, then tap the English word' },
   [ACTIVITY_TYPES.DEFINITION]: { icon: '📝', title: 'Definitions', desc: 'Tap a definition, then tap the correct word' },
   [ACTIVITY_TYPES.QCM]: { icon: '❓', title: 'Quick Quiz', desc: 'Multiple choice on vocabulary' },
@@ -117,4 +117,17 @@ export const IMAGE_BANK = {
 export function getWordImage(word) {
   const key = word.toLowerCase().trim();
   return IMAGE_BANK[key] || IMAGE_BANK.default;
+}
+
+/** Nouns only — objects, exercises, body parts with clear photos (no verbs/adjectives). */
+export const IMAGE_MATCH_WORDS = new Set([
+  'bench press', 'hamstring', 'training', 'warm up',
+  'dumbbell', 'squat', 'deadlift', 'pull-up', 'reps', 'rep',
+  'biceps', 'core', 'stretch', 'sore muscles', 'recovery',
+  'barbell', 'spotter', 'shoulder', 'set', 'endurance',
+  'workout', 'protein', 'strength',
+]);
+
+export function filterImageMatchWords(words) {
+  return words.filter(w => IMAGE_MATCH_WORDS.has(w.english.toLowerCase().trim()));
 }

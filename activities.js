@@ -1,4 +1,4 @@
-import { CONFIG, ACTIVITY_LABELS } from './config.js';
+import { CONFIG, ACTIVITY_LABELS, filterImageMatchWords } from './config.js';
 import { shuffle } from './gamification.js';
 import { escapeHtml, formatTime } from './utils.js';
 import { wrapStoryWords, createStoryReader, stopStoryAudio } from './story-audio.js';
@@ -20,9 +20,12 @@ export function createTimer(onTick) {
 }
 
 export function renderActivity(type, words, container, onComplete) {
-  const subset = shuffle(words).slice(0, Math.min(words.length, 5));
+  const pool = type === 'image_match' ? filterImageMatchWords(words) : words;
+  const subset = shuffle(pool).slice(0, Math.min(pool.length, 5));
   if (subset.length === 0) {
-    container.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>No words assigned yet.</p></div>';
+    container.innerHTML = type === 'image_match'
+      ? '<div class="empty-state"><div class="icon">📭</div><p>No picture words assigned yet (nouns only).</p></div>'
+      : '<div class="empty-state"><div class="icon">📭</div><p>No words assigned yet.</p></div>';
     return;
   }
 
