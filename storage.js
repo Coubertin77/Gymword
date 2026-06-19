@@ -1,4 +1,4 @@
-import { CONFIG } from './config.js';
+import { CONFIG, getWordImage } from './config.js';
 import { getSeedData } from './seed.js';
 import { isCloudConfigured } from './supabase-config.js';
 import { fetchCloudData, pushCloudData } from './cloud.js';
@@ -30,6 +30,12 @@ function migrateData(data) {
     if (!seedCls) continue;
     for (const listId of seedCls.assignedListIds) {
       if (!cls.assignedListIds.includes(listId)) cls.assignedListIds.push(listId);
+    }
+  }
+
+  for (const list of data.wordLists) {
+    for (const word of list.words || []) {
+      if (word.english) word.imageUrl = getWordImage(word.english);
     }
   }
 
