@@ -54,7 +54,7 @@ function renderHome() {
   app.innerHTML = `
     <div class="page" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100dvh">
       <div style="font-size:4rem;margin-bottom:0.5rem">🏋️</div>
-      <h1 class="logo-big">GymWord</h1>
+      <h1 class="logo-big">GymWord EPS</h1>
       <p class="logo-sub">Learn English vocabulary through fitness!</p>
       ${sync.cloudEnabled ? '<p class="cloud-badge">☁️ Online — progress saved for everyone</p>' : ''}
       <div class="card" style="width:100%;max-width:400px">
