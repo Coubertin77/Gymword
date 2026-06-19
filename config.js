@@ -44,71 +44,74 @@ export const ACTIVITY_LABELS = {
   [ACTIVITY_TYPES.SPELLING]: { icon: '✍️', title: 'Spelling', desc: 'Type the English word' },
 };
 
+const P = (id) =>
+  `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop`;
+
 export const IMAGE_BANK = {
   // Equipment & basics
-  'bench press': 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=200&h=150&fit=crop',
-  'hamstring': 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=200&h=150&fit=crop',
-  'to bend': 'https://images.unsplash.com/photo-1517836357463-d25dfeac3438?w=200&h=150&fit=crop',
-  'training': 'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=200&h=150&fit=crop',
-  'warm up': 'https://images.unsplash.com/photo-1599058945522-28d584b6f0ff?w=200&h=150&fit=crop',
+  'bench press': P(414029),           // développé couché
+  'hamstring': P(6550859),            // étirement arrière de cuisse
+  'to bend': P(4056727),              // se pencher / plier
+  'training': P(1229356),             // entraînement en duo
+  'warm up': P(6550900),              // échauffement
 
   // Exercises
-  'dumbbell': 'https://images.unsplash.com/photo-1583454110551-21f2fe2edb61?w=200&h=150&fit=crop',
-  'squat': 'https://images.unsplash.com/photo-1434682881344-6e0e2820e992?w=200&h=150&fit=crop',
-  'deadlift': 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=200&h=150&fit=crop',
-  'pull-up': 'https://images.unsplash.com/photo-1597452485669-879c725a9702?w=200&h=150&fit=crop',
-  'reps': 'https://images.unsplash.com/photo-1576678927484-cc907957088c?w=200&h=150&fit=crop',
+  'dumbbell': P(841130),              // haltères
+  'squat': P(3823039),                // squat à la barre
+  'deadlift': 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=300&h=200&fit=crop', // soulevé de terre
+  'pull-up': P(6388459),              // traction
+  'reps': P(3757942),                 // répétitions
 
   // Body & recovery
-  'biceps': 'https://images.unsplash.com/photo-1581009146145-b5ef050c1498?w=200&h=150&fit=crop',
-  'core': 'https://images.unsplash.com/photo-1571019613454-1cb2f99b51d8?w=200&h=150&fit=crop',
-  'stretch': 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=200&h=150&fit=crop',
-  'sore muscles': 'https://images.unsplash.com/photo-1571907922533-081e4936dbb8?w=200&h=150&fit=crop',
-  'recovery': 'https://images.unsplash.com/photo-1540497077202-7c42a1092163?w=200&h=150&fit=crop',
+  'biceps': P(1552107),               // bras / biceps
+  'core': P(6455891),                 // gainage / planche
+  'stretch': P(3076516),              // étirement
+  'sore muscles': P(4498290),         // foam roller / courbatures
+  'recovery': P(7775848),             // repos / récupération
 
   // Musculation — Mix 1
-  'barbell': 'https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=200&h=150&fit=crop',
-  'to lift': 'https://images.unsplash.com/photo-1583454110551-21f2fe2edb61?w=200&h=150&fit=crop',
-  'strong': 'https://images.unsplash.com/photo-1526506118085-60ce8714f8c5?w=200&h=150&fit=crop',
-  'to flex': 'https://images.unsplash.com/photo-1583500178690-05236b4c3aae?w=200&h=150&fit=crop',
-  'heavy': 'https://images.unsplash.com/photo-1534368952113-4d3d5550d55d?w=200&h=150&fit=crop',
-  'rep': 'https://images.unsplash.com/photo-1576678927484-cc907957088c?w=200&h=150&fit=crop',
-  'to breathe': 'https://images.unsplash.com/photo-1506126613408-eca07ce68773?w=200&h=150&fit=crop',
-  'muscular': 'https://images.unsplash.com/photo-1571389129580-bc7413c8ba83?w=200&h=150&fit=crop',
-  'spotter': 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=200&h=150&fit=crop',
+  'barbell': P(416778),               // barre
+  'to lift': P(226148),               // soulever une barre
+  'strong': P(5327523),               // personne forte
+  'to flex': P(1552252),              // contracter un muscle
+  'heavy': P(260352),                 // poids lourds
+  'rep': P(4720764),                  // une répétition
+  'to breathe': P(1954524),           // respirer
+  'muscular': P(863988),              // musclé
+  'spotter': 'https://images.unsplash.com/photo-1758875568671-9fa1829fe1e3?w=300&h=200&fit=crop', // pareur
 
   // Musculation — Mix 2
-  'to push': 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=200&h=150&fit=crop',
-  'powerful': 'https://images.unsplash.com/photo-1476480862126-209bfaa8edc5?w=200&h=150&fit=crop',
-  'shoulder': 'https://images.unsplash.com/photo-1597452485669-879c725a9702?w=200&h=150&fit=crop',
-  'to pull': 'https://images.unsplash.com/photo-1571907208792-936298398caf?w=200&h=150&fit=crop',
-  'tired': 'https://images.unsplash.com/photo-1483728642382-8d3aeb287da0?w=200&h=150&fit=crop',
-  'to stretch': 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=200&h=150&fit=crop',
-  'flexible': 'https://images.unsplash.com/photo-1599909538395-2d47702209e6?w=200&h=150&fit=crop',
+  'to push': P(416809),               // pousser ( développé )
+  'powerful': P(3768913),             // puissant ( course )
+  'shoulder': P(703014),              // épaule ( développé épaules )
+  'to pull': P(104553),               // tirer ( rowing )
+  'tired': P(6455804),                // fatigué
+  'to stretch': P(3253501),           // s'étirer
+  'flexible': P(317157),              // souple ( yoga )
 
   // Musculation — Mix 3
-  'to strengthen': 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=200&h=150&fit=crop',
-  'exhausted': 'https://images.unsplash.com/photo-1483728642382-8d3aeb287da0?w=200&h=150&fit=crop',
-  'to sweat': 'https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=200&h=150&fit=crop',
-  'fit': 'https://images.unsplash.com/photo-1518611012118-696072aa579a?w=200&h=150&fit=crop',
-  'set': 'https://images.unsplash.com/photo-1583454110551-21f2fe2edb61?w=200&h=150&fit=crop',
-  'to rest': 'https://images.unsplash.com/photo-1540497077202-7c42a1092163?w=200&h=150&fit=crop',
-  'sore': 'https://images.unsplash.com/photo-1571907922533-081e4936dbb8?w=200&h=150&fit=crop',
-  'endurance': 'https://images.unsplash.com/photo-1476480862126-209bfaa8edc5?w=200&h=150&fit=crop',
+  'to strengthen': P(416476),         // renforcer
+  'exhausted': P(4771733),            // épuisé ( serviette )
+  'to sweat': P(3823488),             // transpirer
+  'fit': P(4064437),                  // en forme
+  'set': P(791763),                   // série ( haltères au sol )
+  'to rest': P(2820342),              // se reposer
+  'sore': P(7298426),                 // courbaturé ( massage )
+  'endurance': P(15758347),           // endurance ( course longue )
 
   // Musculation — Mix 4
-  'workout': 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=200&h=150&fit=crop',
-  'to warm up': 'https://images.unsplash.com/photo-1599058945522-28d584b6f0ff?w=200&h=150&fit=crop',
-  'lean': 'https://images.unsplash.com/photo-1571019613454-1cb2f99b51d8?w=200&h=150&fit=crop',
-  'protein': 'https://images.unsplash.com/photo-1593095948071-247ed4127403?w=200&h=150&fit=crop',
-  'to curl': 'https://images.unsplash.com/photo-1581009146145-b5ef050c1498?w=200&h=150&fit=crop',
-  'balanced': 'https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?w=200&h=150&fit=crop',
-  'strength': 'https://images.unsplash.com/photo-1534368952113-4d3d5550d55d?w=200&h=150&fit=crop',
-  'to increase': 'https://images.unsplash.com/photo-1574680096145-d05b474e2155?w=200&h=150&fit=crop',
-  'challenging': 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=200&h=150&fit=crop',
-  'progress': 'https://images.unsplash.com/photo-1576678927484-cc907957088c?w=200&h=150&fit=crop',
+  'workout': P(7480452),              // séance d'entraînement
+  'to warm up': P(3485729),           // s'échauffer
+  'lean': P(914759),                  // sec / tonique
+  'protein': P(4056530),              // protéine ( shake )
+  'to curl': P(1638336),              // curl biceps
+  'balanced': P(669841),              // exercice d'équilibre
+  'strength': P(1517838),             // force
+  'to increase': P(2294361),          // augmenter les charges
+  'challenging': P(3483099),          // entraînement difficile
+  'progress': P(18949630),            // progrès à la salle
 
-  default: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=200&h=150&fit=crop',
+  default: P(7480452),
 };
 
 export function getWordImage(word) {
