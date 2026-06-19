@@ -46,15 +46,88 @@ export function getSeedData() {
     ],
   };
 
+  const listMix1 = {
+    id: 'list_mix_1',
+    name: 'Musculation — Mix 1',
+    theme: 'musculation',
+    words: [
+      makeWord({ english: 'barbell', french: 'barre (haltères)', definition: 'A long metal bar used for weightlifting' }),
+      makeWord({ english: 'to lift', french: 'soulever', definition: 'To raise something heavy using your muscles' }),
+      makeWord({ english: 'strong', french: 'fort(e)', definition: 'Having powerful muscles and physical ability' }),
+      makeWord({ english: 'dumbbell', french: 'haltère', definition: 'A short bar with weights on each end' }),
+      makeWord({ english: 'to flex', french: 'contracter (un muscle)', definition: 'To tighten a muscle on purpose' }),
+      makeWord({ english: 'heavy', french: 'lourd(e)', definition: 'Weighing a lot; difficult to lift' }),
+      makeWord({ english: 'rep', french: 'répétition', definition: 'One complete movement of an exercise' }),
+      makeWord({ english: 'to breathe', french: 'respirer', definition: 'To take air in and out during exercise' }),
+      makeWord({ english: 'muscular', french: 'musclé(e)', definition: 'Having well-developed muscles' }),
+      makeWord({ english: 'spotter', french: 'pareur', definition: 'A person who helps and protects someone lifting weights' }),
+    ],
+  };
+
+  const listMix2 = {
+    id: 'list_mix_2',
+    name: 'Musculation — Mix 2',
+    theme: 'musculation',
+    words: [
+      makeWord({ english: 'biceps', french: 'biceps', definition: 'The muscle on the front of the upper arm' }),
+      makeWord({ english: 'to push', french: 'pousser', definition: 'To move something away from your body with force' }),
+      makeWord({ english: 'powerful', french: 'puissant(e)', definition: 'Very strong and able to produce a lot of force' }),
+      makeWord({ english: 'shoulder', french: 'épaule', definition: 'The joint connecting the arm to the body' }),
+      makeWord({ english: 'to pull', french: 'tirer', definition: 'To move something toward your body with force' }),
+      makeWord({ english: 'tired', french: 'fatigué(e)', definition: 'Needing rest after physical effort' }),
+      makeWord({ english: 'core', french: 'sangle abdominale / centre du corps', definition: 'The muscles of the abdomen and lower back' }),
+      makeWord({ english: 'to stretch', french: "s'étirer / étirer", definition: 'To lengthen muscles to improve flexibility' }),
+      makeWord({ english: 'flexible', french: 'souple', definition: 'Able to bend and move easily' }),
+      makeWord({ english: 'recovery', french: 'récupération', definition: 'The rest period when muscles repair after training' }),
+    ],
+  };
+
+  const listMix3 = {
+    id: 'list_mix_3',
+    name: 'Musculation — Mix 3',
+    theme: 'musculation',
+    words: [
+      makeWord({ english: 'squat', french: 'squat', definition: 'A leg exercise where you bend your knees and lower your hips' }),
+      makeWord({ english: 'to strengthen', french: 'renforcer', definition: 'To make muscles stronger through training' }),
+      makeWord({ english: 'exhausted', french: 'épuisé(e)', definition: 'Completely tired after intense effort' }),
+      makeWord({ english: 'deadlift', french: 'soulevé de terre', definition: 'Lifting a barbell from the floor to hip level' }),
+      makeWord({ english: 'to sweat', french: 'transpirer', definition: 'To produce moisture on the skin during exercise' }),
+      makeWord({ english: 'fit', french: 'en forme', definition: 'In good physical condition' }),
+      makeWord({ english: 'set', french: 'série', definition: 'A group of repetitions done one after another' }),
+      makeWord({ english: 'to rest', french: 'se reposer', definition: 'To stop exercising to recover energy' }),
+      makeWord({ english: 'sore', french: 'courbaturé(e)', definition: 'Feeling muscle pain after hard training' }),
+      makeWord({ english: 'endurance', french: 'endurance', definition: 'The ability to keep exercising for a long time' }),
+    ],
+  };
+
+  const listMix4 = {
+    id: 'list_mix_4',
+    name: 'Musculation — Mix 4',
+    theme: 'musculation',
+    words: [
+      makeWord({ english: 'workout', french: "séance d'entraînement", definition: 'A period of physical exercise at the gym' }),
+      makeWord({ english: 'to warm up', french: "s'échauffer", definition: 'To prepare the body with light exercise before training' }),
+      makeWord({ english: 'lean', french: 'sec / tonique', definition: 'Thin with little fat and visible muscle tone' }),
+      makeWord({ english: 'protein', french: 'protéine', definition: 'A nutrient that helps muscles grow and repair' }),
+      makeWord({ english: 'to curl', french: 'faire un curl', definition: 'To bend the arm to lift a weight toward the shoulder' }),
+      makeWord({ english: 'balanced', french: 'équilibré(e)', definition: 'Well-developed on all sides; stable' }),
+      makeWord({ english: 'strength', french: 'force', definition: 'The power your muscles can produce' }),
+      makeWord({ english: 'to increase', french: 'augmenter', definition: 'To make weights or reps greater over time' }),
+      makeWord({ english: 'challenging', french: 'exigeant(e)', definition: 'Difficult but good for progress' }),
+      makeWord({ english: 'progress', french: 'progrès', definition: 'Improvement in strength or fitness over time' }),
+    ],
+  };
+
   const classes = [
-    { id: 'class_seconde', name: 'Seconde — Group A', level: 'Seconde', roster: [], assignedListIds: ['list_equipment'], assignedStoryIds: ['story_1', 'story_2', 'story_3'], assignedActivities: ['image_match', 'translation', 'definition', 'qcm', 'spelling'] },
-    { id: 'class_premiere', name: 'Première — Group B', level: 'Première', roster: [], assignedListIds: ['list_equipment', 'list_exercises'], assignedStoryIds: ['story_1', 'story_2', 'story_3', 'story_4', 'story_5'], assignedActivities: ['image_match', 'translation', 'definition', 'qcm', 'spelling'] },
-    { id: 'class_terminale', name: 'Terminale — Group C', level: 'Terminale', roster: [], assignedListIds: ['list_equipment', 'list_exercises', 'list_body'], assignedStoryIds: ['story_1', 'story_2', 'story_3', 'story_4', 'story_5', 'story_6', 'story_7', 'story_8', 'story_9', 'story_10'], assignedActivities: ['image_match', 'translation', 'definition', 'qcm', 'spelling'] },
+    { id: 'class_seconde', name: 'Seconde — Group A', level: 'Seconde', roster: [], assignedListIds: ['list_equipment', 'list_mix_1'], assignedStoryIds: ['story_1', 'story_2', 'story_3'], assignedActivities: ['image_match', 'translation', 'definition', 'qcm', 'spelling'] },
+    { id: 'class_premiere', name: 'Première — Group B', level: 'Première', roster: [], assignedListIds: ['list_equipment', 'list_exercises', 'list_mix_1', 'list_mix_2'], assignedStoryIds: ['story_1', 'story_2', 'story_3', 'story_4', 'story_5'], assignedActivities: ['image_match', 'translation', 'definition', 'qcm', 'spelling'] },
+    { id: 'class_terminale', name: 'Terminale — Group C', level: 'Terminale', roster: [], assignedListIds: ['list_equipment', 'list_exercises', 'list_body', 'list_mix_1', 'list_mix_2', 'list_mix_3', 'list_mix_4'], assignedStoryIds: ['story_1', 'story_2', 'story_3', 'story_4', 'story_5', 'story_6', 'story_7', 'story_8', 'story_9', 'story_10'], assignedActivities: ['image_match', 'translation', 'definition', 'qcm', 'spelling'] },
   ];
 
   const stories = buildStories();
 
-  return { classes, wordLists: [list1, list2, list3], stories, students: [], activityResults: [] };
+  return { classes, wordLists: [list1, list2, list3, listMix1, listMix2, listMix3, listMix4], stories, students: [], activityResults: [] };
+}
 }
 
 function buildStories() {

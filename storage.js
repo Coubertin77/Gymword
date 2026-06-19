@@ -15,6 +15,24 @@ function migrateData(data) {
     if (!c.roster) c.roster = [];
   });
   if (!data.activityResults) data.activityResults = [];
+  if (!data.wordLists) data.wordLists = [];
+
+  const seed = getSeedData();
+  const existingListIds = new Set(data.wordLists.map(l => l.id));
+  for (const list of seed.wordLists) {
+    if (!existingListIds.has(list.id)) data.wordLists.push(list);
+  }
+
+  const seedClasses = Object.fromEntries(seed.classes.map(c => [c.id, c]));
+  for (const cls of data.classes || []) {
+    if (!cls.assignedListIds) cls.assignedListIds = [];
+    const seedCls = seedClasses[cls.id];
+    if (!seedCls) continue;
+    for (const listId of seedCls.assignedListIds) {
+      if (!cls.assignedListIds.includes(listId)) cls.assignedListIds.push(listId);
+    }
+  }
+
   return data;
 }
 
