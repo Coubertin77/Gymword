@@ -1,5 +1,4 @@
 import { CONFIG, ACTIVITY_LABELS, getWordImage } from './config.js';
-import { isCloudConfigured } from './supabase-config.js';
 import {
   initStorage, loadData, getClasses, getClassById, getWordsForClass, getStories, getStoryById,
   loginStudentByRoster, updateStudent, getStudentById, getStudentsByClass,
@@ -17,6 +16,23 @@ import { parseStudentLines, readCsvFile } from './roster-import.js';
 import { toast, escapeHtml, uid } from './utils.js';
 
 const app = document.getElementById('app');
+
+function cloudStatusHtml(sync, { compact = false } = {}) {
+  const tag = compact ? 'span' : 'p';
+  const cls = compact ? 'cloud-badge cloud-badge-sm' : 'cloud-badge';
+  const localCls = `${cls} cloud-badge-local`;
+  if (!sync.cloudEnabled) {
+    if (!compact) return '';
+    return `<span class="${localCls}" title="Supabase non configuré">💾 Local uniquement</span>`;
+  }
+  if (sync.cloudSynced && !sync.syncError) {
+    return `<${tag} class="${cls}" title="Données synchronisées en ligne">☁️ En ligne — données synchronisées</${tag}>`;
+  }
+  if (sync.syncError) {
+    return `<${tag} class="${localCls}" title="Mode hors ligne sur cet appareil">📱 Hors ligne — l'app fonctionne sur cet appareil</${tag}>`;
+  }
+  return `<${tag} class="${cls}">☁️ Connexion en cours…</${tag}>`;
+}
 
 export function navigate(view, params = {}) {
   if ('speechSynthesis' in window) window.speechSynthesis.cancel();
@@ -56,7 +72,7 @@ function renderHome() {
       <div style="font-size:4rem;margin-bottom:0.5rem">🏋️</div>
       <h1 class="logo-big">GymWord EPS</h1>
       <p class="logo-sub">Learn English vocabulary through fitness!</p>
-      ${sync.cloudEnabled ? '<p class="cloud-badge">☁️ Online — progress saved for everyone</p>' : ''}
+      ${cloudStatusHtml(sync)}
       <div class="card" style="width:100%;max-width:400px">
         <button class="btn btn-primary btn-block" id="btn-student" style="margin-bottom:0.75rem">I'm a Student 💪</button>
         <button class="btn btn-secondary btn-block" id="btn-teacher">I'm a Teacher 👩‍🏫</button>
@@ -417,9 +433,7 @@ function renderTeacherDashboard() {
         <div class="page-header">
           <h1 class="page-title">Teacher Dashboard 👩‍🏫</h1>
           <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap">
-            ${sync.cloudEnabled
-              ? `<span class="cloud-badge cloud-badge-sm" title="Data synced online">☁️ Online</span>`
-              : `<span class="cloud-badge cloud-badge-sm cloud-badge-local" title="Configure Supabase for online sync">💾 Local only</span>`}
+            ${cloudStatusHtml(sync, { compact: true })}
             <button class="btn btn-ghost btn-sm" id="refresh-cloud" title="Reload latest data">🔄 Refresh</button>
             <button class="btn btn-ghost btn-sm" id="logout">Logout</button>
           </div>
@@ -436,7 +450,7 @@ function renderTeacherDashboard() {
     app.querySelector('#logout').onclick = () => { clearSession(); navigate('home'); };
     app.querySelector('#refresh-cloud')?.addEventListener('click', async () => {
       const ok = await reloadFromCloud();
-      toast(ok ? 'Data refreshed from cloud' : 'Refresh not available', ok ? 'success' : 'info');
+      toast(ok ? 'Données mises à jour depuis le cloud' : 'Synchronisation indisponible pour le moment', ok ? 'success' : 'info');
       if (ok) render();
     });
     app.querySelectorAll('.tab').forEach(tab => {
@@ -779,17 +793,15 @@ function showLoading(message = 'Loading GymWord…') {
 }
 
 async function bootstrap() {
-  showLoading(isCloudConfigured() ? 'Connecting to online storage…' : 'Loading…');
+  showLoading('Chargement de GymWord…');
   try {
-    await Promise.race([
-      initStorage(),
-      new Promise((_, reject) => {
-        setTimeout(() => reject(new Error('Startup timed out')), 12000);
-      }),
-    ]);
+    await initStorage();
   } catch (err) {
     console.error(err);
-    toast('Could not load online data — working offline', 'error');
+  }
+  const sync = getSyncStatus();
+  if (sync.cloudEnabled && sync.syncError) {
+    toast('Synchronisation en ligne indisponible — vous pouvez quand même utiliser l\'application', 'info');
   }
   const session = getSession();
   if (session?.studentId) navigate('studentDashboard');

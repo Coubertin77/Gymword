@@ -1,22 +1,23 @@
 import { CONFIG, getWordImage } from './config.js';
-import { getSeedData } from './seed.js';
+import { getSeedData, getSeedCatalog } from './seed.js';
 import { isCloudConfigured } from './supabase-config.js';
 import { fetchCloudData, pushCloudData } from './cloud.js';
 
 let cache = null;
 let initialized = false;
 let cloudEnabled = false;
+let cloudSynced = false;
 let saveTimer = null;
 let lastSyncAt = null;
 let syncError = null;
 
-const CLOUD_TIMEOUT_MS = 8000;
+const CLOUD_TIMEOUT_MS = 15000;
 
 function withTimeout(promise, ms = CLOUD_TIMEOUT_MS) {
   return Promise.race([
     promise,
     new Promise((_, reject) => {
-      setTimeout(() => reject(new Error('Cloud request timed out')), ms);
+      setTimeout(() => reject(new Error('Délai de connexion dépassé')), ms);
     }),
   ]);
 }
@@ -31,10 +32,21 @@ function migrateData(data) {
   if (!data.wordLists) data.wordLists = [];
 
   try {
-    const seed = getSeedData();
+    const seed = getSeedCatalog();
     const existingListIds = new Set(data.wordLists.map(l => l.id));
     for (const list of seed.wordLists) {
       if (!existingListIds.has(list.id)) data.wordLists.push(list);
+    }
+
+    const SYNC_LIST_IDS = ['list_image_match'];
+    for (const listId of SYNC_LIST_IDS) {
+      const seedList = seed.wordLists.find(l => l.id === listId);
+      const existing = data.wordLists.find(l => l.id === listId);
+      if (seedList && existing) {
+        existing.name = seedList.name;
+        existing.theme = seedList.theme;
+        existing.words = seedList.words.map(w => ({ ...w }));
+      }
     }
 
     const seedClasses = Object.fromEntries(seed.classes.map(c => [c.id, c]));
@@ -92,7 +104,8 @@ function scheduleCloudSave() {
       lastSyncAt = new Date();
       syncError = null;
     } catch (err) {
-      syncError = err.message || 'Sync failed';
+      syncError = err.message || 'Échec de la synchronisation';
+      cloudSynced = false;
       console.error('GymWord cloud save error:', err);
     }
   }, 600);
@@ -103,13 +116,14 @@ export function isCloudEnabled() {
 }
 
 export function getSyncStatus() {
-  return { cloudEnabled, lastSyncAt, syncError };
+  return { cloudEnabled, cloudSynced, lastSyncAt, syncError };
 }
 
 export async function initStorage() {
   if (initialized) return cache;
 
   cloudEnabled = isCloudConfigured();
+  cloudSynced = false;
   let local = null;
   try {
     local = readLocalCache();
@@ -138,15 +152,18 @@ export async function initStorage() {
     }
 
     writeLocalCache();
+    cloudSynced = true;
+    syncError = null;
     withTimeout(pushCloudData(cache), CLOUD_TIMEOUT_MS)
       .then(() => { lastSyncAt = new Date(); syncError = null; })
       .catch(err => {
-        syncError = err.message || 'Sync failed';
+        syncError = err.message || 'Échec de la synchronisation';
         console.error('GymWord cloud save error:', err);
       });
   } catch (err) {
     console.error('GymWord cloud load error:', err);
-    syncError = err.message || 'Could not connect to cloud';
+    cloudSynced = false;
+    syncError = err.message || 'Connexion au cloud impossible';
     cache = local || cache || getSeedData();
     writeLocalCache();
   }
@@ -184,10 +201,12 @@ export async function reloadFromCloud() {
       writeLocalCache();
       lastSyncAt = new Date();
       syncError = null;
+      cloudSynced = true;
       return true;
     }
   } catch (err) {
     syncError = err.message;
+    cloudSynced = false;
   }
   return false;
 }

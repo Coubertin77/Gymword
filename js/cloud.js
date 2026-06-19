@@ -5,9 +5,22 @@ let createClientFn = null;
 
 async function loadSupabase() {
   if (createClientFn) return createClientFn;
-  const mod = await import('https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.1/+esm');
-  createClientFn = mod.createClient;
-  return createClientFn;
+  const cdns = [
+    'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.1/+esm',
+    'https://esm.sh/@supabase/supabase-js@2.49.1',
+  ];
+  let lastErr = null;
+  for (const url of cdns) {
+    try {
+      const mod = await import(url);
+      createClientFn = mod.createClient;
+      return createClientFn;
+    } catch (err) {
+      lastErr = err;
+      console.warn('GymWord Supabase CDN failed:', url, err);
+    }
+  }
+  throw lastErr || new Error('Impossible de charger la bibliothèque Supabase');
 }
 
 export async function getSupabase() {

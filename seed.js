@@ -120,36 +120,17 @@ export function getSeedData() {
 
   const listImageMatch = {
     id: 'list_image_match',
-    name: 'Match Images — Concret',
+    name: 'Match Images — Machines',
     theme: 'image_match',
     words: [
-      makeWord({ english: 'biceps', french: 'biceps', definition: 'Front arm muscle — worked by bicep curl' }),
-      makeWord({ english: 'triceps', french: 'triceps', definition: 'Back arm muscle — worked by push-ups and dips' }),
-      makeWord({ english: 'hamstring', french: 'ischio-jambiers', definition: 'Back thigh muscle — worked by leg curl' }),
-      makeWord({ english: 'quadriceps', french: 'quadriceps', definition: 'Front thigh muscle — worked by squat' }),
-      makeWord({ english: 'glutes', french: 'fessiers', definition: 'Buttock muscles — worked by squat and hip thrust' }),
-      makeWord({ english: 'calves', french: 'mollets', definition: 'Lower leg muscles — worked by calf raise' }),
-      makeWord({ english: 'chest', french: 'pectoraux', definition: 'Chest muscles — worked by bench press' }),
-      makeWord({ english: 'shoulder', french: 'épaule / deltoïdes', definition: 'Shoulder muscles — worked by shoulder press' }),
-      makeWord({ english: 'lats', french: 'grands dorsaux', definition: 'Back muscles — worked by pull-up and rowing' }),
-      makeWord({ english: 'core', french: 'sangle abdominale', definition: 'Abdominal muscles — worked by plank' }),
-      makeWord({ english: 'dumbbell', french: 'haltère', definition: 'A short bar with weights on each end' }),
-      makeWord({ english: 'barbell', french: 'barre', definition: 'A long metal bar for weightlifting' }),
-      makeWord({ english: 'bench', french: 'banc de musculation', definition: 'A padded bench used for exercises like bench press' }),
-      makeWord({ english: 'kettlebell', french: 'kettlebell', definition: 'A round weight with a handle' }),
-      makeWord({ english: 'weight plate', french: 'disque de fonte', definition: 'A round metal weight that slides onto a bar' }),
-      makeWord({ english: 'foam roller', french: 'rouleau de massage', definition: 'A foam cylinder used to massage sore muscles' }),
-      makeWord({ english: 'resistance band', french: 'élastique de résistance', definition: 'An elastic band used for strength exercises' }),
-      makeWord({ english: 'treadmill', french: 'tapis de course', definition: 'A running machine with a moving belt' }),
-      makeWord({ english: 'exercise bike', french: 'vélo d\'appartement', definition: 'A stationary bicycle for cardio training' }),
-      makeWord({ english: 'rowing machine', french: 'rameur', definition: 'A cardio machine that simulates rowing' }),
-      makeWord({ english: 'leg press', french: 'presse à cuisses', definition: 'A machine where you push a platform with your legs' }),
-      makeWord({ english: 'cable machine', french: 'poulie / machine à câbles', definition: 'A gym machine with adjustable cables and weights' }),
       makeWord({ english: 'bench press', french: 'développé couché', definition: 'Lying on a bench, pushing a barbell upward' }),
-      makeWord({ english: 'squat', french: 'squat', definition: 'Bending the knees to lower the hips with weight' }),
-      makeWord({ english: 'deadlift', french: 'soulevé de terre', definition: 'Lifting a barbell from the floor to hip level' }),
-      makeWord({ english: 'pull-up', french: 'traction', definition: 'Pulling your body up on a horizontal bar' }),
-      makeWord({ english: 'bicep curl', french: 'curl biceps', definition: 'Curling a dumbbell toward the shoulder' }),
+      makeWord({ english: 'lat pull down', french: 'tirage vertical', definition: 'Pulling a bar down toward your chest on a cable machine' }),
+      makeWord({ english: 'machine fly', french: 'écarté à la machine', definition: 'Bringing your arms together in front of your chest on a pec deck machine' }),
+      makeWord({ english: 'machine squat', french: 'squat à la machine', definition: 'Squatting with a barbell on your shoulders' }),
+      makeWord({ english: 'barbell preacher curl', french: 'curl pupitre', definition: 'Curling a barbell on a preacher bench to work the biceps' }),
+      makeWord({ english: 'leg extension', french: 'extension des jambes', definition: 'Straightening your legs against resistance on a leg extension machine' }),
+      makeWord({ english: 'leg curl', french: 'curl ischio-jambiers', definition: 'Curling your legs backward to work the hamstrings on a leg curl machine' }),
+      makeWord({ english: 'incline leg press', french: 'presse à cuisses inclinée', definition: 'Pushing a weighted platform away with your legs on an incline leg press machine' }),
     ],
   };
 
@@ -162,6 +143,16 @@ export function getSeedData() {
   const stories = buildStories();
 
   return { classes, wordLists: [list1, list2, list3, listMix1, listMix2, listMix3, listMix4, listImageMatch], stories, students: [], activityResults: [] };
+}
+
+/** Lists + classes only (for migrations — avoids rebuilding stories each time). */
+let seedCatalogCache = null;
+export function getSeedCatalog() {
+  if (!seedCatalogCache) {
+    const { classes, wordLists } = getSeedData();
+    seedCatalogCache = { classes, wordLists };
+  }
+  return seedCatalogCache;
 }
 
 function buildStories() {

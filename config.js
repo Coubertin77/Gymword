@@ -37,7 +37,7 @@ export const ACTIVITY_TYPES = {
 };
 
 export const ACTIVITY_LABELS = {
-  [ACTIVITY_TYPES.IMAGE_MATCH]:   { icon: '🖼️', title: 'Match Images', desc: 'Match pictures to muscles, equipment and machines' },
+  [ACTIVITY_TYPES.IMAGE_MATCH]:   { icon: '🖼️', title: 'Match Images', desc: 'Match pictures to gym machines and exercises' },
   [ACTIVITY_TYPES.TRANSLATION]: { icon: '🇫🇷', title: 'Translations', desc: 'Tap a translation, then tap the English word' },
   [ACTIVITY_TYPES.DEFINITION]: { icon: '📝', title: 'Definitions', desc: 'Tap a definition, then tap the correct word' },
   [ACTIVITY_TYPES.QCM]: { icon: '❓', title: 'Quick Quiz', desc: 'Multiple choice on vocabulary' },
@@ -47,37 +47,48 @@ export const ACTIVITY_LABELS = {
 const P = (id) =>
   `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop`;
 
+const EX = (file) => `images/exercises/${file}`;
+
 export const IMAGE_BANK = {
   // Muscles (photo = exercice qui les travaille)
-  'biceps': P(1638336),
-  'triceps': P(5327523),
-  'hamstring': P(6550859),
-  'quadriceps': P(3823039),
-  'glutes': P(914759),
-  'calves': P(317157),
-  'chest': P(414029),
-  'shoulder': P(703014),
-  'lats': P(6388459),
-  'core': P(6455891),
+  'biceps': P(1638336),              // curl biceps
+  'triceps': P(5327523),             // extension / bras
+  'hamstring': P(6550859),           // ischios — étirement jambes
+  'quadriceps': P(3823039),          // quadriceps — squat
+  'glutes': P(914759),               // fessiers — silhouette tonique
+  'calves': P(317157),               // mollets — jambe / souplesse
+  'chest': P(414029),                // pectoraux — développé couché
+  'shoulder': P(703014),             // épaules — développé épaules
+  'lats': P(6388459),                // dorsaux — traction
+  'core': P(6455891),                // abdos — planche
 
   // Équipement
   'dumbbell': P(841130),
   'barbell': P(416778),
-  'bench': P(414029),
-  'kettlebell': P(416476),
-  'weight plate': P(260352),
+  'bench': P(414029),                // banc de musculation
+  'kettlebell': P(416476),           // kettlebell
+  'weight plate': P(260352),         // disque de fonte
   'foam roller': P(4498290),
-  'resistance band': P(3076516),
+  'resistance band': P(3076516),     // élastique de résistance
 
   // Machines
-  'treadmill': P(3768913),
-  'exercise bike': P(416809),
-  'rowing machine': P(104553),
-  'leg press': P(791763),
-  'cable machine': P(863988),
+  'treadmill': P(3768913),           // tapis de course
+  'exercise bike': P(416809),        // vélo d'appartement
+  'rowing machine': P(104553),       // rameur
+  'leg press': P(791763),            // presse à cuisses
+  'cable machine': P(863988),        // poulie / câbles
 
-  // Exercices (concrets, visuels)
-  'bench press': P(414029),
+  // Match Images — exercices machines (images locales)
+  'bench press': EX('bench-press.png'),
+  'lat pull down': EX('lat-pull-down.png'),
+  'machine fly': EX('machine-fly.png'),
+  'machine squat': EX('machine-squat.png'),
+  'barbell preacher curl': EX('barbell-preacher-curl.png'),
+  'leg extension': EX('leg-extension.png'),
+  'leg curl': EX('leg-curl.png'),
+  'incline leg press': EX('incline-leg-press.png'),
+
+  // Autres exercices (photos en ligne)
   'squat': P(3823039),
   'deadlift': 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=300&h=200&fit=crop',
   'pull-up': P(6388459),
@@ -91,12 +102,10 @@ export function getWordImage(word) {
   return IMAGE_BANK[key] || IMAGE_BANK.default;
 }
 
-/** Match Images — muscles, équipements, machines et exercices concrets uniquement. */
+/** Match Images — 8 exercices machines avec images pédagogiques. */
 export const IMAGE_MATCH_WORDS = new Set([
-  'biceps', 'triceps', 'hamstring', 'quadriceps', 'glutes', 'calves', 'chest', 'shoulder', 'lats', 'core',
-  'dumbbell', 'barbell', 'bench', 'kettlebell', 'weight plate', 'foam roller', 'resistance band',
-  'treadmill', 'exercise bike', 'rowing machine', 'leg press', 'cable machine',
-  'bench press', 'squat', 'deadlift', 'pull-up', 'bicep curl',
+  'bench press', 'lat pull down', 'machine fly', 'machine squat',
+  'barbell preacher curl', 'leg extension', 'leg curl', 'incline leg press',
 ]);
 
 export function filterImageMatchWords(words) {
