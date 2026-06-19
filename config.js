@@ -37,7 +37,7 @@ export const ACTIVITY_TYPES = {
 };
 
 export const ACTIVITY_LABELS = {
-  [ACTIVITY_TYPES.IMAGE_MATCH]:   { icon: '🖼️', title: 'Match Images', desc: 'Match pictures to gym objects and body parts (nouns only)' },
+  [ACTIVITY_TYPES.IMAGE_MATCH]:   { icon: '🖼️', title: 'Match Images', desc: 'Match pictures to muscles, equipment and machines' },
   [ACTIVITY_TYPES.TRANSLATION]: { icon: '🇫🇷', title: 'Translations', desc: 'Tap a translation, then tap the English word' },
   [ACTIVITY_TYPES.DEFINITION]: { icon: '📝', title: 'Definitions', desc: 'Tap a definition, then tap the correct word' },
   [ACTIVITY_TYPES.QCM]: { icon: '❓', title: 'Quick Quiz', desc: 'Multiple choice on vocabulary' },
@@ -48,70 +48,42 @@ const P = (id) =>
   `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop`;
 
 export const IMAGE_BANK = {
-  // Equipment & basics
-  'bench press': P(414029),           // développé couché
-  'hamstring': P(6550859),            // étirement arrière de cuisse
-  'to bend': P(4056727),              // se pencher / plier
-  'training': P(1229356),             // entraînement en duo
-  'warm up': P(6550900),              // échauffement
+  // Muscles (photo = exercice qui les travaille)
+  'biceps': P(1638336),
+  'triceps': P(5327523),
+  'hamstring': P(6550859),
+  'quadriceps': P(3823039),
+  'glutes': P(914759),
+  'calves': P(317157),
+  'chest': P(414029),
+  'shoulder': P(703014),
+  'lats': P(6388459),
+  'core': P(6455891),
 
-  // Exercises
-  'dumbbell': P(841130),              // haltères
-  'squat': P(3823039),                // squat à la barre
-  'deadlift': 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=300&h=200&fit=crop', // soulevé de terre
-  'pull-up': P(6388459),              // traction
-  'reps': P(3757942),                 // répétitions
+  // Équipement
+  'dumbbell': P(841130),
+  'barbell': P(416778),
+  'bench': P(414029),
+  'kettlebell': P(416476),
+  'weight plate': P(260352),
+  'foam roller': P(4498290),
+  'resistance band': P(3076516),
 
-  // Body & recovery
-  'biceps': P(1552107),               // bras / biceps
-  'core': P(6455891),                 // gainage / planche
-  'stretch': P(3076516),              // étirement
-  'sore muscles': P(4498290),         // foam roller / courbatures
-  'recovery': P(7775848),             // repos / récupération
+  // Machines
+  'treadmill': P(3768913),
+  'exercise bike': P(416809),
+  'rowing machine': P(104553),
+  'leg press': P(791763),
+  'cable machine': P(863988),
 
-  // Musculation — Mix 1
-  'barbell': P(416778),               // barre
-  'to lift': P(226148),               // soulever une barre
-  'strong': P(5327523),               // personne forte
-  'to flex': P(1552252),              // contracter un muscle
-  'heavy': P(260352),                 // poids lourds
-  'rep': P(4720764),                  // une répétition
-  'to breathe': P(1954524),           // respirer
-  'muscular': P(863988),              // musclé
-  'spotter': 'https://images.unsplash.com/photo-1758875568671-9fa1829fe1e3?w=300&h=200&fit=crop', // pareur
+  // Exercices (concrets, visuels)
+  'bench press': P(414029),
+  'squat': P(3823039),
+  'deadlift': 'https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=300&h=200&fit=crop',
+  'pull-up': P(6388459),
+  'bicep curl': P(1638336),
 
-  // Musculation — Mix 2
-  'to push': P(416809),               // pousser ( développé )
-  'powerful': P(3768913),             // puissant ( course )
-  'shoulder': P(703014),              // épaule ( développé épaules )
-  'to pull': P(104553),               // tirer ( rowing )
-  'tired': P(6455804),                // fatigué
-  'to stretch': P(3253501),           // s'étirer
-  'flexible': P(317157),              // souple ( yoga )
-
-  // Musculation — Mix 3
-  'to strengthen': P(416476),         // renforcer
-  'exhausted': P(4771733),            // épuisé ( serviette )
-  'to sweat': P(3823488),             // transpirer
-  'fit': P(4064437),                  // en forme
-  'set': P(791763),                   // série ( haltères au sol )
-  'to rest': P(2820342),              // se reposer
-  'sore': P(7298426),                 // courbaturé ( massage )
-  'endurance': P(15758347),           // endurance ( course longue )
-
-  // Musculation — Mix 4
-  'workout': P(7480452),              // séance d'entraînement
-  'to warm up': P(3485729),           // s'échauffer
-  'lean': P(914759),                  // sec / tonique
-  'protein': P(4056530),              // protéine ( shake )
-  'to curl': P(1638336),              // curl biceps
-  'balanced': P(669841),              // exercice d'équilibre
-  'strength': P(1517838),             // force
-  'to increase': P(2294361),          // augmenter les charges
-  'challenging': P(3483099),          // entraînement difficile
-  'progress': P(18949630),            // progrès à la salle
-
-  default: P(7480452),
+  default: P(841130),
 };
 
 export function getWordImage(word) {
@@ -119,13 +91,12 @@ export function getWordImage(word) {
   return IMAGE_BANK[key] || IMAGE_BANK.default;
 }
 
-/** Nouns only — objects, exercises, body parts with clear photos (no verbs/adjectives). */
+/** Match Images — muscles, équipements, machines et exercices concrets uniquement. */
 export const IMAGE_MATCH_WORDS = new Set([
-  'bench press', 'hamstring', 'training', 'warm up',
-  'dumbbell', 'squat', 'deadlift', 'pull-up', 'reps', 'rep',
-  'biceps', 'core', 'stretch', 'sore muscles', 'recovery',
-  'barbell', 'spotter', 'shoulder', 'set', 'endurance',
-  'workout', 'protein', 'strength',
+  'biceps', 'triceps', 'hamstring', 'quadriceps', 'glutes', 'calves', 'chest', 'shoulder', 'lats', 'core',
+  'dumbbell', 'barbell', 'bench', 'kettlebell', 'weight plate', 'foam roller', 'resistance band',
+  'treadmill', 'exercise bike', 'rowing machine', 'leg press', 'cable machine',
+  'bench press', 'squat', 'deadlift', 'pull-up', 'bicep curl',
 ]);
 
 export function filterImageMatchWords(words) {

@@ -118,15 +118,50 @@ export function getSeedData() {
     ],
   };
 
+  const listImageMatch = {
+    id: 'list_image_match',
+    name: 'Match Images — Concret',
+    theme: 'image_match',
+    words: [
+      makeWord({ english: 'biceps', french: 'biceps', definition: 'Front arm muscle — worked by bicep curl' }),
+      makeWord({ english: 'triceps', french: 'triceps', definition: 'Back arm muscle — worked by push-ups and dips' }),
+      makeWord({ english: 'hamstring', french: 'ischio-jambiers', definition: 'Back thigh muscle — worked by leg curl' }),
+      makeWord({ english: 'quadriceps', french: 'quadriceps', definition: 'Front thigh muscle — worked by squat' }),
+      makeWord({ english: 'glutes', french: 'fessiers', definition: 'Buttock muscles — worked by squat and hip thrust' }),
+      makeWord({ english: 'calves', french: 'mollets', definition: 'Lower leg muscles — worked by calf raise' }),
+      makeWord({ english: 'chest', french: 'pectoraux', definition: 'Chest muscles — worked by bench press' }),
+      makeWord({ english: 'shoulder', french: 'épaule / deltoïdes', definition: 'Shoulder muscles — worked by shoulder press' }),
+      makeWord({ english: 'lats', french: 'grands dorsaux', definition: 'Back muscles — worked by pull-up and rowing' }),
+      makeWord({ english: 'core', french: 'sangle abdominale', definition: 'Abdominal muscles — worked by plank' }),
+      makeWord({ english: 'dumbbell', french: 'haltère', definition: 'A short bar with weights on each end' }),
+      makeWord({ english: 'barbell', french: 'barre', definition: 'A long metal bar for weightlifting' }),
+      makeWord({ english: 'bench', french: 'banc de musculation', definition: 'A padded bench used for exercises like bench press' }),
+      makeWord({ english: 'kettlebell', french: 'kettlebell', definition: 'A round weight with a handle' }),
+      makeWord({ english: 'weight plate', french: 'disque de fonte', definition: 'A round metal weight that slides onto a bar' }),
+      makeWord({ english: 'foam roller', french: 'rouleau de massage', definition: 'A foam cylinder used to massage sore muscles' }),
+      makeWord({ english: 'resistance band', french: 'élastique de résistance', definition: 'An elastic band used for strength exercises' }),
+      makeWord({ english: 'treadmill', french: 'tapis de course', definition: 'A running machine with a moving belt' }),
+      makeWord({ english: 'exercise bike', french: 'vélo d\'appartement', definition: 'A stationary bicycle for cardio training' }),
+      makeWord({ english: 'rowing machine', french: 'rameur', definition: 'A cardio machine that simulates rowing' }),
+      makeWord({ english: 'leg press', french: 'presse à cuisses', definition: 'A machine where you push a platform with your legs' }),
+      makeWord({ english: 'cable machine', french: 'poulie / machine à câbles', definition: 'A gym machine with adjustable cables and weights' }),
+      makeWord({ english: 'bench press', french: 'développé couché', definition: 'Lying on a bench, pushing a barbell upward' }),
+      makeWord({ english: 'squat', french: 'squat', definition: 'Bending the knees to lower the hips with weight' }),
+      makeWord({ english: 'deadlift', french: 'soulevé de terre', definition: 'Lifting a barbell from the floor to hip level' }),
+      makeWord({ english: 'pull-up', french: 'traction', definition: 'Pulling your body up on a horizontal bar' }),
+      makeWord({ english: 'bicep curl', french: 'curl biceps', definition: 'Curling a dumbbell toward the shoulder' }),
+    ],
+  };
+
   const classes = [
-    { id: 'class_seconde', name: 'Seconde — Group A', level: 'Seconde', roster: [], assignedListIds: ['list_equipment', 'list_mix_1'], assignedStoryIds: ['story_1', 'story_2', 'story_3'], assignedActivities: ['image_match', 'translation', 'definition', 'qcm', 'spelling'] },
-    { id: 'class_premiere', name: 'Première — Group B', level: 'Première', roster: [], assignedListIds: ['list_equipment', 'list_exercises', 'list_mix_1', 'list_mix_2'], assignedStoryIds: ['story_1', 'story_2', 'story_3', 'story_4', 'story_5'], assignedActivities: ['image_match', 'translation', 'definition', 'qcm', 'spelling'] },
-    { id: 'class_terminale', name: 'Terminale — Group C', level: 'Terminale', roster: [], assignedListIds: ['list_equipment', 'list_exercises', 'list_body', 'list_mix_1', 'list_mix_2', 'list_mix_3', 'list_mix_4'], assignedStoryIds: ['story_1', 'story_2', 'story_3', 'story_4', 'story_5', 'story_6', 'story_7', 'story_8', 'story_9', 'story_10'], assignedActivities: ['image_match', 'translation', 'definition', 'qcm', 'spelling'] },
+    { id: 'class_seconde', name: 'Seconde — Group A', level: 'Seconde', roster: [], assignedListIds: ['list_image_match', 'list_equipment', 'list_mix_1'], assignedStoryIds: ['story_1', 'story_2', 'story_3'], assignedActivities: ['image_match', 'translation', 'definition', 'qcm', 'spelling'] },
+    { id: 'class_premiere', name: 'Première — Group B', level: 'Première', roster: [], assignedListIds: ['list_image_match', 'list_equipment', 'list_exercises', 'list_mix_1', 'list_mix_2'], assignedStoryIds: ['story_1', 'story_2', 'story_3', 'story_4', 'story_5'], assignedActivities: ['image_match', 'translation', 'definition', 'qcm', 'spelling'] },
+    { id: 'class_terminale', name: 'Terminale — Group C', level: 'Terminale', roster: [], assignedListIds: ['list_image_match', 'list_equipment', 'list_exercises', 'list_body', 'list_mix_1', 'list_mix_2', 'list_mix_3', 'list_mix_4'], assignedStoryIds: ['story_1', 'story_2', 'story_3', 'story_4', 'story_5', 'story_6', 'story_7', 'story_8', 'story_9', 'story_10'], assignedActivities: ['image_match', 'translation', 'definition', 'qcm', 'spelling'] },
   ];
 
   const stories = buildStories();
 
-  return { classes, wordLists: [list1, list2, list3, listMix1, listMix2, listMix3, listMix4], stories, students: [], activityResults: [] };
+  return { classes, wordLists: [list1, list2, list3, listMix1, listMix2, listMix3, listMix4, listImageMatch], stories, students: [], activityResults: [] };
 }
 
 function buildStories() {
