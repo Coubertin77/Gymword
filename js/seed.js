@@ -128,7 +128,6 @@ export function getSeedData() {
 
   return { classes, wordLists: [list1, list2, list3, listMix1, listMix2, listMix3, listMix4], stories, students: [], activityResults: [] };
 }
-}
 
 function buildStories() {
   return [

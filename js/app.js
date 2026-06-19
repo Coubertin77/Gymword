@@ -781,10 +781,15 @@ function showLoading(message = 'Loading GymWord…') {
 async function bootstrap() {
   showLoading(isCloudConfigured() ? 'Connecting to online storage…' : 'Loading…');
   try {
-    await initStorage();
+    await Promise.race([
+      initStorage(),
+      new Promise((_, reject) => {
+        setTimeout(() => reject(new Error('Startup timed out')), 12000);
+      }),
+    ]);
   } catch (err) {
     console.error(err);
-    toast('Could not load data', 'error');
+    toast('Could not load online data — working offline', 'error');
   }
   const session = getSession();
   if (session?.studentId) navigate('studentDashboard');

@@ -10,33 +10,54 @@ let saveTimer = null;
 let lastSyncAt = null;
 let syncError = null;
 
+const CLOUD_TIMEOUT_MS = 8000;
+
+function withTimeout(promise, ms = CLOUD_TIMEOUT_MS) {
+  return Promise.race([
+    promise,
+    new Promise((_, reject) => {
+      setTimeout(() => reject(new Error('Cloud request timed out')), ms);
+    }),
+  ]);
+}
+
 function migrateData(data) {
+  if (!data || typeof data !== 'object') return data;
+
   (data.classes || []).forEach(c => {
     if (!c.roster) c.roster = [];
   });
   if (!data.activityResults) data.activityResults = [];
   if (!data.wordLists) data.wordLists = [];
 
-  const seed = getSeedData();
-  const existingListIds = new Set(data.wordLists.map(l => l.id));
-  for (const list of seed.wordLists) {
-    if (!existingListIds.has(list.id)) data.wordLists.push(list);
+  try {
+    const seed = getSeedData();
+    const existingListIds = new Set(data.wordLists.map(l => l.id));
+    for (const list of seed.wordLists) {
+      if (!existingListIds.has(list.id)) data.wordLists.push(list);
+    }
+
+    const seedClasses = Object.fromEntries(seed.classes.map(c => [c.id, c]));
+    for (const cls of data.classes || []) {
+      if (!cls.assignedListIds) cls.assignedListIds = [];
+      const seedCls = seedClasses[cls.id];
+      if (!seedCls) continue;
+      for (const listId of seedCls.assignedListIds) {
+        if (!cls.assignedListIds.includes(listId)) cls.assignedListIds.push(listId);
+      }
+    }
+  } catch (err) {
+    console.error('GymWord seed merge error:', err);
   }
 
-  const seedClasses = Object.fromEntries(seed.classes.map(c => [c.id, c]));
-  for (const cls of data.classes || []) {
-    if (!cls.assignedListIds) cls.assignedListIds = [];
-    const seedCls = seedClasses[cls.id];
-    if (!seedCls) continue;
-    for (const listId of seedCls.assignedListIds) {
-      if (!cls.assignedListIds.includes(listId)) cls.assignedListIds.push(listId);
+  try {
+    for (const list of data.wordLists) {
+      for (const word of list.words || []) {
+        if (word.english) word.imageUrl = getWordImage(word.english);
+      }
     }
-  }
-
-  for (const list of data.wordLists) {
-    for (const word of list.words || []) {
-      if (word.english) word.imageUrl = getWordImage(word.english);
-    }
+  } catch (err) {
+    console.error('GymWord image refresh error:', err);
   }
 
   return data;
@@ -53,7 +74,12 @@ function readLocalCache() {
 }
 
 function writeLocalCache() {
-  if (cache) localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(cache));
+  if (!cache) return;
+  try {
+    localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(cache));
+  } catch (err) {
+    console.error('GymWord local save error:', err);
+  }
 }
 
 function scheduleCloudSave() {
@@ -84,41 +110,47 @@ export async function initStorage() {
   if (initialized) return cache;
 
   cloudEnabled = isCloudConfigured();
-  const local = readLocalCache();
+  let local = null;
+  try {
+    local = readLocalCache();
+  } catch (err) {
+    console.error('GymWord local cache error:', err);
+  }
 
-  if (cloudEnabled) {
-    try {
-      const remote = await fetchCloudData();
-      const hasRemote = remote && Object.keys(remote).length > 0
-        && (remote.classes?.length || remote.students?.length || remote.wordLists?.length);
+  cache = local || getSeedData();
+  initialized = true;
+  writeLocalCache();
 
-      if (hasRemote) {
-        cache = migrateData(remote);
-        if (local && (local.students?.length > (remote.students?.length || 0))) {
-          cache = migrateData(local);
-        }
-      } else if (local) {
-        cache = local;
-      } else {
-        cache = getSeedData();
+  if (!cloudEnabled) return cache;
+
+  try {
+    const remote = await withTimeout(fetchCloudData());
+    const hasRemote = remote && Object.keys(remote).length > 0
+      && (remote.classes?.length || remote.students?.length || remote.wordLists?.length);
+
+    if (hasRemote) {
+      cache = migrateData(remote);
+      if (local && (local.students?.length > (remote.students?.length || 0))) {
+        cache = migrateData(local);
       }
-
-      writeLocalCache();
-      await pushCloudData(cache);
-      lastSyncAt = new Date();
-    } catch (err) {
-      console.error('GymWord cloud load error:', err);
-      syncError = err.message || 'Could not connect to cloud';
-      cache = local || getSeedData();
-      cloudEnabled = false;
-      writeLocalCache();
+    } else if (!local) {
+      cache = getSeedData();
     }
-  } else {
-    cache = local || getSeedData();
+
+    writeLocalCache();
+    withTimeout(pushCloudData(cache), CLOUD_TIMEOUT_MS)
+      .then(() => { lastSyncAt = new Date(); syncError = null; })
+      .catch(err => {
+        syncError = err.message || 'Sync failed';
+        console.error('GymWord cloud save error:', err);
+      });
+  } catch (err) {
+    console.error('GymWord cloud load error:', err);
+    syncError = err.message || 'Could not connect to cloud';
+    cache = local || cache || getSeedData();
     writeLocalCache();
   }
 
-  initialized = true;
   return cache;
 }
 
