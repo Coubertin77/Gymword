@@ -1,0 +1,88 @@
+GymWord — Mise en ligne
+========================
+
+RÉSUMÉ
+------
+- Base de données (scores, élèves, listes) → Supabase (obligatoire pour la sync)
+- Site web (le lien pour les élèves)     → GitHub Pages (recommandé) ou Netlify
+
+GitHub Pages est souvent PLUS SIMPLE si vous avez déjà un compte GitHub :
+  → lien stable du type https://VOTRE-NOM.github.io/gymword/
+  → gratuit, pas de limite de temps
+  → vous modifiez les fichiers sur GitHub, le site se met à jour tout seul
+
+
+═══════════════════════════════════════════════════════════
+ÉTAPE 1 — Supabase (base de données en ligne)
+═══════════════════════════════════════════════════════════
+1. https://supabase.com → compte gratuit
+2. Nouveau projet → région EU (Frankfurt) — important RGPD
+3. SQL Editor → coller le fichier supabase/schema.sql → Run
+4. Settings → API → copier :
+   - Project URL
+   - anon public key
+
+5. Ouvrir js/supabase-config.js et remplir :
+
+   export const SUPABASE_URL = 'https://xxxxx.supabase.co';
+   export const SUPABASE_ANON_KEY = 'eyJhbGciOi...';
+
+
+═══════════════════════════════════════════════════════════
+ÉTAPE 2 — GitHub Pages (héberger le site)  ★ RECOMMANDÉ
+═══════════════════════════════════════════════════════════
+
+MÉTHODE A — Sans installer Git (la plus simple)
+-----------------------------------------------
+1. Allez sur https://github.com → connectez-vous (ou créez un compte)
+2. Bouton vert "New" → nouveau dépôt
+   - Nom : gymword (ou autre)
+   - Public
+   - Create repository
+3. "uploading an existing file" → glissez TOUS les fichiers du dossier :
+   index.html, css/, js/, supabase/, netlify.toml, etc.
+   → Commit changes
+4. Settings → Pages (menu gauche)
+   - Source : Deploy from a branch
+   - Branch : main → / (root) → Save
+5. Attendez 1-2 minutes
+6. Votre lien : https://VOTRE-NOM-GITHUB.github.io/gymword/
+
+MÉTHODE B — Avec Git installé sur le PC
+---------------------------------------
+1. git init
+2. git add .
+3. git commit -m "GymWord app"
+4. Créer le dépôt sur GitHub, puis :
+   git remote add origin https://github.com/VOTRE-NOM/gymword.git
+   git push -u origin main
+5. Settings → Pages → branch main / root
+
+
+═══════════════════════════════════════════════════════════
+ÉTAPE 3 — Vérifier
+═══════════════════════════════════════════════════════════
+1. Ouvrez votre lien GitHub Pages
+2. Message à l'accueil : "Online — progress saved for everyone"
+3. Prof (mot de passe EPS) → ajoutez un élève
+4. Sur un téléphone (4G, pas le Wi-Fi du lycée) → même lien → l'élève se connecte
+
+Bouton "Refresh" dans l'espace prof pour voir les scores à jour.
+
+
+═══════════════════════════════════════════════════════════
+Alternative : Netlify
+═══════════════════════════════════════════════════════════
+Si vous préférez ne pas utiliser GitHub :
+1. https://www.netlify.com
+2. Glissez-déposez le dossier
+3. Lien : https://gymword-xxxxx.netlify.app
+
+
+═══════════════════════════════════════════════════════════
+Notes importantes
+═══════════════════════════════════════════════════════════
+- GitHub héberge le SITE, Supabase stocke les DONNÉES (les deux sont nécessaires)
+- Partagez UN SEUL lien à tous vos élèves
+- La session (qui est connecté) reste sur l'appareil de chaque élève
+- Après chaque modification du code, re-uploadez sur GitHub (ou git push)

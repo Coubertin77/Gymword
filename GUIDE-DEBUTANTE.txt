@@ -1,0 +1,186 @@
+╔══════════════════════════════════════════════════════════════╗
+║  GYMWORD — GUIDE DÉBUTANTE (pas à pas)                       ║
+║  Temps estimé : 30 à 45 minutes                              ║
+╚══════════════════════════════════════════════════════════════╝
+
+Vous allez faire 2 choses :
+  A) Créer une "base de données" en ligne (Supabase) — gratuit
+  B) Mettre le site sur internet (GitHub) — gratuit
+
+À la fin vous aurez UN LIEN à envoyer à vos élèves.
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PARTIE A — SUPABASE (sauvegarde des données)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ÉTAPE A1 — Créer un compte
+──────────────────────────
+1. Ouvrez votre navigateur (Chrome ou Edge)
+2. Allez sur : https://supabase.com
+3. Cliquez "Start your project"
+4. Connectez-vous avec Google ou créez un compte email
+
+ÉTAPE A2 — Créer un projet
+──────────────────────────
+1. Cliquez "New project"
+2. Remplissez :
+   - Name : gymword
+   - Database Password : inventez un mot de passe (NOTEZ-LE quelque part !)
+   - Region : choisissez "West EU (Frankfurt)" ← important pour RGPD
+3. Cliquez "Create new project"
+4. Attendez 2 minutes (barre de chargement verte)
+
+ÉTAPE A3 — Créer la table de données
+────────────────────────────────────
+1. Dans le menu à GAUCHE, cliquez "SQL Editor"
+2. Cliquez "+ New query"
+3. Sur votre PC, ouvrez le fichier :
+   Documents → Coubertin Lycée → Nouveau dossier → supabase → schema.sql
+4. Sélectionnez TOUT le texte (Ctrl+A), copiez (Ctrl+C)
+5. Collez dans la fenêtre SQL de Supabase (Ctrl+V)
+6. Cliquez le bouton vert "Run" (ou Ctrl+Enter)
+7. En bas vous devez voir "Success" en vert ✓
+
+ÉTAPE A4 — Copier vos clés secrètes
+───────────────────────────────────
+1. Menu gauche → cliquez l'icône engrenage "Project Settings"
+2. Cliquez "API" dans le sous-menu
+3. Notez sur un papier ou Word :
+
+   Project URL → ressemble à :
+   https://abcdefghijk.supabase.co
+
+   anon public (sous "Project API keys") → longue chaîne qui commence par :
+   eyJhbGciOiJIUzI1NiIsInR5cCI6...
+
+   ⚠️ Utilisez bien "anon" / "public", PAS "service_role" !
+
+ÉTAPE A5 — Mettre les clés dans l'application
+─────────────────────────────────────────────
+1. Dans Cursor, ouvrez le fichier : js/supabase-config.js
+2. Remplacez les guillemets vides :
+
+   AVANT :
+   export const SUPABASE_URL = '';
+   export const SUPABASE_ANON_KEY = '';
+
+   APRÈS (avec VOS valeurs) :
+   export const SUPABASE_URL = 'https://abcdefghijk.supabase.co';
+   export const SUPABASE_ANON_KEY = 'eyJhbGciOiJ...';
+
+3. Enregistrez le fichier (Ctrl+S)
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PARTIE B — GITHUB (mettre le site en ligne)
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+ÉTAPE B1 — Créer un compte GitHub
+─────────────────────────────────
+1. Allez sur : https://github.com
+2. Cliquez "Sign up" si vous n'avez pas de compte
+3. Choisissez un nom d'utilisateur (ex : aurelie-coubertin)
+   → votre lien sera : https://aurelie-coubertin.github.io/gymword/
+
+ÉTAPE B2 — Créer un dépôt (repository)
+──────────────────────────────────────
+1. Une fois connectée, cliquez le bouton vert "New" (ou "+")
+2. Remplissez :
+   - Repository name : gymword
+   - Cochez "Public"
+   - NE cochez PAS "Add a README"
+3. Cliquez "Create repository"
+
+ÉTAPE B3 — Envoyer vos fichiers sur GitHub
+──────────────────────────────────────────
+1. Sur la page du nouveau dépôt, cliquez :
+   "uploading an existing file" (lien bleu)
+2. Ouvrez l'Explorateur Windows :
+   Documents → Coubertin Lycée → Nouveau dossier
+3. Sélectionnez TOUS les fichiers et dossiers :
+   - index.html
+   - css (dossier)
+   - js (dossier)
+   - supabase (dossier)
+   - netlify.toml
+   - start-server.ps1
+   - MISE-EN-LIGNE.txt
+   - GUIDE-DEBUTANTE.txt
+4. Glissez-déposez dans la page GitHub
+5. Attendez la fin de l'upload
+6. En bas, cliquez "Commit changes" (bouton vert)
+
+ÉTAPE B4 — Activer GitHub Pages (le site web)
+─────────────────────────────────────────────
+1. Dans votre dépôt gymword, cliquez "Settings" (onglet en haut)
+2. Menu gauche → "Pages"
+3. Sous "Build and deployment" :
+   - Source : Deploy from a branch
+   - Branch : main
+   - Folder : / (root)
+4. Cliquez "Save"
+5. Attendez 1 à 3 minutes
+6. Rafraîchissez la page → un lien apparaît :
+   "Your site is live at https://VOTRE-NOM.github.io/gymword/"
+
+   ⭐ C'EST CE LIEN QUE VOUS DONNEZ À VOS ÉLÈVES ⭐
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+PARTIE C — VÉRIFIER QUE TOUT MARCHE
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+1. Ouvrez votre lien GitHub Pages dans le navigateur
+2. Vous devez voir l'écran GymWord avec :
+   "☁️ Online — progress saved for everyone"
+   → Si ce message n'apparaît PAS : vérifiez l'étape A5 (supabase-config.js)
+
+3. Test professeur :
+   - Cliquez "I'm a Teacher"
+   - Mot de passe : EPS
+   - Onglet Students → ajoutez un élève test
+
+4. Test élève (sur votre téléphone en 4G, pas le Wi-Fi du lycée) :
+   - Ouvrez le MÊME lien
+   - I'm a Student → classe → choisissez l'élève test
+   - Faites une activité
+
+5. Retour professeur :
+   - Cliquez le bouton "🔄 Refresh"
+   - Vous devez voir le score de l'élève
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+EN CAS DE PROBLÈME
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+❌ "La connexion a échoué" en local
+   → Normal si vous n'utilisez pas start-server.ps1
+   → Utilisez le lien GitHub Pages à la place
+
+❌ Pas de message "Online" sur l'accueil
+   → supabase-config.js mal rempli ou pas re-uploadé sur GitHub
+   → Refaites A5 puis B3 (re-uploader le dossier js/)
+
+❌ Le site GitHub affiche 404
+   → Attendez 5 minutes, vérifiez Settings → Pages (branch main)
+
+❌ Les élèves ne voient pas la même liste
+   → Vérifiez que tout le monde utilise le MÊME lien GitHub
+   → Pas le lien localhost (127.0.0.1)
+
+❌ Modifier l'application plus tard
+   → Modifiez dans Cursor → sauvegardez
+   → Re-uploadez les fichiers modifiés sur GitHub (même dépôt)
+
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+RAPPEL DES ACCÈS
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+Élèves  : lien GitHub → classe → nom dans la liste
+Prof     : lien GitHub → mot de passe EPS
+Lien     : https://VOTRE-NOM-GITHUB.github.io/gymword/
+
+Besoin d'aide ? Revenez dans Cursor et dites à quelle étape vous êtes bloquée.
