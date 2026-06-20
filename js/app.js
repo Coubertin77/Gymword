@@ -77,9 +77,12 @@ function renderHome() {
   const sync = getSyncStatus();
   app.innerHTML = `
     <div class="page" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100dvh">
-      <div style="font-size:4rem;margin-bottom:0.5rem">🏋️</div>
-      <h1 class="logo-big">GymWord EPS</h1>
-      <p class="logo-sub">Learn English vocabulary through sport!</p>
+      <div class="home-icons" aria-hidden="true">
+        <span class="home-icon" title="English">🇬🇧</span>
+        <span class="home-icon" title="Badminton">🏸</span>
+      </div>
+      <h1 class="logo-big">SportWord Section Euro</h1>
+      <p class="logo-sub">Revise PE vocabulary in English</p>
       ${cloudStatusHtml(sync)}
       <div class="card" style="width:100%;max-width:400px">
         <button class="btn btn-primary btn-block" id="btn-student" style="margin-bottom:0.75rem">I'm a Student 💪</button>
@@ -873,7 +876,7 @@ function renderResultsTab(container) {
   }).join('');
 }
 
-function showLoading(message = 'Loading GymWord…') {
+function showLoading(message = 'Loading SportWord…') {
   app.innerHTML = `
     <div class="loading-screen">
       <div class="loading-spinner"></div>
@@ -883,7 +886,7 @@ function showLoading(message = 'Loading GymWord…') {
 }
 
 async function bootstrap() {
-  showLoading('Chargement de GymWord…');
+  showLoading('Loading SportWord…');
   try {
     await initStorage();
   } catch (err) {
