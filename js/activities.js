@@ -321,6 +321,16 @@ function setupTapMatching(container, { poolSelector, zoneSelector, hintEl, getVa
   });
 }
 
+function shuffleQuestionOptions(q) {
+  const indexed = q.options.map((text, i) => ({ text, originalIndex: i }));
+  const shuffled = shuffle(indexed);
+  return {
+    question: q.question,
+    options: shuffled.map(item => item.text),
+    correctIndex: shuffled.findIndex(item => item.originalIndex === q.correctIndex),
+  };
+}
+
 function renderQCM(questions, container, finish) {
   let current = 0;
   let score = 0;
@@ -426,15 +436,16 @@ function renderSpelling(words, container, finish) {
 }
 
 export function renderStoryQuiz(story, container, onComplete) {
+  const quizQuestions = story.questions.map(shuffleQuestionOptions);
   let currentQ = 0;
-  const answers = story.questions.map(() => null);
+  const answers = quizQuestions.map(() => null);
   let storyReader = null;
   let audioState = 'idle';
 
   function getScore() {
     return answers.reduce((sum, ans, i) => {
       if (ans === null) return sum;
-      return sum + (ans === story.questions[i].correctIndex ? 1 : 0);
+      return sum + (ans === quizQuestions[i].correctIndex ? 1 : 0);
     }, 0);
   }
 
@@ -462,7 +473,7 @@ export function renderStoryQuiz(story, container, onComplete) {
   }
 
   function goToQuestion(index) {
-    if (index < 0 || index >= story.questions.length) return;
+    if (index < 0 || index >= quizQuestions.length) return;
     currentQ = index;
     renderView();
   }
@@ -472,26 +483,26 @@ export function renderStoryQuiz(story, container, onComplete) {
     storyReader = null;
     audioState = 'idle';
 
-    const q = story.questions[currentQ];
+    const q = quizQuestions[currentQ];
     const answered = answers[currentQ];
 
     container.innerHTML = `
       <div class="activity-shell">
         <div class="activity-toolbar">
           <div class="activity-toolbar-left">
-            <span class="score-pill">${countAnswered()} / ${story.questions.length} answered</span>
+            <span class="score-pill">${countAnswered()} / ${quizQuestions.length} answered</span>
           </div>
           <div class="story-audio-controls">
             <button type="button" class="btn btn-secondary btn-sm" id="audio-play">🔊 Read aloud</button>
             <button type="button" class="btn btn-ghost btn-sm" id="audio-pause" disabled>⏸ Pause</button>
           </div>
         </div>
-        ${activityProgressBar(countAnswered(), story.questions.length)}
+        ${activityProgressBar(countAnswered(), quizQuestions.length)}
         <nav class="story-q-nav" aria-label="Questions">
-          ${story.questions.map((_, i) => {
+          ${quizQuestions.map((_, i) => {
             const isActive = i === currentQ;
             const isAnswered = answers[i] !== null;
-            const isCorrect = isAnswered && answers[i] === story.questions[i].correctIndex;
+            const isCorrect = isAnswered && answers[i] === quizQuestions[i].correctIndex;
             return `
               <button type="button"
                 class="story-q-pill ${isActive ? 'active' : ''} ${isAnswered ? (isCorrect ? 'correct' : 'wrong') : ''}"
@@ -509,13 +520,13 @@ export function renderStoryQuiz(story, container, onComplete) {
             <div class="story-text" id="story-text">${wrapStoryWords(story.text)}</div>
           </div>
           <div class="story-quiz-col card" id="quiz-panel">
-            ${renderQuestion(q, currentQ, story.questions.length, answered)}
+            ${renderQuestion(q, currentQ, quizQuestions.length, answered)}
             <div class="story-nav-buttons">
               <button type="button" class="btn btn-secondary btn-sm" id="q-prev" ${currentQ === 0 ? 'disabled' : ''}>← Previous</button>
-              ${currentQ < story.questions.length - 1
+              ${currentQ < quizQuestions.length - 1
                 ? `<button type="button" class="btn btn-secondary btn-sm" id="q-next">Next →</button>`
                 : ''}
-              ${countAnswered() === story.questions.length
+              ${countAnswered() === quizQuestions.length
                 ? `<button type="button" class="btn btn-primary btn-sm" id="q-finish">Finish quiz ✓</button>`
                 : ''}
             </div>
@@ -552,7 +563,7 @@ export function renderStoryQuiz(story, container, onComplete) {
 
     container.querySelector('#q-finish')?.addEventListener('click', () => finishQuiz());
 
-    if (currentQ < story.questions.length) {
+    if (currentQ < quizQuestions.length) {
       container.querySelectorAll('.qcm-option').forEach((btn, i) => {
         if (answered !== null) {
           if (i === q.correctIndex) btn.classList.add('correct');
@@ -568,7 +579,7 @@ export function renderStoryQuiz(story, container, onComplete) {
             if (j === i) b.classList.add('selected');
           });
           setTimeout(() => {
-            if (currentQ < story.questions.length - 1) goToQuestion(currentQ + 1);
+            if (currentQ < quizQuestions.length - 1) goToQuestion(currentQ + 1);
             else renderView();
           }, 700);
         });
@@ -596,8 +607,8 @@ export function renderStoryQuiz(story, container, onComplete) {
     const score = getScore();
     onComplete({
       score,
-      total: story.questions.length,
-      perfect: score === story.questions.length,
+      total: quizQuestions.length,
+      perfect: score === quizQuestions.length,
     });
   }
 
