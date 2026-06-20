@@ -273,7 +273,47 @@ export function buildSportContent(makeWord) {
       ],
     },
     {
-      id: 'flag_football_story_1', chapterId: 'flag_football', title: 'Flag Football Friday',
+      id: 'touch_rugby_story_2', chapterId: 'touch_rugby', title: 'Support Lines', englishLevel: 'B1',
+      text: 'Coach Laurent taught the Seconde class that support lines win touch rugby matches. After each touch, attackers must reset quickly and offer passing options on both sides of the ball carrier. Students who stood flat and waited were easily marked, while those who ran diagonally into space created opportunities for offloads. The coach used cones to show ideal spacing between teammates. During small-sided games, teams that maintained width scored more tries because defenders could not cover every angle. Laurent concluded that touch rugby rewards intelligent movement as much as speed.',
+      questions: [
+        { question: 'What must attackers do after each touch?', options: ['Reset and offer passing options', 'Stop completely and argue', 'Pass forward immediately', 'Leave the pitch'], correctIndex: 0 },
+        { question: 'What helped create offload opportunities?', options: ['Running diagonally into space', 'Standing flat and waiting', 'Hiding behind the referee', 'Ignoring the ball carrier'], correctIndex: 0 },
+        { question: 'Why did teams maintaining width score more tries?', options: ['Defenders could not cover every angle', 'The ball became heavier', 'Rules changed every minute', 'The pitch became shorter'], correctIndex: 0 },
+        { question: 'What does touch rugby reward according to the coach?', options: ['Intelligent movement and speed', 'Only individual strength', 'Silence on the pitch', 'Avoiding all passes'], correctIndex: 0 },
+      ],
+    },
+    {
+      id: 'touch_rugby_story_3', chapterId: 'touch_rugby', title: 'The Dummy Pass Drill', englishLevel: 'B2',
+      text: 'In a technical session dedicated to deception, players practiced the dummy pass to commit defenders before accelerating through the gap. The coach insisted that body language must convince opponents — shoulders, eyes, and hips should all suggest a pass that never happens. Première students paired up and filmed short sequences to review their timing. Those who telegraphed the dummy too early were easily touched; those who sold the fake convincingly created space for teammates behind them. The session concluded with a discussion about decision-making: when is deception worth the risk, and when is a simple pass safer? Students agreed that reading the defence is a skill developed through deliberate practice, not instinct alone.',
+      questions: [
+        { question: 'What is the purpose of a dummy pass?', options: ['To commit defenders and create space', 'To stop the game permanently', 'To score without running', 'To replace the try line'], correctIndex: 0 },
+        { question: 'What must body language achieve?', options: ['Convince opponents a pass is coming', 'Hide the ball from teammates', 'Signal the referee only', 'Slow the attack deliberately'], correctIndex: 0 },
+        { question: 'Why did some students fail the drill?', options: ['They telegraphed the dummy too early', 'They never touched the ball', 'They refused to run', 'The pitch was indoors'], correctIndex: 0 },
+        { question: 'How is reading the defence developed?', options: ['Through deliberate practice', 'Only by watching television', 'Without any training', 'By avoiding all deception'], correctIndex: 0 },
+      ],
+    },
+    {
+      id: 'touch_rugby_story_4', chapterId: 'touch_rugby', title: 'Managing the Six-Touch Rule', englishLevel: 'B2',
+      text: 'Touch rugby limits each possession to six touches before the ball is turned over, which forces teams to plan attacks carefully. The Terminale squad analysed how they wasted touches by running sideways without gaining ground. Their coach introduced a simple rule: every touch should either advance the ball toward the try line or fix defenders to create an overlap. In tournament preparation, they tracked average touches per try and noticed significant improvement when players communicated the touch count aloud. Under fatigue, discipline often collapsed — players took unnecessary risks instead of resetting shape. The team learned that tactical patience under pressure separates organised sides from chaotic ones.',
+      questions: [
+        { question: 'What happens after six touches?', options: ['The ball is turned over', 'The team automatically scores', 'The game ends', 'Defenders leave the pitch'], correctIndex: 0 },
+        { question: 'What should every touch achieve?', options: ['Advance the ball or fix defenders', 'Move sideways without purpose', 'Delay the game indefinitely', 'Ignore the try line'], correctIndex: 0 },
+        { question: 'What helped teams improve their attack?', options: ['Communicating the touch count aloud', 'Avoiding all passing', 'Running without a plan', 'Removing the touch limit'], correctIndex: 0 },
+        { question: 'What separates organised sides from chaotic ones?', options: ['Tactical patience under pressure', 'Only physical size', 'Ignoring fatigue completely', 'Never resetting shape'], correctIndex: 0 },
+      ],
+    },
+    {
+      id: 'touch_rugby_story_5', chapterId: 'touch_rugby', title: 'Fair Play Under Pressure', englishLevel: 'C1',
+      text: 'During a closely contested semi-final, a touch rugby player admitted voluntarily that he had been touched before scoring what would have been the winning try. The referee had not seen the contact, yet the athlete raised his hand immediately, costing his team the advantage. Afterwards, the PE teacher used the incident as a case study in sports ethics, asking students to write in English whether competitive ambition should ever override honesty. Opinions differed, but most concluded that long-term integrity preserves trust within a squad and respect from opponents. The coach noted that elite environments increasingly emphasise values-based education alongside performance metrics. The episode reinforced that touch rugby, though non-contact, demands the same moral courage expected in any high-level sporting context.',
+      questions: [
+        { question: 'What did the player admit voluntarily?', options: ['He had been touched before scoring', 'He wanted to change teams', 'He did not understand the rules', 'He had never trained'], correctIndex: 0 },
+        { question: 'What did the PE teacher ask students to write about?', options: ['Whether ambition should override honesty', 'Their favourite rugby player only', 'French grammar rules', 'The history of the school'], correctIndex: 0 },
+        { question: 'What did most students conclude about integrity?', options: ['It preserves trust and respect long term', 'It is irrelevant in sport', 'It only matters in exams', 'It reduces all performance'], correctIndex: 0 },
+        { question: 'What does the coach say elite environments emphasise?', options: ['Values-based education alongside performance', 'Only winning at any cost', 'Avoiding all ethics discussions', 'Replacing sport with theory'], correctIndex: 0 },
+      ],
+    },
+    {
+      id: 'flag_football_story_1', chapterId: 'flag_football', title: 'Flag Football Friday', englishLevel: 'B1',
       text: 'The Première class tried flag football for the first time on the school field. Each player wore a flag belt around the waist. The quarterback called the plays and handed the ball to a runner or threw a pass downfield. To score a touchdown, a player had to enter the end zone with the ball. Defenders focused on pulling flags instead of tackling. One team used a blitz to pressure the quarterback, forcing a quick decision. After the game, the coach explained that flag football teaches strategy, speed, and teamwork without the risks of full contact.',
       questions: [
         { question: 'What did players wear around the waist?', options: ['A scarf', 'A flag belt', 'A backpack', 'A helmet only'], correctIndex: 1 },
