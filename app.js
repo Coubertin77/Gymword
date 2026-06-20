@@ -363,7 +363,8 @@ function renderStudentActivity(type) {
   const area = app.querySelector('#activity-area');
 
   renderActivity(type, words, area, result => {
-    const { pts, newBadges } = handleActivityComplete(student, chapterId, type, words.slice(0, 5), result);
+    const quizWords = type === 'qcm' ? [] : words.slice(0, 5);
+    const { pts, newBadges } = handleActivityComplete(student, chapterId, type, quizWords, result);
     area.classList.add('hidden');
     const resultArea = app.querySelector('#result-area');
     resultArea.classList.remove('hidden');
@@ -381,7 +382,7 @@ function renderStudentActivity(type) {
     resultArea.querySelector('#retry').onclick = () => navigate('studentActivity', { type });
     resultArea.querySelector('#home-btn').onclick = () => navigate('studentDashboard');
     toast(`+${pts} points!`, 'success');
-  });
+  }, chapterId);
 }
 
 function renderStudentStories() {

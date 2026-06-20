@@ -3,9 +3,22 @@ import { shuffle } from './gamification.js';
 import { escapeHtml } from './utils.js';
 import { wrapStoryWords, createStoryReader, stopStoryAudio } from './story-audio.js';
 
-export function renderActivity(type, words, container, onComplete) {
+import { getRulesQuestions } from './chapter-rules.js';
+
+export function renderActivity(type, words, container, onComplete, chapterId = 'musculation') {
   const pool = type === 'image_match' ? filterImageMatchWords(words) : words;
   const subset = shuffle(pool).slice(0, Math.min(pool.length, 5));
+
+  if (type === 'qcm') {
+    const questions = getRulesQuestions(chapterId, 5);
+    if (!questions.length) {
+      container.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>No rules quiz available for this sport yet.</p></div>';
+      return;
+    }
+    const finish = (score, total) => onComplete({ score, total, perfect: score === total });
+    return renderQCM(questions, container, finish);
+  }
+
   if (subset.length === 0) {
     container.innerHTML = type === 'image_match'
       ? '<div class="empty-state"><div class="icon">📭</div><p>No picture words assigned yet (nouns only).</p></div>'
@@ -21,7 +34,6 @@ export function renderActivity(type, words, container, onComplete) {
     case 'image_match': return renderImageMatch(subset, container, finish);
     case 'translation': return renderTranslationMatch(subset, container, finish);
     case 'definition': return renderDefinitionMatch(subset, container, finish);
-    case 'qcm': return renderQCM(subset, container, finish);
     case 'spelling': return renderSpelling(subset, container, finish);
     default:
       container.innerHTML = '<p>Unknown activity</p>';
@@ -277,10 +289,9 @@ function setupTapMatching(container, { poolSelector, zoneSelector, hintEl, getVa
   });
 }
 
-function renderQCM(words, container, finish) {
+function renderQCM(questions, container, finish) {
   let current = 0;
   let score = 0;
-  const questions = buildQCMQuestions(words);
 
   function showQuestion() {
     if (current >= questions.length) {
@@ -288,8 +299,6 @@ function renderQCM(words, container, finish) {
       return;
     }
     const q = questions[current];
-    const wordMatch = q.question.match(/"([^"]+)"/);
-    const highlightWord = wordMatch ? wordMatch[1] : '';
 
     container.innerHTML = `
       <div class="activity-shell">
@@ -297,8 +306,7 @@ function renderQCM(words, container, finish) {
         <div class="qcm-layout">
           <div class="qcm-question-col card">
             <span class="qcm-step-label">Question ${current + 1} of ${questions.length}</span>
-            ${highlightWord ? `<div class="qcm-word-badge">${escapeHtml(highlightWord)}</div>` : ''}
-            <p class="qcm-question-text">What is the French translation?</p>
+            <p class="qcm-question-text">${escapeHtml(q.question)}</p>
           </div>
           <div class="qcm-options-col">
             <div class="qcm-options-grid" id="qcm-options"></div>
@@ -329,18 +337,6 @@ function renderQCM(words, container, finish) {
     });
   }
   showQuestion();
-}
-
-function buildQCMQuestions(words) {
-  return words.map(w => {
-    const wrong = shuffle(words.filter(x => x.english !== w.english)).slice(0, 3).map(x => x.french);
-    const options = shuffle([w.french, ...wrong]);
-    return {
-      question: `What is the French translation of "${w.english}"?`,
-      options,
-      correctIndex: options.indexOf(w.french),
-    };
-  });
 }
 
 function renderSpelling(words, container, finish) {
