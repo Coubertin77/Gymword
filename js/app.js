@@ -255,10 +255,13 @@ function renderStudentDashboard() {
         </div>
         <button class="btn btn-ghost btn-sm" id="logout">Logout</button>
       </div>
+      <button type="button" class="btn btn-change-sport" id="change-chapter">
+        <span class="btn-change-sport-icon" aria-hidden="true">🔄</span>
+        Change sport
+      </button>
       <div class="stats-bar">
         <div class="stat-pill"><span class="icon">🏆</span> ${progress.points} pts</div>
         <div class="stat-pill"><span class="icon">📚</span> ${escapeHtml(cls?.name || '')}</div>
-        <button class="btn btn-ghost btn-sm" id="change-chapter">Change sport</button>
       </div>
       <div class="word-status-grid">
         <div class="status-box status-learned"><span class="status-count">${counts.learned}</span>Learned</div>

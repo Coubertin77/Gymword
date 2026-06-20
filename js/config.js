@@ -27,7 +27,7 @@ export const CONFIG = {
 };
 
 /** Bump when publishing — shown on home screen to confirm the latest version loaded. */
-export const APP_VERSION = '2.3.0';
+export const APP_VERSION = '2.3.1';
 
 export const CHAPTERS = [
   { id: 'musculation', name: 'Musculation', icon: '🏋️', color: '#6c3ce0' },

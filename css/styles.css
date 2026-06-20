@@ -234,6 +234,40 @@ body {
   margin-bottom: 1.25rem;
 }
 
+.btn-change-sport {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  margin-bottom: 1rem;
+  padding: 0.9rem 1.25rem;
+  font-size: 1.05rem;
+  font-weight: 800;
+  font-family: inherit;
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  background: linear-gradient(135deg, var(--orange), #ff6b35);
+  box-shadow: 0 6px 20px rgba(255, 159, 67, 0.45);
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.btn-change-sport:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(255, 159, 67, 0.55);
+}
+
+.btn-change-sport:active {
+  transform: translateY(0);
+}
+
+.btn-change-sport-icon {
+  font-size: 1.25rem;
+  line-height: 1;
+}
+
 .stat-pill {
   display: flex;
   align-items: center;
