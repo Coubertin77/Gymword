@@ -136,8 +136,8 @@ export function getSeedData() {
 
   const classes = [
     { id: 'class_seconde', name: 'Seconde — Group A', level: 'Seconde', roster: [], assignedListIds: ['list_image_match', 'list_equipment', 'list_mix_1'], assignedStoryIds: ['story_1', 'story_2', 'story_3'], assignedActivities: ['image_match', 'translation', 'definition', 'qcm', 'spelling'] },
-    { id: 'class_premiere', name: 'Première — Group B', level: 'Première', roster: [], assignedListIds: ['list_image_match', 'list_equipment', 'list_exercises', 'list_mix_1', 'list_mix_2'], assignedStoryIds: ['story_1', 'story_2', 'story_3', 'story_4', 'story_5'], assignedActivities: ['image_match', 'translation', 'definition', 'qcm', 'spelling'] },
-    { id: 'class_terminale', name: 'Terminale — Group C', level: 'Terminale', roster: [], assignedListIds: ['list_image_match', 'list_equipment', 'list_exercises', 'list_body', 'list_mix_1', 'list_mix_2', 'list_mix_3', 'list_mix_4'], assignedStoryIds: ['story_1', 'story_2', 'story_3', 'story_4', 'story_5', 'story_6', 'story_7', 'story_8', 'story_9', 'story_10'], assignedActivities: ['image_match', 'translation', 'definition', 'qcm', 'spelling'] },
+    { id: 'class_premiere', name: 'Première — Group B', level: 'Première', roster: [], assignedListIds: ['list_image_match', 'list_equipment', 'list_exercises', 'list_mix_1', 'list_mix_2'], assignedStoryIds: ['story_1', 'story_2', 'story_3', 'story_4', 'story_5', 'story_11', 'story_12'], assignedActivities: ['image_match', 'translation', 'definition', 'qcm', 'spelling'] },
+    { id: 'class_terminale', name: 'Terminale — Group C', level: 'Terminale', roster: [], assignedListIds: ['list_image_match', 'list_equipment', 'list_exercises', 'list_body', 'list_mix_1', 'list_mix_2', 'list_mix_3', 'list_mix_4'], assignedStoryIds: ['story_1', 'story_2', 'story_3', 'story_4', 'story_5', 'story_6', 'story_7', 'story_8', 'story_9', 'story_10', 'story_11', 'story_12', 'story_13', 'story_14', 'story_15', 'story_16', 'story_17'], assignedActivities: ['image_match', 'translation', 'definition', 'qcm', 'spelling'] },
   ];
 
   const stories = buildStories();
@@ -153,6 +153,12 @@ export function getSeedCatalog() {
     seedCatalogCache = { classes, wordLists };
   }
   return seedCatalogCache;
+}
+
+let seedStoriesCache = null;
+export function getSeedStories() {
+  if (!seedStoriesCache) seedStoriesCache = buildStories();
+  return seedStoriesCache;
 }
 
 function buildStories() {
@@ -255,6 +261,76 @@ function buildStories() {
         { question: 'Who led the group warm up?', options: ['Teachers only', 'Terminale students', 'Parents', 'Nobody'], correctIndex: 1 },
         { question: 'Which team won?', options: ['Team A from Seconde', 'Team B from Première', 'Team C from Terminale', 'No team'], correctIndex: 1 },
         { question: "What was the teacher's main message?", options: ['Language and sport work together', 'Only strength matters', 'Vocabulary is useless', 'Competition is bad'], correctIndex: 0 },
+      ],
+    },
+    {
+      id: 'story_11', title: 'The Leg Press Station',
+      text: 'During their first session on the leg press machine, the Première students listened carefully to the safety instructions. The coach explained that they had to keep their back flat against the seat and push the platform with their heels, not their toes. Before loading any weight plates, everyone completed a warm up with bodyweight squats and light stretching for the quadriceps and hamstrings. Nora was surprised by how much the exercise worked her glutes as well as her legs. When she tried to increase the weight too quickly, the coach reminded her that progress should be gradual. By the end of the lesson, the class understood that good technique matters more than heavy loads.',
+      questions: [
+        { question: 'What did the coach say about foot position?', options: ['Push with your toes', 'Push with your heels', 'Keep feet off the platform', 'Stand on the machine'], correctIndex: 1 },
+        { question: 'Which muscles were stretched during the warm up?', options: ['Biceps and triceps', 'Quadriceps and hamstrings', 'Shoulders and chest', 'Neck and wrists'], correctIndex: 1 },
+        { question: 'What happened when Nora increased the weight too fast?', options: ['She won a prize', 'The coach told her to progress gradually', 'She skipped the exercise', 'The machine broke'], correctIndex: 1 },
+        { question: 'What is the main lesson of the story?', options: ['Heavy weights are always best', 'Good technique matters more than heavy loads', 'Warm ups are optional', 'The leg press is dangerous'], correctIndex: 1 },
+      ],
+    },
+    {
+      id: 'story_12', title: 'Cardio and Core',
+      text: 'Coach Dupont designed a circuit that combined cardio equipment with core exercises. Students spent three minutes on the exercise bike, then moved to the rowing machine, and finally walked at a steady pace on the treadmill. Between each station, they held a plank for thirty seconds to strengthen their core muscles. Although the session was demanding, most students agreed that variety made the training more engaging than repeating the same movement for an hour. The coach pointed out that cardiovascular endurance supports every other type of physical activity, from running to weightlifting. At the cool-down, students stretched their calves and discussed how they could improve their breathing rhythm during the next session.',
+      questions: [
+        { question: 'Which three cardio machines appear in the circuit?', options: ['Leg press, bench press, cable machine', 'Exercise bike, rowing machine, treadmill', 'Dumbbells, barbell, kettlebell', 'Foam roller, resistance band, bench'], correctIndex: 1 },
+        { question: 'What core exercise did students perform between stations?', options: ['Bicep curl', 'Plank', 'Leg extension', 'Pull-up'], correctIndex: 1 },
+        { question: 'According to the coach, why is cardiovascular endurance important?', options: ['It replaces strength training', 'It supports other physical activities', 'It is only useful for exams', 'It prevents students from sweating'], correctIndex: 1 },
+        { question: 'What did students discuss during the cool-down?', options: ['Their holiday plans', 'How to improve their breathing rhythm', 'The price of gym membership', 'Which teacher they prefer'], correctIndex: 1 },
+      ],
+    },
+    {
+      id: 'story_13', title: 'A Personal Training Log',
+      text: 'Every Terminale student received a training log at the start of the semester. The idea was simple: record each session, note the exercises performed, and track whether performance was improving over time. Antoine wrote down his sets and reps after every bench press and squat session. After six weeks, he noticed a clear pattern — his strength was increasing, but only on the days when he had slept well and completed his warm up properly. His teacher explained that this kind of self-analysis helps athletes make smarter decisions about rest, nutrition, and workload. Antoine realised that training is not just about working hard; it is about working intelligently and learning from your own data.',
+      questions: [
+        { question: 'What were students asked to record in their training log?', options: ['Their favourite music', 'Exercises, sets, reps, and progress', 'Only their exam grades', 'Phone numbers of classmates'], correctIndex: 1 },
+        { question: 'What pattern did Antoine discover after six weeks?', options: ['He never improved', 'Progress linked to sleep and proper warm up', 'He trained better without sleep', 'He stopped doing squats'], correctIndex: 1 },
+        { question: 'What does self-analysis help athletes decide?', options: ['Which TV series to watch', 'Rest, nutrition, and workload', 'How to skip PE class', 'Which shoes to buy online'], correctIndex: 1 },
+        { question: 'What is the central message of the story?', options: ['Training means lifting as heavy as possible', 'Smart training means learning from your own data', 'Logs are useless for beginners', 'Only coaches can analyse progress'], correctIndex: 1 },
+      ],
+    },
+    {
+      id: 'story_14', title: 'The Cable Machine Workout',
+      text: 'The cable machine area was always busy on Thursday afternoons. Under the coach\'s supervision, students practised the lat pull down to strengthen their back muscles and the machine fly to work their chest. Because the resistance could be adjusted precisely, each student could choose a load that matched their current level. The coach insisted that controlled movements were more effective than fast, uncontrolled repetitions. When Lucas rushed through his sets, his partner reminded him to focus on form rather than speed. By slowing down, Lucas felt his lats and shoulders working more deeply. The session ended with a discussion about how machines can help beginners learn movement patterns before progressing to free weights such as the barbell.',
+      questions: [
+        { question: 'Which two exercises are mentioned on the cable machine?', options: ['Deadlift and squat', 'Lat pull down and machine fly', 'Leg curl and leg extension', 'Bench press and pull-up'], correctIndex: 1 },
+        { question: 'Why could each student choose a different load?', options: ['The machines were broken', 'Resistance could be adjusted precisely', 'There were no weight plates', 'The coach assigned random numbers'], correctIndex: 1 },
+        { question: 'What advice did Lucas\'s partner give him?', options: ['Lift faster to finish early', 'Focus on form rather than speed', 'Skip the warm up', 'Use the heaviest weight immediately'], correctIndex: 1 },
+        { question: 'What advantage of machines did the class discuss?', options: ['They are always easier than free weights', 'They help beginners learn movement patterns', 'They replace the need for coaching', 'They work only the legs'], correctIndex: 1 },
+      ],
+    },
+    {
+      id: 'story_15', title: 'When Training Gets Tough',
+      text: 'After eight weeks of steady progress, Inès hit a plateau. Her bench press weight had not increased, and she felt frustrated during every session. Instead of training harder every day, she spoke with her PE teacher, who suggested a different approach: reduce the training volume for one week, focus on mobility exercises with a foam roller, and pay more attention to nutrition and sleep. Inès was sceptical at first, but she followed the advice. When she returned to the weight room, her movements felt smoother and her confidence returned. She learned that setbacks are a normal part of long-term development, and that sometimes the best way forward is to step back, recover, and adjust your programme rather than push through exhaustion.',
+      questions: [
+        { question: 'What problem did Inès experience?', options: ['She forgot her gym clothes', 'She hit a plateau in her bench press', 'She won every competition', 'She never attended class'], correctIndex: 1 },
+        { question: 'What did the teacher recommend instead of training harder every day?', options: ['Quit the gym permanently', 'Reduce volume, focus on mobility, rest, and nutrition', 'Double the number of sessions immediately', 'Stop doing bench press forever'], correctIndex: 1 },
+        { question: 'Which recovery tool is mentioned in the story?', options: ['Resistance band', 'Foam roller', 'Weight plate', 'Exercise bike'], correctIndex: 1 },
+        { question: 'What lesson did Inès learn about setbacks?', options: ['They mean you should give up', 'They are normal and require smart adjustment', 'They only happen to beginners', 'They can be ignored safely'], correctIndex: 1 },
+      ],
+    },
+    {
+      id: 'story_16', title: 'The Fitness Assessment',
+      text: 'At the beginning of the year, every Terminale student completed a fitness assessment designed to measure strength, endurance, and flexibility. The results were not used to rank students against each other, but to help each person set realistic personal goals. Some students excelled at the rowing machine test, while others performed better on core stability exercises or the leg press. The PE department then created individual programmes that combined areas of strength with areas needing improvement. Students also had to write a short report in English explaining their results and describing how they planned to progress during the term. The teacher emphasised that assessment is a starting point for growth, not a final judgement of ability.',
+      questions: [
+        { question: 'What three qualities did the fitness assessment measure?', options: ['Height, age, and shoe size', 'Strength, endurance, and flexibility', 'Memory, spelling, and grammar', 'Speed, luck, and confidence only'], correctIndex: 1 },
+        { question: 'How were the results used?', options: ['To publicly rank every student', 'To help each student set personal goals', 'To exclude students from the gym', 'To replace all training sessions'], correctIndex: 1 },
+        { question: 'What written task did students complete in English?', options: ['A poem about holidays', 'A report explaining results and future plans', 'A letter to a famous athlete', 'A list of French translations only'], correctIndex: 1 },
+        { question: 'What did the teacher say assessment represents?', options: ['A final judgement of ability', 'A starting point for growth', 'An unnecessary formality', 'A punishment for weak students'], correctIndex: 1 },
+      ],
+    },
+    {
+      id: 'story_17', title: 'Road to the Regional Championship',
+      text: 'For months, the school\'s fitness team prepared methodically for the regional championship. Their programme alternated between strength sessions — including squats, deadlifts, and pull-ups — and recovery days devoted to stretching, hydration, and sleep. The coach explained that peak performance depends on consistency, not last-minute cramming. Before each training block, students reviewed key vocabulary in English so they could communicate clearly about technique during team workouts. On competition day, they arrived early, completed a structured warm up, and supported one another through every event. Although they did not win first place, the team achieved several personal bests and left with a shared understanding: sustainable progress is built week by week, and language skills help athletes train and compete more effectively together.',
+      questions: [
+        { question: 'How was the team\'s programme structured over several months?', options: ['Only rest days, no training', 'Strength sessions alternated with recovery days', 'One intense session the night before the event', 'Random exercises with no planning'], correctIndex: 1 },
+        { question: 'According to the coach, what does peak performance depend on?', options: ['Last-minute cramming', 'Consistency over time', 'Skipping warm ups', 'Training alone without communication'], correctIndex: 1 },
+        { question: 'Why did students review English vocabulary before training blocks?', options: ['To pass a maths exam', 'To communicate clearly about technique during team workouts', 'To impress the judges with poetry', 'Because English replaces physical training'], correctIndex: 1 },
+        { question: 'What overall conclusion did the team reach?', options: ['Progress is impossible without winning first place', 'Sustainable progress and language skills support effective training', 'Recovery days are a sign of weakness', 'Teamwork is less important than individual records'], correctIndex: 1 },
       ],
     },
   ];

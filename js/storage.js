@@ -1,5 +1,5 @@
 import { CONFIG, getWordImage } from './config.js';
-import { getSeedData, getSeedCatalog } from './seed.js';
+import { getSeedData, getSeedCatalog, getSeedStories } from './seed.js';
 import { isCloudConfigured } from './supabase-config.js';
 import { fetchCloudData, pushCloudData } from './cloud.js';
 
@@ -57,6 +57,16 @@ function migrateData(data) {
       for (const listId of seedCls.assignedListIds) {
         if (!cls.assignedListIds.includes(listId)) cls.assignedListIds.push(listId);
       }
+      if (!cls.assignedStoryIds) cls.assignedStoryIds = [];
+      for (const storyId of seedCls.assignedStoryIds || []) {
+        if (!cls.assignedStoryIds.includes(storyId)) cls.assignedStoryIds.push(storyId);
+      }
+    }
+
+    if (!data.stories) data.stories = [];
+    const existingStoryIds = new Set(data.stories.map(s => s.id));
+    for (const story of getSeedStories()) {
+      if (!existingStoryIds.has(story.id)) data.stories.push(story);
     }
   } catch (err) {
     console.error('GymWord seed merge error:', err);
