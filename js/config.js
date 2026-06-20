@@ -46,6 +46,7 @@ export const ACTIVITY_TYPES = {
   DEFINITION: 'definition',
   QCM: 'qcm',
   SPELLING: 'spelling',
+  MUSCLE_REGION: 'muscle_region',
 };
 
 export const ACTIVITY_LABELS = {
@@ -54,7 +55,18 @@ export const ACTIVITY_LABELS = {
   [ACTIVITY_TYPES.DEFINITION]: { icon: '📝', title: 'Definitions', desc: 'Tap a definition, then tap the correct word' },
   [ACTIVITY_TYPES.QCM]: { icon: '❓', title: 'Quick Quiz', desc: 'Answer questions about the rules of the sport' },
   [ACTIVITY_TYPES.SPELLING]: { icon: '✍️', title: 'Spelling', desc: 'Type the English word' },
+  [ACTIVITY_TYPES.MUSCLE_REGION]: { icon: '🧍', title: 'Locate Muscles', desc: 'Match each muscle to Upper body, Lower body or Abdomen', chapters: ['musculation'] },
 };
+
+/** Activities shown for a chapter (some are chapter-specific). */
+export function getActivitiesForChapter(assignedActivities, chapterId) {
+  const assigned = assignedActivities || Object.keys(ACTIVITY_LABELS);
+  return assigned.filter(type => {
+    const info = ACTIVITY_LABELS[type];
+    if (info?.chapters) return info.chapters.includes(chapterId);
+    return true;
+  });
+}
 
 const P = (id) =>
   `https://images.pexels.com/photos/${id}/pexels-photo-${id}.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop`;

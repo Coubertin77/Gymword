@@ -67,6 +67,10 @@ function migrateData(data) {
       for (const chapterId of seedCls.assignedChapterIds || []) {
         if (!cls.assignedChapterIds.includes(chapterId)) cls.assignedChapterIds.push(chapterId);
       }
+      if (!cls.assignedActivities) cls.assignedActivities = [];
+      for (const act of seedCls.assignedActivities || []) {
+        if (!cls.assignedActivities.includes(act)) cls.assignedActivities.push(act);
+      }
     }
 
     if (!data.stories) data.stories = [];

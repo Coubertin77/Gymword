@@ -1,4 +1,4 @@
-import { CONFIG, ACTIVITY_LABELS, getWordImage, CHAPTERS, getChapterById } from './config.js';
+import { CONFIG, ACTIVITY_LABELS, getWordImage, CHAPTERS, getChapterById, getActivitiesForChapter } from './config.js';
 import {
   initStorage, loadData, getClasses, getClassById, getWordsForClass, getStories, getStoryById,
   getStoriesForClass, getChaptersForClass,
@@ -241,7 +241,7 @@ function renderStudentDashboard() {
   const counts = countWordsByStatus(progress, words);
   const level = getLevel(progress.points);
   const vocabProgress = getVocabularyProgress(counts, words.length);
-  const activityTypes = cls?.assignedActivities || Object.keys(ACTIVITY_LABELS);
+  const activityTypes = getActivitiesForChapter(cls?.assignedActivities, chapterId);
   const activityProgress = getActivityProgress(progress, activityTypes, ACTIVITY_LABELS);
   const badges = CONFIG.BADGES.map(b => ({ ...b, earned: progress.badges.includes(b.id) }));
 
@@ -316,7 +316,7 @@ function renderStudentDashboard() {
   app.querySelector('#go-leaderboard').onclick = () => navigate('studentLeaderboard');
 
   const grid = app.querySelector('#activity-grid');
-  (cls?.assignedActivities || Object.keys(ACTIVITY_LABELS)).forEach(type => {
+  getActivitiesForChapter(cls?.assignedActivities, chapterId).forEach(type => {
     const info = ACTIVITY_LABELS[type];
     if (!info) return;
     const best = progress.activityScores[type]?.best;
@@ -366,7 +366,7 @@ function renderStudentActivity(type) {
   const area = app.querySelector('#activity-area');
 
   renderActivity(type, words, area, result => {
-    const quizWords = type === 'qcm' ? [] : words.slice(0, 5);
+    const quizWords = (type === 'qcm' || type === 'muscle_region') ? [] : words.slice(0, 5);
     const { pts, newBadges } = handleActivityComplete(student, chapterId, type, quizWords, result);
     area.classList.add('hidden');
     const resultArea = app.querySelector('#result-area');
@@ -910,12 +910,15 @@ function renderAssignTab(container) {
       }).join('')}
       <div class="form-group">
         <label>Activities (all chapters)</label>
-        ${allActivities.map(a => `
+        ${allActivities.map(a => {
+          const info = ACTIVITY_LABELS[a];
+          const chapterNote = info?.chapters ? ` (${info.chapters.join(', ')} only)` : '';
+          return `
           <label style="display:flex;align-items:center;gap:0.5rem;font-weight:400;margin-bottom:0.35rem">
             <input type="checkbox" class="assign-activity" value="${a}" ${cls.assignedActivities.includes(a) ? 'checked' : ''}>
-            ${ACTIVITY_LABELS[a].icon} ${escapeHtml(ACTIVITY_LABELS[a].title)}
-          </label>
-        `).join('')}
+            ${info.icon} ${escapeHtml(info.title)}${chapterNote}
+          </label>`;
+        }).join('')}
       </div>
       <button class="btn btn-primary btn-sm save-assign">Save assignments</button>
     </div>

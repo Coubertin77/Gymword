@@ -1158,6 +1158,18 @@ body {
   margin-top: 0.25rem;
 }
 
+.match-card-region-label {
+  font-weight: 800;
+  font-size: 0.95rem;
+}
+
+.match-card-region {
+  min-height: 3.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 @media (max-width: 600px) {
   .word-editor-row { grid-template-columns: 1fr; }
 }

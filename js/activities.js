@@ -4,11 +4,9 @@ import { escapeHtml } from './utils.js';
 import { wrapStoryWords, createStoryReader, stopStoryAudio } from './story-audio.js';
 
 import { getRulesQuestions } from './chapter-rules.js';
+import { getMuscleRegionItems, getRegionLabel } from './muscle-regions.js';
 
 export function renderActivity(type, words, container, onComplete, chapterId = 'musculation') {
-  const pool = type === 'image_match' ? filterImageMatchWords(words) : words;
-  const subset = shuffle(pool).slice(0, Math.min(pool.length, 5));
-
   if (type === 'qcm') {
     const questions = getRulesQuestions(chapterId, 5);
     if (!questions.length) {
@@ -18,6 +16,19 @@ export function renderActivity(type, words, container, onComplete, chapterId = '
     const finish = (score, total) => onComplete({ score, total, perfect: score === total });
     return renderQCM(questions, container, finish);
   }
+
+  if (type === 'muscle_region') {
+    const muscles = getMuscleRegionItems(5);
+    if (!muscles.length) {
+      container.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>No muscles available.</p></div>';
+      return;
+    }
+    const finish = (score, total) => onComplete({ score, total, perfect: score === total });
+    return renderMuscleRegionMatch(muscles, container, finish);
+  }
+
+  const pool = type === 'image_match' ? filterImageMatchWords(words) : words;
+  const subset = shuffle(pool).slice(0, Math.min(pool.length, 5));
 
   if (subset.length === 0) {
     container.innerHTML = type === 'image_match'
@@ -70,13 +81,13 @@ function renderTapMatchBoard(words, container, finish, config) {
       ${activityToolbar(0, words.length)}
       <p class="tap-hint-bar" id="tap-hint">
         <span class="tap-hint-icon">👆</span>
-        Tap an item on either side, then tap its match
+        ${config.hintHtml || 'Tap an item on either side, then tap its match'}
       </p>
       <div class="match-board">
         <div class="match-col match-col-words">
           <div class="match-col-header">
-            <span class="match-col-icon">🇬🇧</span>
-            <span>English words</span>
+            <span class="match-col-icon">${config.targetColIcon || '🇬🇧'}</span>
+            <span>${config.targetColLabel || 'English words'}</span>
           </div>
           <div class="match-col-body" id="targets-col"></div>
         </div>
@@ -101,8 +112,9 @@ function renderTapMatchBoard(words, container, finish, config) {
     btn.className = 'match-slot tap-target';
     Object.entries(config.getTargetData(w)).forEach(([k, v]) => { btn.dataset[k] = v; });
     btn.dataset.matched = 'false';
+    const targetLabel = config.renderTargetWord ? config.renderTargetWord(w) : w.english;
     btn.innerHTML = `
-      <span class="match-slot-word">${escapeHtml(w.english)}</span>
+      <span class="match-slot-word">${escapeHtml(targetLabel)}</span>
       <span class="match-slot-answer match-slot-placeholder">?</span>
     `;
     targetsCol.appendChild(btn);
@@ -178,6 +190,26 @@ function renderTranslationMatch(words, container, finish) {
     getValue: el => el.dataset.french,
     getExpected: zone => zone.dataset.french,
     renderMatchedAnswer: value => `<span class="match-card-text">${escapeHtml(value)}</span>`,
+  });
+}
+
+function renderMuscleRegionMatch(muscles, container, finish) {
+  renderTapMatchBoard(muscles, container, finish, {
+    poolIcon: '📍',
+    poolLabel: 'Body regions',
+    targetColIcon: '💪',
+    targetColLabel: 'Muscles',
+    poolCardClass: 'match-card-region',
+    hintHtml: 'Tap a <strong>muscle</strong>, then tap its <strong>body region</strong> (Upper body, Lower body or Abdomen)',
+    getPoolItems: ws => ws.map(w => ({
+      datasets: { region: w.region },
+      html: `<span class="match-card-text match-card-region-label">${escapeHtml(getRegionLabel(w.region))}</span>`,
+    })),
+    getTargetData: w => ({ expectedRegion: w.region }),
+    getValue: el => el.dataset.region,
+    getExpected: zone => zone.dataset.expectedRegion,
+    renderTargetWord: w => w.english,
+    renderMatchedAnswer: value => `<span class="match-card-text">${escapeHtml(getRegionLabel(value))}</span>`,
   });
 }
 

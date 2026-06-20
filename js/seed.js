@@ -151,7 +151,7 @@ export function getSeedData() {
   const sportListIds = getSportListIds();
   const sportStoryIds = getSportStoryIds();
   const allChapterIds = ['musculation', 'badminton', 'basket', 'touch_rugby', 'flag_football', 'baseball', 'laser_run'];
-  const allActivities = ['image_match', 'translation', 'definition', 'qcm', 'spelling'];
+  const allActivities = ['image_match', 'translation', 'definition', 'qcm', 'spelling', 'muscle_region'];
 
   const classes = [
     {
