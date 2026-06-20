@@ -8,8 +8,8 @@ export function getLevel(points) {
   return level;
 }
 
-export function getWordStatus(student, wordKey) {
-  const wp = student.wordProgress[wordKey];
+export function getWordStatus(progress, wordKey) {
+  const wp = progress.wordProgress[wordKey];
   if (!wp) return 'learning';
   if (wp.nextReview && new Date(wp.nextReview) <= new Date() && wp.correctCount < 3) return 'review';
   if (wp.correctCount >= 3) return 'learned';
@@ -17,20 +17,20 @@ export function getWordStatus(student, wordKey) {
   return 'learning';
 }
 
-export function countWordsByStatus(student, words) {
+export function countWordsByStatus(progress, words) {
   const counts = { learned: 0, learning: 0, review: 0 };
   for (const w of words) {
     const key = w.english.toLowerCase();
-    counts[getWordStatus(student, key)]++;
+    counts[getWordStatus(progress, key)]++;
   }
   return counts;
 }
 
-export function recordWordAttempt(student, wordKey, correct) {
-  if (!student.wordProgress[wordKey]) {
-    student.wordProgress[wordKey] = { correctCount: 0, wrongCount: 0, lastSeen: null, nextReview: null };
+export function recordWordAttempt(progress, wordKey, correct) {
+  if (!progress.wordProgress[wordKey]) {
+    progress.wordProgress[wordKey] = { correctCount: 0, wrongCount: 0, lastSeen: null, nextReview: null };
   }
-  const wp = student.wordProgress[wordKey];
+  const wp = progress.wordProgress[wordKey];
   wp.lastSeen = new Date().toISOString();
   if (correct) {
     wp.correctCount++;
@@ -51,55 +51,55 @@ function scheduleReview(wp) {
   wp.nextReview = next.toISOString();
 }
 
-export function awardPoints(student, points, activityType) {
-  student.points += points;
+export function awardPoints(progress, points, activityType) {
+  progress.points += points;
   const today = new Date().toISOString().slice(0, 10);
-  const existing = student.scoreHistory.find(h => h.date === today && h.activityType === activityType);
+  const existing = progress.scoreHistory.find(h => h.date === today && h.activityType === activityType);
   if (existing) existing.points += points;
-  else student.scoreHistory.push({ date: today, points, activityType });
+  else progress.scoreHistory.push({ date: today, points, activityType });
 }
 
-export function recordActivityScore(student, activityType, score, total) {
-  if (!student.activityScores[activityType]) {
-    student.activityScores[activityType] = { best: 0, attempts: 0, totalScore: 0 };
+export function recordActivityScore(progress, activityType, score, total) {
+  if (!progress.activityScores[activityType]) {
+    progress.activityScores[activityType] = { best: 0, attempts: 0, totalScore: 0 };
   }
-  const s = student.activityScores[activityType];
+  const s = progress.activityScores[activityType];
   s.attempts++;
   s.totalScore += score;
   const pct = total > 0 ? Math.round((score / total) * 100) : 0;
   if (pct > s.best) s.best = pct;
 }
 
-export function recordStoryScore(student, storyId, score, total) {
+export function recordStoryScore(progress, storyId, score, total) {
   const pct = total > 0 ? Math.round((score / total) * 100) : 0;
-  student.storyScores[storyId] = { best: Math.max(student.storyScores[storyId]?.best || 0, pct), lastScore: pct };
+  progress.storyScores[storyId] = { best: Math.max(progress.storyScores[storyId]?.best || 0, pct), lastScore: pct };
 }
 
-export function checkBadges(student, context = {}) {
-  const earned = new Set(student.badges);
-  const wordsLearned = Object.values(student.wordProgress).filter(w => w.correctCount >= 3).length;
+export function checkBadges(progress, context = {}) {
+  const earned = new Set(progress.badges);
+  const wordsLearned = Object.values(progress.wordProgress).filter(w => w.correctCount >= 3).length;
 
   if (context.activityCompleted && !earned.has('first_workout')) earned.add('first_workout');
   if (wordsLearned >= 5 && !earned.has('word_master')) earned.add('word_master');
   if (context.storyCompleted && !earned.has('story_reader')) earned.add('story_reader');
   if (context.perfectScore && !earned.has('perfect_score')) earned.add('perfect_score');
-  if (getLevel(student.points) >= 3 && !earned.has('level_3')) earned.add('level_3');
+  if (getLevel(progress.points) >= 3 && !earned.has('level_3')) earned.add('level_3');
 
-  const newBadges = [...earned].filter(b => !student.badges.includes(b));
-  student.badges = [...earned];
+  const newBadges = [...earned].filter(b => !progress.badges.includes(b));
+  progress.badges = [...earned];
   return newBadges;
 }
 
-export function getLeaderboard(classId, students) {
+export function getLeaderboard(classId, students, chapterId) {
   return students
     .filter(s => s.classId === classId)
+    .map(s => {
+      const ch = s.chapterData?.[chapterId];
+      const points = ch?.points || 0;
+      return { firstName: s.firstName, points, level: getLevel(points) };
+    })
     .sort((a, b) => b.points - a.points)
-    .map((s, i) => ({
-      rank: i + 1,
-      firstName: s.firstName,
-      points: s.points,
-      level: getLevel(s.points),
-    }));
+    .map((s, i) => ({ rank: i + 1, ...s }));
 }
 
 export function getVocabularyProgress(counts, totalWords) {
@@ -112,9 +112,9 @@ export function getVocabularyProgress(counts, totalWords) {
   };
 }
 
-export function getActivityProgress(student, activityTypes, labels) {
+export function getActivityProgress(progress, activityTypes, labels) {
   return (activityTypes || []).map(type => {
-    const s = student.activityScores[type];
+    const s = progress.activityScores[type];
     const info = labels[type] || {};
     return {
       type,

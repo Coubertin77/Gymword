@@ -1,5 +1,7 @@
 import { CONFIG, getWordImage } from './config.js';
 import { getSeedData, getSeedCatalog, getSeedStories } from './seed.js';
+import { migrateStudentToChapters } from './chapter-progress.js';
+import { CHAPTERS } from './config.js';
 import { isCloudConfigured } from './supabase-config.js';
 import { fetchCloudData, pushCloudData } from './cloud.js';
 
@@ -61,6 +63,10 @@ function migrateData(data) {
       for (const storyId of seedCls.assignedStoryIds || []) {
         if (!cls.assignedStoryIds.includes(storyId)) cls.assignedStoryIds.push(storyId);
       }
+      if (!cls.assignedChapterIds) cls.assignedChapterIds = CHAPTERS.map(c => c.id);
+      for (const chapterId of seedCls.assignedChapterIds || []) {
+        if (!cls.assignedChapterIds.includes(chapterId)) cls.assignedChapterIds.push(chapterId);
+      }
     }
 
     if (!data.stories) data.stories = [];
@@ -68,18 +74,30 @@ function migrateData(data) {
     for (const story of getSeedStories()) {
       if (!existingStoryIds.has(story.id)) data.stories.push(story);
     }
+    for (const story of data.stories) {
+      if (!story.chapterId) story.chapterId = 'musculation';
+    }
   } catch (err) {
     console.error('GymWord seed merge error:', err);
   }
 
   try {
     for (const list of data.wordLists) {
+      if (!list.chapterId) list.chapterId = 'musculation';
       for (const word of list.words || []) {
         if (word.english) word.imageUrl = getWordImage(word.english);
       }
     }
   } catch (err) {
     console.error('GymWord image refresh error:', err);
+  }
+
+  try {
+    for (const student of data.students || []) {
+      migrateStudentToChapters(student);
+    }
+  } catch (err) {
+    console.error('GymWord chapter migration error:', err);
   }
 
   return data;
@@ -244,8 +262,9 @@ export function updateClass(id, updates) {
   }
 }
 
-export function getWordLists() {
-  return loadData().wordLists;
+export function getWordLists(chapterId = null) {
+  const lists = loadData().wordLists;
+  return chapterId ? lists.filter(l => l.chapterId === chapterId) : lists;
 }
 
 export function getWordListById(id) {
@@ -281,11 +300,7 @@ export function getStudents() {
 export function getStudentById(id) {
   const student = loadData().students.find(s => s.id === id);
   if (!student) return null;
-  student.activityScores = student.activityScores || {};
-  student.storyScores = student.storyScores || {};
-  student.wordProgress = student.wordProgress || {};
-  student.badges = student.badges || [];
-  student.scoreHistory = student.scoreHistory || [];
+  migrateStudentToChapters(student);
   return student;
 }
 
@@ -311,12 +326,7 @@ function createStudentRecord({ classId, firstName, lastName, rosterId = null }) 
     classId,
     firstName: firstName.trim(),
     lastName: lastName.trim(),
-    points: 0,
-    badges: [],
-    wordProgress: {},
-    activityScores: {},
-    storyScores: {},
-    scoreHistory: [],
+    chapterData: {},
     gdprAccepted: false,
     createdAt: new Date().toISOString(),
   };
@@ -427,11 +437,33 @@ export function getStudentsByClass(classId) {
   return loadData().students.filter(s => s.classId === classId);
 }
 
-export function getWordsForClass(classId) {
+export function getWordsForClass(classId, chapterId) {
+  const cls = getClassById(classId);
+  if (!cls || !chapterId) return [];
+  const lists = cls.assignedListIds
+    .map(getWordListById)
+    .filter(l => l && l.chapterId === chapterId);
+  return lists.flatMap(l => l.words.map(w => ({
+    ...w,
+    listId: l.id,
+    listName: l.name,
+    listTheme: l.theme,
+    chapterId: l.chapterId,
+  })));
+}
+
+export function getStoriesForClass(classId, chapterId) {
+  const cls = getClassById(classId);
+  if (!cls || !chapterId) return [];
+  const storyIds = new Set(cls.assignedStoryIds || []);
+  return loadData().stories.filter(s => s.chapterId === chapterId && storyIds.has(s.id));
+}
+
+export function getChaptersForClass(classId) {
   const cls = getClassById(classId);
   if (!cls) return [];
-  const lists = cls.assignedListIds.map(getWordListById).filter(Boolean);
-  return lists.flatMap(l => l.words.map(w => ({ ...w, listId: l.id, listName: l.name })));
+  const ids = cls.assignedChapterIds || CHAPTERS.map(c => c.id);
+  return CHAPTERS.filter(c => ids.includes(c.id));
 }
 
 export function getActivityResults() {

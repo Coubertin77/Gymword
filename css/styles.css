@@ -936,6 +936,41 @@ body {
   .score-value { text-align: left; }
 }
 
+.page-subtitle {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin: 0.25rem 0 1rem;
+}
+
+.chapter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 0.75rem;
+}
+
+.chapter-card {
+  text-align: center;
+  padding: 1.25rem 0.75rem;
+  border: 2px solid var(--chapter-color, var(--purple));
+}
+
+.chapter-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.assign-chapter-block {
+  margin-bottom: 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #eee;
+}
+
+.assign-chapter-title {
+  font-size: 1rem;
+  font-weight: 800;
+  margin: 0 0 0.75rem;
+}
+
 .chart-wrap {
   height: 200px;
   display: flex;

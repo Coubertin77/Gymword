@@ -1,6 +1,7 @@
-import { CONFIG, ACTIVITY_LABELS, getWordImage } from './config.js';
+import { CONFIG, ACTIVITY_LABELS, getWordImage, CHAPTERS, getChapterById } from './config.js';
 import {
   initStorage, loadData, getClasses, getClassById, getWordsForClass, getStories, getStoryById,
+  getStoriesForClass, getChaptersForClass,
   loginStudentByRoster, updateStudent, getStudentById, getStudentsByClass,
   getRosterByClass, addRosterStudent, addRosterStudentsBulk, removeRosterStudent,
   getWordLists, saveWordList, deleteWordList, updateClass,
@@ -12,6 +13,7 @@ import {
   recordActivityScore, recordStoryScore, checkBadges, getLeaderboard, getVocabularyProgress, getActivityProgress,
 } from './gamification.js';
 import { renderActivity, renderStoryQuiz } from './activities.js';
+import { getChapterProgress, getTotalPoints, migrateStudentToChapters } from './chapter-progress.js';
 import { parseStudentLines, readCsvFile } from './roster-import.js';
 import { toast, escapeHtml, uid } from './utils.js';
 
@@ -40,6 +42,7 @@ export function navigate(view, params = {}) {
     home: renderHome,
     studentLogin: renderStudentLogin,
     teacherLogin: renderTeacherLogin,
+    studentChapterSelect: renderStudentChapterSelect,
     studentDashboard: renderStudentDashboard,
     studentActivity: () => renderStudentActivity(params.type),
     studentStories: renderStudentStories,
@@ -56,7 +59,12 @@ function requireStudentSession() {
   if (!session?.studentId) { navigate('studentLogin'); return null; }
   const student = getStudentById(session.studentId);
   if (!student) { clearSession(); navigate('studentLogin'); return null; }
+  if (!session.chapterId) { navigate('studentChapterSelect'); return null; }
   return student;
+}
+
+function getSessionChapterId() {
+  return getSession()?.chapterId || null;
 }
 
 function requireTeacherSession() {
@@ -71,7 +79,7 @@ function renderHome() {
     <div class="page" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100dvh">
       <div style="font-size:4rem;margin-bottom:0.5rem">🏋️</div>
       <h1 class="logo-big">GymWord EPS</h1>
-      <p class="logo-sub">Learn English vocabulary through fitness!</p>
+      <p class="logo-sub">Learn English vocabulary through sport!</p>
       ${cloudStatusHtml(sync)}
       <div class="card" style="width:100%;max-width:400px">
         <button class="btn btn-primary btn-block" id="btn-student" style="margin-bottom:0.75rem">I'm a Student 💪</button>
@@ -155,8 +163,40 @@ function renderStudentLogin() {
     updateStudent(student);
     setSession({ studentId: student.id, classId });
     toast(`Welcome, ${student.firstName}! 💪`, 'success');
-    navigate('studentDashboard');
+    navigate('studentChapterSelect');
   };
+}
+
+function renderStudentChapterSelect() {
+  const session = getSession();
+  if (!session?.studentId) { navigate('studentLogin'); return; }
+  const student = getStudentById(session.studentId);
+  if (!student) { clearSession(); navigate('studentLogin'); return; }
+
+  const chapters = getChaptersForClass(student.classId);
+
+  app.innerHTML = `
+    <div class="page">
+      <button class="nav-back" id="back">← Back</button>
+      <h1 class="page-title">Choose your sport 🏆</h1>
+      <p class="page-subtitle">Hi ${escapeHtml(student.firstName)}! Pick a chapter to start.</p>
+      <div class="chapter-grid">
+        ${chapters.map(ch => `
+          <button type="button" class="card card-clickable chapter-card" data-chapter="${ch.id}" style="--chapter-color:${ch.color}">
+            <div class="chapter-icon">${ch.icon}</div>
+            <div class="card-label">${escapeHtml(ch.name)}</div>
+          </button>
+        `).join('')}
+      </div>
+    </div>
+  `;
+  app.querySelector('#back').onclick = () => { clearSession(); navigate('home'); };
+  app.querySelectorAll('.chapter-card').forEach(card => {
+    card.onclick = () => {
+      setSession({ ...session, chapterId: card.dataset.chapter });
+      navigate('studentDashboard');
+    };
+  });
 }
 
 function renderTeacherLogin() {
@@ -190,27 +230,31 @@ function renderTeacherLogin() {
 function renderStudentDashboard() {
   const student = requireStudentSession();
   if (!student) return;
+  const chapterId = getSessionChapterId();
+  const chapter = getChapterById(chapterId);
   const cls = getClassById(student.classId);
-  const words = getWordsForClass(student.classId);
-  const counts = countWordsByStatus(student, words);
-  const level = getLevel(student.points);
+  const progress = getChapterProgress(student, chapterId);
+  const words = getWordsForClass(student.classId, chapterId);
+  const counts = countWordsByStatus(progress, words);
+  const level = getLevel(progress.points);
   const vocabProgress = getVocabularyProgress(counts, words.length);
   const activityTypes = cls?.assignedActivities || Object.keys(ACTIVITY_LABELS);
-  const activityProgress = getActivityProgress(student, activityTypes, ACTIVITY_LABELS);
-  const badges = CONFIG.BADGES.map(b => ({ ...b, earned: student.badges.includes(b.id) }));
+  const activityProgress = getActivityProgress(progress, activityTypes, ACTIVITY_LABELS);
+  const badges = CONFIG.BADGES.map(b => ({ ...b, earned: progress.badges.includes(b.id) }));
 
   app.innerHTML = `
     <div class="page">
       <div class="page-header">
         <div>
-          <h1 class="page-title">Hi, ${escapeHtml(student.firstName)}! 👋</h1>
-          <span class="level-badge">⭐ Level ${level}</span>
+          <h1 class="page-title">${chapter.icon} ${escapeHtml(chapter.name)}</h1>
+          <p class="page-subtitle">Hi, ${escapeHtml(student.firstName)}! · <span class="level-badge">⭐ Level ${level}</span></p>
         </div>
         <button class="btn btn-ghost btn-sm" id="logout">Logout</button>
       </div>
       <div class="stats-bar">
-        <div class="stat-pill"><span class="icon">🏆</span> ${student.points} pts</div>
+        <div class="stat-pill"><span class="icon">🏆</span> ${progress.points} pts</div>
         <div class="stat-pill"><span class="icon">📚</span> ${escapeHtml(cls?.name || '')}</div>
+        <button class="btn btn-ghost btn-sm" id="change-chapter">Change sport</button>
       </div>
       <div class="word-status-grid">
         <div class="status-box status-learned"><span class="status-count">${counts.learned}</span>Learned</div>
@@ -264,6 +308,7 @@ function renderStudentDashboard() {
   `;
 
   app.querySelector('#logout').onclick = () => { clearSession(); navigate('home'); };
+  app.querySelector('#change-chapter').onclick = () => navigate('studentChapterSelect');
   app.querySelector('#go-stories').onclick = () => navigate('studentStories');
   app.querySelector('#go-leaderboard').onclick = () => navigate('studentLeaderboard');
 
@@ -271,7 +316,7 @@ function renderStudentDashboard() {
   (cls?.assignedActivities || Object.keys(ACTIVITY_LABELS)).forEach(type => {
     const info = ACTIVITY_LABELS[type];
     if (!info) return;
-    const best = student.activityScores[type]?.best;
+    const best = progress.activityScores[type]?.best;
     const card = document.createElement('div');
     card.className = 'card card-clickable';
     card.innerHTML = `
@@ -284,25 +329,27 @@ function renderStudentDashboard() {
   });
 }
 
-function handleActivityComplete(student, type, words, result) {
+function handleActivityComplete(student, chapterId, type, words, result) {
+  const progress = getChapterProgress(student, chapterId);
   const pts = result.score * CONFIG.POINTS.CORRECT;
-  awardPoints(student, pts, type);
-  recordActivityScore(student, type, result.score, result.total);
-  words.forEach(w => recordWordAttempt(student, w.english.toLowerCase(), true));
-  const newBadges = checkBadges(student, {
+  awardPoints(progress, pts, type);
+  recordActivityScore(progress, type, result.score, result.total);
+  words.forEach(w => recordWordAttempt(progress, w.english.toLowerCase(), true));
+  const newBadges = checkBadges(progress, {
     activityCompleted: true,
     perfectScore: result.perfect,
   });
   updateStudent(student);
-  addActivityResult({ studentId: student.id, classId: student.classId, activityType: type, ...result, points: pts });
+  addActivityResult({ studentId: student.id, classId: student.classId, chapterId, activityType: type, ...result, points: pts });
   return { pts, newBadges };
 }
 
 function renderStudentActivity(type) {
   const student = requireStudentSession();
   if (!student) return;
+  const chapterId = getSessionChapterId();
   const info = ACTIVITY_LABELS[type];
-  const words = getWordsForClass(student.classId);
+  const words = getWordsForClass(student.classId, chapterId);
 
   app.innerHTML = `
     <div class="page">
@@ -316,7 +363,7 @@ function renderStudentActivity(type) {
   const area = app.querySelector('#activity-area');
 
   renderActivity(type, words, area, result => {
-    const { pts, newBadges } = handleActivityComplete(student, type, words.slice(0, 5), result);
+    const { pts, newBadges } = handleActivityComplete(student, chapterId, type, words.slice(0, 5), result);
     area.classList.add('hidden');
     const resultArea = app.querySelector('#result-area');
     resultArea.classList.remove('hidden');
@@ -340,16 +387,18 @@ function renderStudentActivity(type) {
 function renderStudentStories() {
   const student = requireStudentSession();
   if (!student) return;
-  const cls = getClassById(student.classId);
-  const stories = getStories().filter(s => cls?.assignedStoryIds?.includes(s.id));
+  const chapterId = getSessionChapterId();
+  const chapter = getChapterById(chapterId);
+  const progress = getChapterProgress(student, chapterId);
+  const stories = getStoriesForClass(student.classId, chapterId);
 
   app.innerHTML = `
     <div class="page">
       <button class="nav-back" id="back">← Dashboard</button>
-      <h1 class="page-title">📖 Stories</h1>
+      <h1 class="page-title">📖 ${escapeHtml(chapter.name)} Stories</h1>
       <div class="card-grid">
-        ${stories.map(s => {
-          const best = student.storyScores[s.id]?.best;
+        ${stories.length ? stories.map(s => {
+          const best = progress.storyScores[s.id]?.best;
           return `
             <div class="card card-clickable story-card" data-id="${s.id}">
               <div class="card-icon">📖</div>
@@ -357,7 +406,7 @@ function renderStudentStories() {
               <div class="card-desc">${s.questions.length} questions${best ? ` · Best: ${best}%` : ''}</div>
             </div>
           `;
-        }).join('')}
+        }).join('') : '<p class="empty-state">No stories for this sport yet.</p>'}
       </div>
     </div>
   `;
@@ -384,10 +433,12 @@ function renderStudentStory(storyId) {
   const area = app.querySelector('#story-area');
 
   renderStoryQuiz(story, area, result => {
+    const chapterId = getSessionChapterId();
+    const progress = getChapterProgress(student, chapterId);
     const pts = result.score * CONFIG.POINTS.CORRECT + CONFIG.POINTS.STORY_COMPLETE;
-    awardPoints(student, pts, 'story');
-    recordStoryScore(student, storyId, result.score, result.total);
-    checkBadges(student, { storyCompleted: true, perfectScore: result.perfect });
+    awardPoints(progress, pts, 'story');
+    recordStoryScore(progress, storyId, result.score, result.total);
+    checkBadges(progress, { storyCompleted: true, perfectScore: result.perfect });
     updateStudent(student);
     area.classList.add('hidden');
     const resultArea = app.querySelector('#result-area');
@@ -407,12 +458,14 @@ function renderStudentStory(storyId) {
 function renderStudentLeaderboard() {
   const student = requireStudentSession();
   if (!student) return;
-  const board = getLeaderboard(student.classId, getStudentsByClass(student.classId));
+  const chapterId = getSessionChapterId();
+  const chapter = getChapterById(chapterId);
+  const board = getLeaderboard(student.classId, getStudentsByClass(student.classId), chapterId);
 
   app.innerHTML = `
     <div class="page">
       <button class="nav-back" id="back">← Dashboard</button>
-      <h1 class="page-title">🏅 Class Leaderboard</h1>
+      <h1 class="page-title">🏅 ${escapeHtml(chapter.name)} Leaderboard</h1>
       <div class="card">
         <table class="leaderboard-table">
           <thead><tr><th>Rank</th><th>Name</th><th>Level</th><th>Points</th></tr></thead>
@@ -709,26 +762,40 @@ function renderAssignTab(container) {
   container.innerHTML = getClasses().map(cls => `
     <div class="card" data-class="${cls.id}">
       <h3 class="section-title">${escapeHtml(cls.name)}</h3>
+      ${CHAPTERS.map(ch => {
+        const lists = getWordLists(ch.id).filter(l => cls.assignedListIds.includes(l.id));
+        const stories = getStories().filter(s => s.chapterId === ch.id && cls.assignedStoryIds.includes(s.id));
+        if (!lists.length && !stories.length) return '';
+        return `
+          <div class="assign-chapter-block">
+            <h4 class="assign-chapter-title">${ch.icon} ${escapeHtml(ch.name)}</h4>
+            ${lists.length ? `
+              <div class="form-group">
+                <label>Word lists</label>
+                ${lists.map(l => `
+                  <label style="display:flex;align-items:center;gap:0.5rem;font-weight:400;margin-bottom:0.35rem">
+                    <input type="checkbox" class="assign-list" value="${l.id}" checked disabled>
+                    ${escapeHtml(l.name)} (${l.words.length} words)
+                  </label>
+                `).join('')}
+              </div>
+            ` : ''}
+            ${stories.length ? `
+              <div class="form-group">
+                <label>Stories</label>
+                ${stories.map(s => `
+                  <label style="display:flex;align-items:center;gap:0.5rem;font-weight:400;margin-bottom:0.35rem">
+                    <input type="checkbox" class="assign-story" value="${s.id}" ${cls.assignedStoryIds.includes(s.id) ? 'checked' : ''}>
+                    ${escapeHtml(s.title)}
+                  </label>
+                `).join('')}
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }).join('')}
       <div class="form-group">
-        <label>Word lists</label>
-        ${getWordLists().map(l => `
-          <label style="display:flex;align-items:center;gap:0.5rem;font-weight:400;margin-bottom:0.35rem">
-            <input type="checkbox" class="assign-list" value="${l.id}" ${cls.assignedListIds.includes(l.id) ? 'checked' : ''}>
-            ${escapeHtml(l.name)} (${l.words.length} words)
-          </label>
-        `).join('')}
-      </div>
-      <div class="form-group">
-        <label>Stories</label>
-        ${getStories().map(s => `
-          <label style="display:flex;align-items:center;gap:0.5rem;font-weight:400;margin-bottom:0.35rem">
-            <input type="checkbox" class="assign-story" value="${s.id}" ${cls.assignedStoryIds.includes(s.id) ? 'checked' : ''}>
-            ${escapeHtml(s.title)}
-          </label>
-        `).join('')}
-      </div>
-      <div class="form-group">
-        <label>Activities</label>
+        <label>Activities (all chapters)</label>
         ${allActivities.map(a => `
           <label style="display:flex;align-items:center;gap:0.5rem;font-weight:400;margin-bottom:0.35rem">
             <input type="checkbox" class="assign-activity" value="${a}" ${cls.assignedActivities.includes(a) ? 'checked' : ''}>
@@ -744,7 +811,6 @@ function renderAssignTab(container) {
     btn.onclick = () => {
       const card = btn.closest('.card');
       updateClass(card.dataset.class, {
-        assignedListIds: [...card.querySelectorAll('.assign-list:checked')].map(c => c.value),
         assignedStoryIds: [...card.querySelectorAll('.assign-story:checked')].map(c => c.value),
         assignedActivities: [...card.querySelectorAll('.assign-activity:checked')].map(c => c.value),
       });
@@ -753,17 +819,29 @@ function renderAssignTab(container) {
   });
 }
 
+function getStudentTotals(student) {
+  migrateStudentToChapters(student);
+  let learned = 0;
+  let actAttempts = 0;
+  let storiesDone = 0;
+  for (const ch of Object.values(student.chapterData || {})) {
+    learned += Object.values(ch.wordProgress || {}).filter(w => w.correctCount >= 3).length;
+    actAttempts += Object.values(ch.activityScores || {}).reduce((sum, a) => sum + (a.attempts || 0), 0);
+    storiesDone += Object.keys(ch.storyScores || {}).length;
+  }
+  return { points: getTotalPoints(student), learned, actAttempts, storiesDone };
+}
+
 function renderResultsTab(container) {
   container.innerHTML = getClasses().map(cls => {
     const roster = getRosterByClass(cls.id);
     const progressMap = Object.fromEntries(getStudentsByClass(cls.id).map(s => [s.rosterId, s]));
-    const words = getWordsForClass(cls.id);
     return `
       <div class="card">
-        <h3 class="section-title">${escapeHtml(cls.name)} — Results</h3>
+        <h3 class="section-title">${escapeHtml(cls.name)} — Results (all sports)</h3>
         ${roster.length ? `
           <table class="data-table">
-            <thead><tr><th>Student</th><th>Points</th><th>Learned</th><th>Activities</th><th>Stories</th></tr></thead>
+            <thead><tr><th>Student</th><th>Points</th><th>Words mastered</th><th>Activities</th><th>Stories</th></tr></thead>
             <tbody>
               ${roster.map(r => {
                 const s = progressMap[r.id];
@@ -775,15 +853,14 @@ function renderResultsTab(container) {
                     </tr>
                   `;
                 }
-                const counts = countWordsByStatus(s, words);
-                const actCount = Object.values(s.activityScores || {}).reduce((sum, a) => sum + a.attempts, 0);
+                const totals = getStudentTotals(s);
                 return `
                   <tr>
                     <td>${escapeHtml(r.firstName)} ${escapeHtml(r.lastName.charAt(0))}.</td>
-                    <td><strong>${s.points}</strong></td>
-                    <td>${counts.learned}/${words.length}</td>
-                    <td>${actCount} attempts</td>
-                    <td>${Object.keys(s.storyScores || {}).length} completed</td>
+                    <td><strong>${totals.points}</strong></td>
+                    <td>${totals.learned}</td>
+                    <td>${totals.actAttempts} attempts</td>
+                    <td>${totals.storiesDone} completed</td>
                   </tr>
                 `;
               }).join('')}
@@ -816,7 +893,10 @@ async function bootstrap() {
     toast('Synchronisation en ligne indisponible — vous pouvez quand même utiliser l\'application', 'info');
   }
   const session = getSession();
-  if (session?.studentId) navigate('studentDashboard');
+  if (session?.studentId) {
+    if (session.chapterId) navigate('studentDashboard');
+    else navigate('studentChapterSelect');
+  }
   else if (session?.isTeacher) navigate('teacherDashboard');
   else navigate('home');
 }

@@ -26,6 +26,20 @@ export const CONFIG = {
   SESSION_KEY: 'gymword_session_v1',
 };
 
+export const CHAPTERS = [
+  { id: 'musculation', name: 'Musculation', icon: '🏋️', color: '#6c3ce0' },
+  { id: 'badminton', name: 'Badminton', icon: '🏸', color: '#e74c3c' },
+  { id: 'basket', name: 'Basketball', icon: '🏀', color: '#f39c12' },
+  { id: 'touch_rugby', name: 'Touch Rugby', icon: '🏉', color: '#27ae60' },
+  { id: 'flag_football', name: 'Flag Football', icon: '🏈', color: '#2980b9' },
+  { id: 'baseball', name: 'Baseball', icon: '⚾', color: '#c0392b' },
+  { id: 'laser_run', name: 'Laser Run', icon: '🎯', color: '#8e44ad' },
+];
+
+export function getChapterById(id) {
+  return CHAPTERS.find(c => c.id === id) || CHAPTERS[0];
+}
+
 export const ACTIVITY_TYPES = {
   IMAGE_MATCH: 'image_match',
   TRANSLATION: 'translation',
@@ -35,7 +49,7 @@ export const ACTIVITY_TYPES = {
 };
 
 export const ACTIVITY_LABELS = {
-  [ACTIVITY_TYPES.IMAGE_MATCH]:   { icon: '🖼️', title: 'Match Images', desc: 'Match pictures to gym machines and exercises' },
+  [ACTIVITY_TYPES.IMAGE_MATCH]:   { icon: '🖼️', title: 'Match Images', desc: 'Match pictures to sport vocabulary' },
   [ACTIVITY_TYPES.TRANSLATION]: { icon: '🇫🇷', title: 'Translations', desc: 'Tap a translation, then tap the English word' },
   [ACTIVITY_TYPES.DEFINITION]: { icon: '📝', title: 'Definitions', desc: 'Tap a definition, then tap the correct word' },
   [ACTIVITY_TYPES.QCM]: { icon: '❓', title: 'Quick Quiz', desc: 'Multiple choice on vocabulary' },
@@ -92,6 +106,55 @@ export const IMAGE_BANK = {
   'pull-up': P(6388459),
   'bicep curl': P(1638336),
 
+  // Badminton
+  'shuttlecock': P(3660420),
+  'badminton racket': P(3660204),
+  'badminton net': P(6550872),
+  'badminton court': P(1171084),
+  'serve': P(3660204),
+  'smash': P(3660420),
+  'drop shot': P(1171084),
+
+  // Basketball
+  'basketball': P(33204406),
+  'hoop': P(1752757),
+  'dribble': P(33204406),
+  'basketball court': P(1752757),
+  'rebound': P(33204406),
+  'lay-up': P(1752757),
+
+  // Touch rugby
+  'rugby ball': P(47730),
+  'try line': P(47730),
+  'touch': P(3621105),
+  'rugby pitch': P(3621105),
+  'offload': P(47730),
+  'sidestep': P(3621105),
+
+  // Flag football
+  'flag belt': P(1618269),
+  'quarterback': P(1618269),
+  'touchdown': P(1618269),
+  'end zone': P(1618269),
+  'football field': P(1618269),
+  'helmet': P(1618269),
+
+  // Baseball
+  'baseball bat': P(6724492),
+  'baseball glove': P(6724492),
+  'home plate': P(6724492),
+  'pitcher': P(6724492),
+  'catcher': P(6724492),
+  'baseball field': P(6724492),
+
+  // Laser run
+  'laser pistol': P(5690931),
+  'shooting target': P(5690931),
+  'obstacle course': P(3621105),
+  'fencing piste': P(5690931),
+  'laser run course': P(3621105),
+  'transition zone': P(3621105),
+
   default: P(841130),
 };
 
@@ -100,12 +163,9 @@ export function getWordImage(word) {
   return IMAGE_BANK[key] || IMAGE_BANK.default;
 }
 
-/** Match Images — 8 exercices machines avec images pédagogiques. */
-export const IMAGE_MATCH_WORDS = new Set([
-  'bench press', 'lat pull down', 'machine fly', 'machine squat',
-  'barbell preacher curl', 'leg extension', 'leg curl', 'incline leg press',
-]);
-
 export function filterImageMatchWords(words) {
-  return words.filter(w => IMAGE_MATCH_WORDS.has(w.english.toLowerCase().trim()));
+  return words.filter(w =>
+    w.listTheme === 'image_match'
+    || (w.listId && String(w.listId).includes('image_match'))
+  );
 }
