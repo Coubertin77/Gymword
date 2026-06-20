@@ -1,5 +1,5 @@
 import { getWordImage } from './config.js';
-import { buildSportContent, getSportListIds, getSportStoryIds } from './seed-sports.js';
+import { buildSportContent, getSportListIds, getSportStoryIds, getSportStoryIdsUpTo } from './seed-sports.js';
 
 const starterWords = [
   { english: 'bench press', french: 'développé couché', definition: 'A weightlifting exercise performed lying on a bench, pushing a barbell upward' },
@@ -153,26 +153,30 @@ export function getSeedData() {
   const allChapterIds = ['musculation', 'badminton', 'basket', 'touch_rugby', 'flag_football', 'baseball', 'laser_run'];
   const allActivities = ['image_match', 'translation', 'definition', 'qcm', 'spelling', 'muscle_region'];
 
+  const musculationStoriesSeconde = ['story_1', 'story_2', 'story_3', 'story_11', 'story_12'];
+  const musculationStoriesPremiere = ['story_1', 'story_2', 'story_3', 'story_4', 'story_5', 'story_11', 'story_12', 'story_13', 'story_14', 'story_15'];
+  const musculationStoriesTerminale = ['story_1', 'story_2', 'story_3', 'story_4', 'story_5', 'story_6', 'story_7', 'story_8', 'story_9', 'story_10', 'story_11', 'story_12', 'story_13', 'story_14', 'story_15', 'story_16', 'story_17'];
+
   const classes = [
     {
       id: 'class_seconde', name: 'Seconde — Group A', level: 'Seconde', roster: [],
       assignedChapterIds: allChapterIds,
       assignedListIds: [...musculationListIds.filter(id => ['list_image_match', 'list_equipment', 'list_mix_1'].includes(id)), ...sportListIds],
-      assignedStoryIds: ['story_1', 'story_2', 'story_3', ...sportStoryIds],
+      assignedStoryIds: [...musculationStoriesSeconde, ...getSportStoryIdsUpTo(2)],
       assignedActivities: allActivities,
     },
     {
       id: 'class_premiere', name: 'Première — Group B', level: 'Première', roster: [],
       assignedChapterIds: allChapterIds,
       assignedListIds: [...musculationListIds.filter(id => !['list_body', 'list_mix_3', 'list_mix_4'].includes(id)), ...sportListIds],
-      assignedStoryIds: ['story_1', 'story_2', 'story_3', 'story_4', 'story_5', 'story_11', 'story_12', ...sportStoryIds],
+      assignedStoryIds: [...musculationStoriesPremiere, ...getSportStoryIdsUpTo(4)],
       assignedActivities: allActivities,
     },
     {
       id: 'class_terminale', name: 'Terminale — Group C', level: 'Terminale', roster: [],
       assignedChapterIds: allChapterIds,
       assignedListIds: [...musculationListIds, ...sportListIds],
-      assignedStoryIds: ['story_1', 'story_2', 'story_3', 'story_4', 'story_5', 'story_6', 'story_7', 'story_8', 'story_9', 'story_10', 'story_11', 'story_12', 'story_13', 'story_14', 'story_15', 'story_16', 'story_17', ...sportStoryIds],
+      assignedStoryIds: [...musculationStoriesTerminale, ...sportStoryIds],
       assignedActivities: allActivities,
     },
   ];
@@ -301,7 +305,7 @@ function buildStories() {
       ],
     },
     {
-      id: 'story_11', chapterId: 'musculation', title: 'The Leg Press Station',
+      id: 'story_11', chapterId: 'musculation', title: 'The Leg Press Station', englishLevel: 'B1',
       text: 'During their first session on the leg press machine, the Première students listened carefully to the safety instructions. The coach explained that they had to keep their back flat against the seat and push the platform with their heels, not their toes. Before loading any weight plates, everyone completed a warm up with bodyweight squats and light stretching for the quadriceps and hamstrings. Nora was surprised by how much the exercise worked her glutes as well as her legs. When she tried to increase the weight too quickly, the coach reminded her that progress should be gradual. By the end of the lesson, the class understood that good technique matters more than heavy loads.',
       questions: [
         { question: 'What did the coach say about foot position?', options: ['Push with your toes', 'Push with your heels', 'Keep feet off the platform', 'Stand on the machine'], correctIndex: 1 },
@@ -311,7 +315,7 @@ function buildStories() {
       ],
     },
     {
-      id: 'story_12', chapterId: 'musculation', title: 'Cardio and Core',
+      id: 'story_12', chapterId: 'musculation', title: 'Cardio and Core', englishLevel: 'B1',
       text: 'Coach Dupont designed a circuit that combined cardio equipment with core exercises. Students spent three minutes on the exercise bike, then moved to the rowing machine, and finally walked at a steady pace on the treadmill. Between each station, they held a plank for thirty seconds to strengthen their core muscles. Although the session was demanding, most students agreed that variety made the training more engaging than repeating the same movement for an hour. The coach pointed out that cardiovascular endurance supports every other type of physical activity, from running to weightlifting. At the cool-down, students stretched their calves and discussed how they could improve their breathing rhythm during the next session.',
       questions: [
         { question: 'Which three cardio machines appear in the circuit?', options: ['Leg press, bench press, cable machine', 'Exercise bike, rowing machine, treadmill', 'Dumbbells, barbell, kettlebell', 'Foam roller, resistance band, bench'], correctIndex: 1 },
@@ -321,7 +325,7 @@ function buildStories() {
       ],
     },
     {
-      id: 'story_13', chapterId: 'musculation', title: 'A Personal Training Log',
+      id: 'story_13', chapterId: 'musculation', title: 'A Personal Training Log', englishLevel: 'B2',
       text: 'Every Terminale student received a training log at the start of the semester. The idea was simple: record each session, note the exercises performed, and track whether performance was improving over time. Antoine wrote down his sets and reps after every bench press and squat session. After six weeks, he noticed a clear pattern — his strength was increasing, but only on the days when he had slept well and completed his warm up properly. His teacher explained that this kind of self-analysis helps athletes make smarter decisions about rest, nutrition, and workload. Antoine realised that training is not just about working hard; it is about working intelligently and learning from your own data.',
       questions: [
         { question: 'What were students asked to record in their training log?', options: ['Their favourite music', 'Exercises, sets, reps, and progress', 'Only their exam grades', 'Phone numbers of classmates'], correctIndex: 1 },
@@ -331,7 +335,7 @@ function buildStories() {
       ],
     },
     {
-      id: 'story_14', chapterId: 'musculation', title: 'The Cable Machine Workout',
+      id: 'story_14', chapterId: 'musculation', title: 'The Cable Machine Workout', englishLevel: 'B2',
       text: 'The cable machine area was always busy on Thursday afternoons. Under the coach\'s supervision, students practised the lat pull down to strengthen their back muscles and the machine fly to work their chest. Because the resistance could be adjusted precisely, each student could choose a load that matched their current level. The coach insisted that controlled movements were more effective than fast, uncontrolled repetitions. When Lucas rushed through his sets, his partner reminded him to focus on form rather than speed. By slowing down, Lucas felt his lats and shoulders working more deeply. The session ended with a discussion about how machines can help beginners learn movement patterns before progressing to free weights such as the barbell.',
       questions: [
         { question: 'Which two exercises are mentioned on the cable machine?', options: ['Deadlift and squat', 'Lat pull down and machine fly', 'Leg curl and leg extension', 'Bench press and pull-up'], correctIndex: 1 },
@@ -341,7 +345,7 @@ function buildStories() {
       ],
     },
     {
-      id: 'story_15', chapterId: 'musculation', title: 'When Training Gets Tough',
+      id: 'story_15', chapterId: 'musculation', title: 'When Training Gets Tough', englishLevel: 'B2',
       text: 'After eight weeks of steady progress, Inès hit a plateau. Her bench press weight had not increased, and she felt frustrated during every session. Instead of training harder every day, she spoke with her PE teacher, who suggested a different approach: reduce the training volume for one week, focus on mobility exercises with a foam roller, and pay more attention to nutrition and sleep. Inès was sceptical at first, but she followed the advice. When she returned to the weight room, her movements felt smoother and her confidence returned. She learned that setbacks are a normal part of long-term development, and that sometimes the best way forward is to step back, recover, and adjust your programme rather than push through exhaustion.',
       questions: [
         { question: 'What problem did Inès experience?', options: ['She forgot her gym clothes', 'She hit a plateau in her bench press', 'She won every competition', 'She never attended class'], correctIndex: 1 },
@@ -351,7 +355,7 @@ function buildStories() {
       ],
     },
     {
-      id: 'story_16', chapterId: 'musculation', title: 'The Fitness Assessment',
+      id: 'story_16', chapterId: 'musculation', title: 'The Fitness Assessment', englishLevel: 'C1',
       text: 'At the beginning of the year, every Terminale student completed a fitness assessment designed to measure strength, endurance, and flexibility. The results were not used to rank students against each other, but to help each person set realistic personal goals. Some students excelled at the rowing machine test, while others performed better on core stability exercises or the leg press. The PE department then created individual programmes that combined areas of strength with areas needing improvement. Students also had to write a short report in English explaining their results and describing how they planned to progress during the term. The teacher emphasised that assessment is a starting point for growth, not a final judgement of ability.',
       questions: [
         { question: 'What three qualities did the fitness assessment measure?', options: ['Height, age, and shoe size', 'Strength, endurance, and flexibility', 'Memory, spelling, and grammar', 'Speed, luck, and confidence only'], correctIndex: 1 },
@@ -361,7 +365,7 @@ function buildStories() {
       ],
     },
     {
-      id: 'story_17', chapterId: 'musculation', title: 'Road to the Regional Championship',
+      id: 'story_17', chapterId: 'musculation', title: 'Road to the Regional Championship', englishLevel: 'C1',
       text: 'For months, the school\'s fitness team prepared methodically for the regional championship. Their programme alternated between strength sessions — including squats, deadlifts, and pull-ups — and recovery days devoted to stretching, hydration, and sleep. The coach explained that peak performance depends on consistency, not last-minute cramming. Before each training block, students reviewed key vocabulary in English so they could communicate clearly about technique during team workouts. On competition day, they arrived early, completed a structured warm up, and supported one another through every event. Although they did not win first place, the team achieved several personal bests and left with a shared understanding: sustainable progress is built week by week, and language skills help athletes train and compete more effectively together.',
       questions: [
         { question: 'How was the team\'s programme structured over several months?', options: ['Only rest days, no training', 'Strength sessions alternated with recovery days', 'One intense session the night before the event', 'Random exercises with no planning'], correctIndex: 1 },

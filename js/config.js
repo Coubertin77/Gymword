@@ -26,6 +26,9 @@ export const CONFIG = {
   SESSION_KEY: 'gymword_session_v1',
 };
 
+/** Bump when publishing — shown on home screen to confirm the latest version loaded. */
+export const APP_VERSION = '2.1.0';
+
 export const CHAPTERS = [
   { id: 'musculation', name: 'Musculation', icon: '🏋️', color: '#6c3ce0' },
   { id: 'badminton', name: 'Badminton', icon: '🏸', color: '#e74c3c' },

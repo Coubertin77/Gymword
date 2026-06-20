@@ -163,7 +163,7 @@ export function buildSportContent(makeWord) {
 
   const stories = [
     {
-      id: 'badminton_story_1', chapterId: 'badminton', title: 'First Badminton Match',
+      id: 'badminton_story_1', chapterId: 'badminton', title: 'First Badminton Match', englishLevel: 'B1',
       text: 'Sophie joined the school badminton club on Monday. Her coach taught her how to hold the racket correctly and how to serve from the right side of the court. During the warm up, students practiced footwork drills along the sideline. In her first singles match, Sophie tried a drop shot that surprised her opponent. Later, she attempted a smash but the shuttlecock landed out. Her partner in doubles encouraged her to stay calm and communicate. By the end of the session, Sophie understood that badminton requires speed, precision, and good teamwork.',
       questions: [
         { question: 'What did Sophie learn at the start?', options: ['How to swim', 'How to hold the racket and serve', 'How to ride a bike', 'How to score a try'], correctIndex: 1 },
@@ -173,7 +173,47 @@ export function buildSportContent(makeWord) {
       ],
     },
     {
-      id: 'basket_story_1', chapterId: 'basket', title: 'Basketball Practice',
+      id: 'badminton_story_2', chapterId: 'badminton', title: 'Doubles Communication', englishLevel: 'B1',
+      text: 'During doubles practice, Coach Martin insisted that partners must talk constantly on court. Before each rally, the server called the type of serve while the partner covered the back of the court. When the shuttlecock flew high, one player shouted "Yours!" so there was no confusion. Students learned that footwork drills are useless if teammates do not communicate. After several sessions, the pairs who spoke clearly made fewer mistakes and won more points. Martin reminded the class that badminton is not only about individual skill — coordination between partners is essential at every level.',
+      questions: [
+        { question: 'What did the coach insist partners must do?', options: ['Stay silent', 'Talk constantly on court', 'Change rackets every point', 'Serve only to the left'], correctIndex: 1 },
+        { question: 'Why did one player shout "Yours!"?', options: ['To distract opponents', 'To avoid confusion about who hits the shuttlecock', 'To stop the match', 'To request a new shuttlecock'], correctIndex: 1 },
+        { question: 'Which pairs performed better over time?', options: ['Those who never practiced footwork', 'Those who communicated clearly', 'Those who avoided the net', 'Those who refused to serve'], correctIndex: 1 },
+        { question: 'What is essential in doubles according to the coach?', options: ['Individual skill only', 'Coordination between partners', 'Running off the court', 'Using the heaviest racket'], correctIndex: 1 },
+      ],
+    },
+    {
+      id: 'badminton_story_3', chapterId: 'badminton', title: 'Preparing for the Tournament', englishLevel: 'B2',
+      text: 'Two weeks before the inter-school badminton tournament, the Première team followed a structured training plan. Mornings focused on explosive footwork along the sideline and reaction drills at the net. Afternoons were reserved for match simulations in singles and doubles. The coach analysed video recordings to show students when a drop shot was more effective than a smash. Nutrition and sleep were discussed as seriously as technique because fatigue leads to unforced errors. Although the pressure increased, students felt prepared rather than overwhelmed. They understood that tournament success depends on consistent preparation, not on luck during a single rally.',
+      questions: [
+        { question: 'What did morning sessions emphasise?', options: ['Only serving practice', 'Explosive footwork and net reaction drills', 'Swimming and cycling', 'Writing essays about badminton'], correctIndex: 1 },
+        { question: 'How did the coach use video recordings?', options: ['To punish students', 'To compare drop shots and smashes strategically', 'To replace all training sessions', 'To select the school team by appearance'], correctIndex: 1 },
+        { question: 'Why were nutrition and sleep discussed?', options: ['Fatigue leads to unforced errors', 'Students asked about holidays', 'The tournament was cancelled', 'Rules forbid eating before sport'], correctIndex: 0 },
+        { question: 'What does tournament success depend on according to the story?', options: ['Luck during one rally', 'Consistent preparation', 'Avoiding all smashes', 'Playing without a warm up'], correctIndex: 1 },
+      ],
+    },
+    {
+      id: 'badminton_story_4', chapterId: 'badminton', title: 'Reading the Opponent', englishLevel: 'B2',
+      text: 'In an advanced tactics session, the Terminale students learned to observe opponents carefully before choosing a shot. If a player stood too close to the net, a high clear to the back of the court could create space. If the opponent\'s footwork looked slow after a long rally, a fast smash down the line became a realistic option. The coach explained that elite players do not simply react — they anticipate patterns and adapt their strategy point by point. Students practiced disguising their shots so the shuttlecock\'s direction was harder to predict. By the end of the lesson, several athletes remarked that badminton felt less like a reflex sport and more like a mental chess game played at high speed.',
+      questions: [
+        { question: 'What should players observe before choosing a shot?', options: ['The colour of the court', 'Opponents\' position and movement patterns', 'The referee\'s shoes', 'The scoreboard only'], correctIndex: 1 },
+        { question: 'When is a high clear to the back useful?', options: ['When the opponent stands too close to the net', 'When the shuttlecock is broken', 'When the net is lowered', 'Never during a match'], correctIndex: 0 },
+        { question: 'How do elite players differ from beginners?', options: ['They never sweat', 'They anticipate patterns and adapt strategy', 'They refuse to play doubles', 'They ignore footwork completely'], correctIndex: 1 },
+        { question: 'What comparison did students make at the end of the lesson?', options: ['Badminton is like chess at high speed', 'Badminton is identical to rugby', 'Badminton requires no thinking', 'Badminton is only about luck'], correctIndex: 0 },
+      ],
+    },
+    {
+      id: 'badminton_story_5', chapterId: 'badminton', title: 'After the Final Point', englishLevel: 'C1',
+      text: 'When the regional badminton final ended, the scoreboard showed a narrow defeat for the school team. In the changing room, disappointment was visible, yet the coach reframed the result as evidence of substantial progress. Over the season, average rally length had increased, unforced errors had decreased, and doubles pairs communicated with far greater precision. Several athletes noted that managing emotions under pressure was the skill they had improved most. The captain suggested keeping a reflective journal in English to analyse matches objectively rather than emotionally. The PE department agreed: competitive experience, combined with structured self-review, develops not only sporting competence but also the resilience required for high-level performance in any discipline.',
+      questions: [
+        { question: 'How did the coach interpret the defeat?', options: ['As proof the team should quit', 'As evidence of substantial progress', 'As a reason to cancel training', 'As an unfair referee decision only'], correctIndex: 1 },
+        { question: 'Which skill did several athletes say they improved most?', options: ['Managing emotions under pressure', 'Memorising French vocabulary', 'Avoiding all smashes', 'Changing sports entirely'], correctIndex: 0 },
+        { question: 'What did the captain recommend keeping?', options: ['A reflective journal in English', 'A collection of broken rackets', 'Only video games', 'No written records'], correctIndex: 0 },
+        { question: 'What broader outcome does the department associate with competitive experience?', options: ['Resilience and structured self-review', 'Immediate victory every time', 'Less need for communication', 'Avoidance of all pressure'], correctIndex: 0 },
+      ],
+    },
+    {
+      id: 'basket_story_1', chapterId: 'basket', title: 'Basketball Practice', englishLevel: 'B1',
       text: 'The Seconde class arrived at the basketball court for their first English PE session. The coach divided students into two teams and explained the rules of offence and defence. Players practiced dribbling without looking at the ball, then passed to teammates moving toward the hoop. When a shot missed, the tallest student grabbed the rebound and passed quickly to a teammate for a lay-up. One player committed a foul by pushing an opponent, so the other team received free throws. Everyone agreed that communication and quick decisions are essential in basketball.',
       questions: [
         { question: 'What did players practice first?', options: ['Dribbling and passing', 'Swimming strokes', 'Serving', 'Pitching'], correctIndex: 0 },
@@ -183,7 +223,47 @@ export function buildSportContent(makeWord) {
       ],
     },
     {
-      id: 'touch_rugby_story_1', chapterId: 'touch_rugby', title: 'Touch Rugby Tournament',
+      id: 'basket_story_2', chapterId: 'basket', title: 'Learning the Pick and Roll', englishLevel: 'B1',
+      text: 'Coach Rivera introduced the pick and roll, one of basketball\'s most common offensive plays. One player set a screen near the defender while the ball handler dribbled toward the hoop. After the screen, the screener rolled toward the basket, ready to receive a pass for a lay-up. Students struggled at first because timing was difficult — arrive too early or too late and the defence recovers easily. With repetition, the Première class understood that basketball offence depends on movement without the ball as much as on individual shooting skill. Rivera reminded them that every successful play begins with clear verbal signals on court.',
+      questions: [
+        { question: 'What is a pick and roll?', options: ['A defensive foul only', 'A screen followed by a cut toward the basket', 'A type of free throw', 'A way to stop the game'], correctIndex: 1 },
+        { question: 'Why did students struggle initially?', options: ['The hoop was too high', 'Timing the screen and roll was difficult', 'They were not allowed to dribble', 'The ball was too heavy'], correctIndex: 1 },
+        { question: 'What does offence depend on according to the coach?', options: ['Movement without the ball and shooting skill', 'Only shouting at referees', 'Standing still with the ball', 'Avoiding all passes'], correctIndex: 0 },
+        { question: 'What begins every successful play?', options: ['Clear verbal signals', 'Closing your eyes', 'Running off the court', 'Ignoring teammates'], correctIndex: 0 },
+      ],
+    },
+    {
+      id: 'basket_story_3', chapterId: 'basket', title: 'Defensive Pressure', englishLevel: 'B2',
+      text: 'During a unit on defence, the Terminale team studied how to apply pressure without committing unnecessary fouls. Players learned to slide their feet laterally, keep their hands active, and force opponents toward the sideline where passing options are limited. The coach explained that good defence is collective: when one player helps after a dribble penetration, others must rotate to cover open shooters. In scrimmages, teams that communicated defensive switches conceded far fewer lay-ups. Students realised that defence requires concentration for the entire possession, not only when the ball is near the hoop. By the end of the week, even the strongest offensive players respected how much strategy defence demands.',
+      questions: [
+        { question: 'What should defenders do with their feet?', options: ['Slide laterally and stay balanced', 'Jump constantly without moving', 'Turn their back to the ball', 'Leave the court'], correctIndex: 0 },
+        { question: 'Why force opponents toward the sideline?', options: ['Passing options become limited', 'It guarantees a foul', 'It stops the clock permanently', 'It ends the game immediately'], correctIndex: 0 },
+        { question: 'What happens when one player helps after penetration?', options: ['Others must rotate to cover shooters', 'Everyone stops playing', 'The offence always scores', 'The referee ends the match'], correctIndex: 0 },
+        { question: 'What did students realise about defence?', options: ['It requires concentration for the entire possession', 'It matters only near the hoop', 'It is easier than offence always', 'It needs no communication'], correctIndex: 0 },
+      ],
+    },
+    {
+      id: 'basket_story_4', chapterId: 'basket', title: 'The Fourth Quarter Comeback', englishLevel: 'B2',
+      text: 'Trailing by twelve points entering the fourth quarter, the school team appeared defeated. However, the coach called a timeout and reorganised the rotation, prioritising fresh legs and full-court pressure on the ball handler. Defensive intensity increased, forcing turnovers that led to fast-break lay-ups. On offence, players passed up contested long shots in favour of higher-percentage attempts near the hoop. The crowd\'s energy grew as the gap narrowed to two points with thirty seconds remaining. Although the final buzzer-beater missed, the team left the court proud of their tactical adjustment. The lesson was clear: momentum can shift when athletes combine physical effort with disciplined decision-making under pressure.',
+      questions: [
+        { question: 'What changed after the timeout?', options: ['Players stopped defending', 'Fresh legs and full-court pressure were prioritised', 'The team forfeited the game', 'Only three players remained on court'], correctIndex: 1 },
+        { question: 'How did turnovers help the team?', options: ['They led to fast-break lay-ups', 'They ended the game early', 'They caused more fouls only', 'They reduced playing time'], correctIndex: 0 },
+        { question: 'What shooting approach did players favour?', options: ['Higher-percentage attempts near the hoop', 'Only long contested shots', 'No shots at all', 'Shooting without looking'], correctIndex: 0 },
+        { question: 'What was the main lesson of the match?', options: ['Momentum can shift with effort and disciplined decisions', 'Comebacks are impossible in basketball', 'Timeouts are useless', 'Only the first quarter matters'], correctIndex: 0 },
+      ],
+    },
+    {
+      id: 'basket_story_5', chapterId: 'basket', title: 'Captain\'s Speech', englishLevel: 'C1',
+      text: 'Before the departmental championship, the basketball captain addressed the team in English, as required by the section euro programme. She argued that their greatest strength was not height or individual scoring records but the trust they had built through months of shared training. She described how accepting constructive criticism after losses had transformed defensive communication and reduced selfish play. The coach supplemented her speech with data: assist-to-turnover ratio, rebounding differential, and free-throw percentage under pressure. Together, they presented a compelling case that sustainable team performance emerges from culture rather than from momentary talent. The athletes entered the arena understanding that leadership, analytics, and emotional maturity are inseparable components of elite sport.',
+      questions: [
+        { question: 'What did the captain identify as the team\'s greatest strength?', options: ['Trust built through shared training', 'Only individual scoring records', 'Avoiding all criticism', 'Tallest players on court'], correctIndex: 0 },
+        { question: 'What had accepting criticism improved?', options: ['Defensive communication and reduced selfish play', 'Only the music played during warm up', 'The price of tickets', 'Homework grades in maths'], correctIndex: 0 },
+        { question: 'Which data did the coach mention?', options: ['Assist-to-turnover ratio and rebounding differential', 'Students\' shoe sizes', 'Weather forecasts', 'Exam timetables'], correctIndex: 0 },
+        { question: 'What components of elite sport are described as inseparable?', options: ['Leadership, analytics, and emotional maturity', 'Luck, silence, and isolation', 'Only physical height', 'Avoiding all team culture'], correctIndex: 0 },
+      ],
+    },
+    {
+      id: 'touch_rugby_story_1', chapterId: 'touch_rugby', title: 'Touch Rugby Tournament', englishLevel: 'B1',
       text: 'On Friday, three classes met on the rugby pitch for a touch rugby tournament. Each team had six players and had to pass the ball backward before scoring a try. Defenders could stop attackers only with a two-hand touch — no tackling allowed. One team used a clever offload to keep the attack alive after a touch. Another player beat a defender with a sharp sidestep and nearly reached the try line. The winning team celebrated but reminded everyone that respect and fair play matter more than the final score.',
       questions: [
         { question: 'How could defenders stop attackers?', options: ['Full tackle', 'Two-hand touch only', 'By shouting', 'They could not stop them'], correctIndex: 1 },

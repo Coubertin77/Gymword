@@ -1,4 +1,4 @@
-import { CONFIG, ACTIVITY_LABELS, getWordImage, CHAPTERS, getChapterById, getActivitiesForChapter } from './config.js';
+import { CONFIG, ACTIVITY_LABELS, getWordImage, CHAPTERS, getChapterById, getActivitiesForChapter, APP_VERSION } from './config.js';
 import {
   initStorage, loadData, getClasses, getClassById, getWordsForClass, getStories, getStoryById,
   getStoriesForClass, getChaptersForClass,
@@ -83,6 +83,7 @@ function renderHome() {
       </div>
       <h1 class="logo-big">SportWord Section Euro</h1>
       <p class="logo-sub">Revise PE vocabulary in English</p>
+      <p class="app-version" aria-label="Application version">v${APP_VERSION}</p>
       ${cloudStatusHtml(sync)}
       <div class="card" style="width:100%;max-width:400px">
         <button class="btn btn-primary btn-block" id="btn-student" style="margin-bottom:0.75rem">I'm a Student 💪</button>
@@ -688,7 +689,11 @@ function renderListsTab(container) {
   const expandedChapters = new Set(CHAPTERS.map(c => c.id));
   const expandedLists = new Set();
 
-  container.innerHTML = `<div id="lists-by-chapter" class="lists-by-chapter"></div>`;
+  container.innerHTML = `
+    <p class="lists-tab-intro card-desc">
+      Word lists are grouped by sport/chapter. Expand a section below, or use <strong>+ New list in …</strong> to create a list for that sport.
+    </p>
+    <div id="lists-by-chapter" class="lists-by-chapter"></div>`;
   const root = container.querySelector('#lists-by-chapter');
 
   function renderListEditor(list, { startOpen = false } = {}) {
@@ -813,6 +818,7 @@ function renderListsTab(container) {
 
     const block = document.createElement('div');
     block.className = 'chapter-lists-block';
+    block.style.borderLeft = `4px solid ${ch.color || 'var(--purple)'}`;
     block.innerHTML = `
       <button type="button" class="chapter-lists-header ${isOpen ? 'open' : ''}">
         <span class="chapter-lists-title">${ch.icon} ${escapeHtml(ch.name)}</span>
