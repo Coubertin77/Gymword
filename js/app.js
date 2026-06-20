@@ -408,7 +408,7 @@ function renderStudentStories() {
             <div class="card card-clickable story-card" data-id="${s.id}">
               <div class="card-icon">📖</div>
               <div class="card-label">${escapeHtml(s.title)}</div>
-              <div class="card-desc">${s.questions.length} questions${best ? ` · Best: ${best}%` : ''}</div>
+              <div class="card-desc">${s.englishLevel ? `<span class="story-level">${escapeHtml(s.englishLevel)}</span> · ` : ''}${s.questions.length} questions${best ? ` · Best: ${best}%` : ''}</div>
             </div>
           `;
         }).join('') : '<p class="empty-state">No stories for this sport yet.</p>'}

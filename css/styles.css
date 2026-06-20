@@ -100,6 +100,16 @@ body {
   letter-spacing: 0.04em;
 }
 
+.story-level {
+  display: inline-block;
+  font-weight: 800;
+  font-size: 0.75rem;
+  color: var(--purple);
+  background: rgba(108, 60, 224, 0.1);
+  padding: 0.1rem 0.45rem;
+  border-radius: 999px;
+}
+
 .lists-tab-intro {
   margin-bottom: 1rem;
   padding: 0.75rem 1rem;

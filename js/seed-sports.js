@@ -373,13 +373,93 @@ export function buildSportContent(makeWord) {
       ],
     },
     {
-      id: 'laser_run_story_1', chapterId: 'laser_run', title: 'Laser Run Challenge',
+      id: 'baseball_story_2', chapterId: 'baseball', title: 'Fielding Fundamentals', englishLevel: 'B1',
+      text: 'After learning to bat, the Seconde class moved to fielding drills in the outfield and infield. The coach demonstrated how to position the glove, keep eyes on the ball, and throw to the correct base with momentum from the legs. Students practiced fielding ground balls without letting the ball bounce off their gloves. In relay exercises, they learned to call "Mine!" or "Yours!" to avoid collisions. Mistakes were common at first — overthrows and dropped catches — but improvement was visible within two lessons. The coach reminded everyone that baseball defence requires concentration on every pitch, even when the ball seems far from your position.',
+      questions: [
+        { question: 'What did fielding drills emphasise?', options: ['Glove position, eye tracking, and throwing with leg momentum', 'Only hitting home runs', 'Running without a ball', 'Ignoring teammates completely'], correctIndex: 0 },
+        { question: 'Why did players call "Mine!" or "Yours!"?', options: ['To avoid collisions during relays', 'To distract the batter', 'To stop the inning early', 'To change the rules'], correctIndex: 0 },
+        { question: 'What mistakes were common at first?', options: ['Overthrows and dropped catches', 'Perfect fielding every time', 'No errors at all', 'Players forgot how to run'], correctIndex: 0 },
+        { question: 'When does baseball defence require concentration?', options: ['On every pitch', 'Only when batting', 'Never in the outfield', 'Only during rain'], correctIndex: 0 },
+      ],
+    },
+    {
+      id: 'baseball_story_3', chapterId: 'baseball', title: 'Pitcher and Catcher Signals', englishLevel: 'B2',
+      text: 'The relationship between pitcher and catcher is central to baseball strategy. Using finger signals behind the plate, the catcher suggested pitch type and location while the pitcher decided whether to accept or shake off the call. Students learned vocabulary for fastball, change-up, and outside corner. When signals were unclear, batters gained an advantage; when they were precise, the defence controlled the rhythm of the inning. The Première class role-played scenarios in English, explaining why a change-up might fool a batter expecting speed. The session demonstrated that baseball is a dialogue between two players who must trust each other completely under public scrutiny.',
+      questions: [
+        { question: 'How does the catcher suggest pitch type?', options: ['Finger signals behind the plate', 'Shouting loudly at the batter', 'Writing notes on the field', 'Sending text messages'], correctIndex: 0 },
+        { question: 'What can happen when signals are unclear?', options: ['Batters gain an advantage', 'The game stops forever', 'Automatic home runs occur', 'Fielders leave the diamond'], correctIndex: 0 },
+        { question: 'Why might a change-up be effective?', options: ['It fools batters expecting speed', 'It is always the fastest pitch', 'It replaces the need for a catcher', 'It ends the inning immediately'], correctIndex: 0 },
+        { question: 'What does the pitcher-catcher relationship require?', options: ['Complete trust under scrutiny', 'No communication at all', 'Only individual performance', 'Avoiding all strategy'], correctIndex: 0 },
+      ],
+    },
+    {
+      id: 'baseball_story_4', chapterId: 'baseball', title: 'Base Running Decisions', englishLevel: 'B2',
+      text: 'Smart base running can win games without a single home run. The Terminale students studied when to advance from first to third on a single hit and when to hold position to avoid an out. Coaches taught them to watch the outfielder\'s body position and the strength of the throw rather than running automatically. On a shallow fly ball, leaving the base too early leads to a double play; on a deep hit, hesitation costs a scoring opportunity. Students timed their sprints and practiced sliding safely into bases. They concluded that base running combines observation, risk assessment, and explosive acceleration — skills transferable to many invasion sports.',
+      questions: [
+        { question: 'What can smart base running achieve?', options: ['Win games without home runs', 'Stop the game permanently', 'Replace all fielding practice', 'Eliminate the need for pitching'], correctIndex: 0 },
+        { question: 'What should runners observe before advancing?', options: ['Outfielder position and throw strength', 'Only the colour of their uniform', 'The crowd\'s favourite song', 'Homework deadlines'], correctIndex: 0 },
+        { question: 'What happens if a runner leaves too early on a shallow fly ball?', options: ['A double play becomes likely', 'They automatically score', 'The inning never ends', 'The pitcher is replaced'], correctIndex: 0 },
+        { question: 'Which skills does base running combine?', options: ['Observation, risk assessment, and acceleration', 'Only luck and silence', 'Avoiding all sprints', 'Ignoring outfielders completely'], correctIndex: 0 },
+      ],
+    },
+    {
+      id: 'baseball_story_5', chapterId: 'baseball', title: 'The Statistics Project', englishLevel: 'C1',
+      text: 'As part of an interdisciplinary assignment, Terminale students analysed baseball statistics to evaluate player contribution beyond batting average alone. They examined on-base percentage, slugging percentage, and defensive assists, presenting findings in English to the class. One group argued that a player with modest hitting but exceptional base running provided greater overall value than raw numbers suggested. Another debated whether small-sample data from school matches could support confident conclusions. The PE teacher welcomed the discussion, noting that modern sport increasingly relies on evidence-based reasoning rather than intuition alone. Students left the project appreciating that statistical literacy enhances both athletic performance and academic credibility in the section euro programme.',
+      questions: [
+        { question: 'What did students analyse beyond batting average?', options: ['On-base percentage, slugging, and defensive assists', 'Only shoe sizes', 'Exam grades in history', 'Cafeteria menus'], correctIndex: 0 },
+        { question: 'What did one group argue about a modest hitter?', options: ['Exceptional base running could provide greater overall value', 'They should never play again', 'Statistics are useless in baseball', 'Only home runs matter always'], correctIndex: 0 },
+        { question: 'What limitation did students debate?', options: ['Whether small-sample school data supports confident conclusions', 'Whether baseball exists in France', 'Whether English is necessary', 'Whether gloves are required'], correctIndex: 0 },
+        { question: 'What does modern sport increasingly rely on?', options: ['Evidence-based reasoning', 'Intuition alone without data', 'Avoiding all analysis', 'Replacing sport with theory only'], correctIndex: 0 },
+      ],
+    },
+    {
+      id: 'laser_run_story_1', chapterId: 'laser_run', title: 'Laser Run Challenge', englishLevel: 'B1',
       text: 'The school organised a laser run challenge as part of the modern pentathlon unit. Athletes had to complete an obstacle course, then enter the transition zone to pick up the laser pistol and shoot at five targets. Every missed shot added a penalty loop to their run. Students learned to control their breathing before shooting — running fast makes aiming much harder. The fastest athlete was not always the winner because accuracy mattered as much as speed. The PE teacher explained that laser run combines endurance, focus, and the ability to perform under pressure.',
       questions: [
         { question: 'What do athletes do in the transition zone?', options: ['Eat lunch', 'Pick up the laser pistol and shoot', 'Sleep', 'Change sports entirely'], correctIndex: 1 },
         { question: 'What happens when a shot misses the target?', options: ['The athlete is disqualified', 'A penalty loop is added', 'The race stops', 'Nothing'], correctIndex: 1 },
         { question: 'Why is running fast before shooting difficult?', options: ['The pistol is too heavy', 'It makes aiming harder', 'Targets disappear', 'Rules forbid running'], correctIndex: 1 },
         { question: 'What does laser run combine?', options: ['Only swimming', 'Endurance, focus, and performing under pressure', 'Only fencing', 'Luck and chance'], correctIndex: 1 },
+      ],
+    },
+    {
+      id: 'laser_run_story_2', chapterId: 'laser_run', title: 'Breathing Between Stages', englishLevel: 'B1',
+      text: 'Coach Dupont noticed that many students arrived at the shooting stage breathing too heavily to aim steadily. She introduced a simple routine: two slow exhalations before picking up the laser pistol, then shoulders relaxed and eyes fixed on the centre target. Runners practised shorter sprints followed immediately by five shots to simulate competition fatigue. Those who controlled their breathing hit more targets and avoided penalty loops. The class recorded results in a table and compared improvement over three weeks. Dupont explained that laser run rewards athletes who can switch rapidly from high-intensity running to calm precision.',
+      questions: [
+        { question: 'What problem did the coach notice at the shooting stage?', options: ['Students breathed too heavily to aim steadily', 'Students refused to run', 'Targets were missing', 'Pistols were too light'], correctIndex: 0 },
+        { question: 'What routine did she introduce?', options: ['Two slow exhalations before shooting', 'Running without stopping for an hour', 'Shooting while sprinting always', 'Closing eyes before every shot'], correctIndex: 0 },
+        { question: 'What happened when breathing was controlled?', options: ['More targets hit and fewer penalty loops', 'Automatic disqualification', 'Slower running only', 'No improvement at all'], correctIndex: 0 },
+        { question: 'What does laser run reward?', options: ['Switching from intense running to calm precision', 'Only the fastest runners regardless of shooting', 'Avoiding all obstacles', 'Never entering the transition zone'], correctIndex: 0 },
+      ],
+    },
+    {
+      id: 'laser_run_story_3', chapterId: 'laser_run', title: 'Obstacle Strategy', englishLevel: 'B2',
+      text: 'The obstacle section of the laser run course demanded more than raw speed. Students learned to attack each barrier with a plan: stable foot placement on the balance beam, controlled momentum over the hurdles, and efficient paths through the slalom cones. The coach filmed runs and highlighted where seconds were lost through awkward turns rather than lack of fitness. Première athletes paired up to give feedback in English using phrases such as "You leaned too far left" or "Shorten your stride before the beam." Gradually, the group understood that modern pentathlon-style events punish wasted movement as severely as missed shots.',
+      questions: [
+        { question: 'What did the obstacle section demand besides speed?', options: ['Planned technique at each barrier', 'Only jumping as high as possible', 'Stopping after every obstacle', 'Removing all cones'], correctIndex: 0 },
+        { question: 'Where were seconds often lost?', options: ['Awkward turns rather than lack of fitness', 'Talking to spectators only', 'Using the wrong school uniform', 'Writing notes during the run'], correctIndex: 0 },
+        { question: 'How did athletes give feedback?', options: ['In English with specific movement phrases', 'Only by shouting numbers', 'Without watching the run', 'By ignoring all mistakes'], correctIndex: 0 },
+        { question: 'What do pentathlon-style events punish severely?', options: ['Wasted movement and missed shots', 'Only slow speaking', 'Team uniforms', 'Using laser pistols correctly'], correctIndex: 0 },
+      ],
+    },
+    {
+      id: 'laser_run_story_4', chapterId: 'laser_run', title: 'Penalty Loop Discipline', englishLevel: 'B2',
+      text: 'After a school time trial, the Terminale squad reviewed why penalty loops had decided the final ranking. Two athletes missed three targets each and added thirty seconds to their overall time despite leading after the run. The coach introduced a training rule: if more than one shot is missed in practice, the athlete repeats the shooting stage until five consecutive hits are achieved. Some complained that the drill was repetitive, yet results at the next competition improved noticeably. Discussion turned to mental routines — visualising the target, consistent trigger pressure, and accepting that perfection under fatigue is a trained skill, not a coincidence.',
+      questions: [
+        { question: 'Why did penalty loops decide the ranking?', options: ['Missed shots added significant time despite fast running', 'Runners were disqualified for talking', 'Obstacles were removed', 'Targets moved during shooting'], correctIndex: 0 },
+        { question: 'What training rule did the coach introduce?', options: ['Repeat shooting until five consecutive hits after multiple misses', 'Never practice shooting again', 'Run without any targets', 'Skip all penalty loops in competition'], correctIndex: 0 },
+        { question: 'How did athletes respond to the drill at first?', options: ['Some complained it was repetitive', 'Everyone refused to participate', 'The coach cancelled laser run', 'Students never missed shots again immediately'], correctIndex: 0 },
+        { question: 'What is perfection under fatigue described as?', options: ['A trained skill, not a coincidence', 'Pure luck only', 'Impossible for all athletes', 'Unrelated to mental routines'], correctIndex: 0 },
+      ],
+    },
+    {
+      id: 'laser_run_story_5', chapterId: 'laser_run', title: 'The Combined Event Mindset', englishLevel: 'C1',
+      text: 'To conclude the modern pentathlon unit, students wrote reflective essays in English on the mindset required for combined events such as laser run. They compared the cognitive shift from explosive running to precise shooting with transitions between academic tasks that demand different types of focus. Several athletes cited research on arousal regulation — how heart rate influences fine motor control — and proposed personalised pre-shooting routines backed by their training data. The PE department displayed the best essays alongside performance charts, illustrating that section euro students can integrate scientific vocabulary, self-analysis, and sporting experience into coherent argumentation. The teacher concluded that laser run is an ideal metaphor for balancing speed, accuracy, and adaptability in both sport and study.',
+      questions: [
+        { question: 'What did students write reflective essays about?', options: ['The mindset required for combined events', 'Only their favourite meals', 'French literature exclusively', 'The history of the school building'], correctIndex: 0 },
+        { question: 'What cognitive shift did they compare to academic work?', options: ['From explosive running to precise shooting', 'From sleeping to eating', 'From maths to art only', 'From silence to shouting'], correctIndex: 0 },
+        { question: 'What concept did several athletes cite from research?', options: ['Arousal regulation and heart rate influence on motor control', 'Only muscle fibre types without application', 'Weather patterns in winter', 'Exam regulations in maths'], correctIndex: 0 },
+        { question: 'What metaphor did the teacher offer for laser run?', options: ['Balancing speed, accuracy, and adaptability in sport and study', 'Avoiding all physical effort', 'Replacing PE with essays only', 'Luck as the only factor in success'], correctIndex: 0 },
       ],
     },
   ];
@@ -399,8 +479,19 @@ export function getSportListIds() {
 }
 
 export function getSportStoryIds() {
-  return [
-    'badminton_story_1', 'basket_story_1', 'touch_rugby_story_1',
-    'flag_football_story_1', 'baseball_story_1', 'laser_run_story_1',
-  ];
+  return getSportStoryIdsUpTo(5);
+}
+
+const SPORT_CHAPTER_PREFIXES = [
+  'badminton', 'basket', 'touch_rugby', 'flag_football', 'baseball', 'laser_run',
+];
+
+export function getSportStoryIdsUpTo(maxPerSport = 5) {
+  const ids = [];
+  for (const sport of SPORT_CHAPTER_PREFIXES) {
+    for (let i = 1; i <= maxPerSport; i++) {
+      ids.push(`${sport}_story_${i}`);
+    }
+  }
+  return ids;
 }
