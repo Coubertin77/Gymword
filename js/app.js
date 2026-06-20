@@ -408,7 +408,7 @@ function renderStudentStories() {
             <div class="card card-clickable story-card" data-id="${s.id}">
               <div class="card-icon">📖</div>
               <div class="card-label">${escapeHtml(s.title)}</div>
-              <div class="card-desc">${s.englishLevel ? `<span class="story-level">${escapeHtml(s.englishLevel)}</span> · ` : ''}${s.questions.length} questions${best ? ` · Best: ${best}%` : ''}</div>
+              <div class="card-desc">${s.englishLevel ? `<span class="story-level">${escapeHtml(s.englishLevel)}</span> · ` : ''}${(s.questions || []).length} questions${best ? ` · Best: ${best}%` : ''}</div>
             </div>
           `;
         }).join('') : '<p class="empty-state">No stories for this sport yet.</p>'}
@@ -995,7 +995,35 @@ function renderResultsTab(container) {
   }).join('');
 }
 
+function showFatalError(err) {
+  const msg = err?.message || String(err || 'Unknown error');
+  if (!app) {
+    document.body.innerHTML = `<div style="padding:2rem;font-family:sans-serif"><h1>SportWord — erreur</h1><p>${escapeHtml(msg)}</p></div>`;
+    return;
+  }
+  app.innerHTML = `
+    <div class="page" style="max-width:520px;margin:2rem auto">
+      <h1 class="page-title">SportWord — erreur au démarrage</h1>
+      <div class="card">
+        <p class="card-desc">L'application n'a pas pu se charger. Essayez <strong>Ctrl+Shift+R</strong> ou videz les données du site pour ce lien.</p>
+        <p class="card-desc" style="font-family:monospace;font-size:0.85rem;word-break:break-word">${escapeHtml(msg)}</p>
+        <button type="button" class="btn btn-primary btn-block" id="retry-load">Réessayer</button>
+        <button type="button" class="btn btn-secondary btn-block" id="clear-data" style="margin-top:0.5rem">Effacer les données locales et recharger</button>
+      </div>
+    </div>
+  `;
+  app.querySelector('#retry-load')?.addEventListener('click', () => location.reload());
+  app.querySelector('#clear-data')?.addEventListener('click', () => {
+    try {
+      localStorage.removeItem(CONFIG.STORAGE_KEY);
+      localStorage.removeItem(CONFIG.SESSION_KEY);
+    } catch { /* ignore */ }
+    location.reload();
+  });
+}
+
 function showLoading(message = 'Loading SportWord…') {
+  if (!app) return;
   app.innerHTML = `
     <div class="loading-screen">
       <div class="loading-spinner"></div>
@@ -1005,26 +1033,38 @@ function showLoading(message = 'Loading SportWord…') {
 }
 
 async function bootstrap() {
+  if (!app) {
+    showFatalError(new Error('Page element #app not found — open index.html via the web server or GitHub Pages link, not as a local file.'));
+    return;
+  }
   showLoading('Loading SportWord…');
   try {
     await initStorage();
+    const sync = getSyncStatus();
+    if (sync.cloudEnabled && sync.syncError) {
+      toast('Synchronisation en ligne indisponible — vous pouvez quand même utiliser l\'application', 'info');
+    }
+    const session = getSession();
+    if (session?.studentId) {
+      if (session.chapterId) navigate('studentDashboard');
+      else navigate('studentChapterSelect');
+    }
+    else if (session?.isTeacher) navigate('teacherDashboard');
+    else navigate('home');
   } catch (err) {
     console.error(err);
+    showFatalError(err);
   }
-  const sync = getSyncStatus();
-  if (sync.cloudEnabled && sync.syncError) {
-    toast('Synchronisation en ligne indisponible — vous pouvez quand même utiliser l\'application', 'info');
-  }
-  const session = getSession();
-  if (session?.studentId) {
-    if (session.chapterId) navigate('studentDashboard');
-    else navigate('studentChapterSelect');
-  }
-  else if (session?.isTeacher) navigate('teacherDashboard');
-  else navigate('home');
 }
 
-bootstrap();
+bootstrap().catch(showFatalError);
+
+window.addEventListener('error', e => {
+  if (app && !app.innerHTML.trim()) showFatalError(e.error || new Error(e.message));
+});
+window.addEventListener('unhandledrejection', e => {
+  if (app && !app.querySelector('.page, .loading-screen')) showFatalError(e.reason);
+});
 
 document.addEventListener('visibilitychange', () => {
   if (document.visibilityState === 'hidden') flushStorage();

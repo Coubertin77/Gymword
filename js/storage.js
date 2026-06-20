@@ -163,7 +163,16 @@ export async function initStorage() {
     console.error('GymWord local cache error:', err);
   }
 
-  cache = local || getSeedData();
+  cache = local;
+  if (!cache) {
+    try {
+      cache = getSeedData();
+    } catch (err) {
+      console.error('GymWord seed error:', err);
+      try { localStorage.removeItem(CONFIG.STORAGE_KEY); } catch { /* ignore */ }
+      cache = getSeedData();
+    }
+  }
   initialized = true;
   writeLocalCache();
 

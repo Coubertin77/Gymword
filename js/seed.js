@@ -1,5 +1,16 @@
 import { getWordImage } from './config.js';
-import { buildSportContent, getSportListIds, getSportStoryIds, getSportStoryIdsUpTo } from './seed-sports.js';
+import { buildSportContent, getSportListIds, getSportStoryIds } from './seed-sports.js';
+
+const SPORT_STORY_PREFIXES = ['badminton', 'basket', 'touch_rugby', 'flag_football', 'baseball', 'laser_run'];
+
+/** Story IDs per sport (1..max), kept here so class seed works even if seed-sports exports change. */
+function sportStoryIdsUpTo(maxPerSport = 5) {
+  const ids = [];
+  for (const sport of SPORT_STORY_PREFIXES) {
+    for (let i = 1; i <= maxPerSport; i++) ids.push(`${sport}_story_${i}`);
+  }
+  return ids;
+}
 
 const starterWords = [
   { english: 'bench press', french: 'développé couché', definition: 'A weightlifting exercise performed lying on a bench, pushing a barbell upward' },
@@ -162,14 +173,14 @@ export function getSeedData() {
       id: 'class_seconde', name: 'Seconde — Group A', level: 'Seconde', roster: [],
       assignedChapterIds: allChapterIds,
       assignedListIds: [...musculationListIds.filter(id => ['list_image_match', 'list_equipment', 'list_mix_1'].includes(id)), ...sportListIds],
-      assignedStoryIds: [...musculationStoriesSeconde, ...getSportStoryIdsUpTo(2)],
+      assignedStoryIds: [...musculationStoriesSeconde, ...sportStoryIdsUpTo(2)],
       assignedActivities: allActivities,
     },
     {
       id: 'class_premiere', name: 'Première — Group B', level: 'Première', roster: [],
       assignedChapterIds: allChapterIds,
       assignedListIds: [...musculationListIds.filter(id => !['list_body', 'list_mix_3', 'list_mix_4'].includes(id)), ...sportListIds],
-      assignedStoryIds: [...musculationStoriesPremiere, ...getSportStoryIdsUpTo(4)],
+      assignedStoryIds: [...musculationStoriesPremiere, ...sportStoryIdsUpTo(4)],
       assignedActivities: allActivities,
     },
     {
