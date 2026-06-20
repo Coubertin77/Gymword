@@ -323,7 +323,47 @@ export function buildSportContent(makeWord) {
       ],
     },
     {
-      id: 'baseball_story_1', chapterId: 'baseball', title: 'Baseball Basics',
+      id: 'flag_football_story_2', chapterId: 'flag_football', title: 'Running Routes', englishLevel: 'B1',
+      text: 'Before students could catch passes consistently, they had to learn running routes — predetermined paths across the field. The coach drew patterns on a whiteboard: slant, out, and go routes each created different spacing against defenders. Receivers practiced sharp cuts and timed their sprints so the quarterback could release the ball at the right moment. When routes were sloppy, passes fell incomplete even though the throw was accurate. By the third session, the Première class understood that flag football offence is choreographed movement rather than random running. Communication before the snap helped everyone know who would cut where.',
+      questions: [
+        { question: 'What are running routes?', options: ['Predetermined paths across the field', 'Random sprints without plan', 'Only defensive movements', 'Ways to pull flags on teammates'], correctIndex: 0 },
+        { question: 'Why did passes fall incomplete when routes were sloppy?', options: ['Timing and spacing were wrong even if the throw was accurate', 'The ball was deflated', 'Wind always stopped play', 'Receivers were not allowed to catch'], correctIndex: 0 },
+        { question: 'What is flag football offence compared to?', options: ['Choreographed movement', 'Pure luck', 'Swimming laps', 'Only kicking the ball'], correctIndex: 0 },
+        { question: 'When did communication help the team?', options: ['Before the snap to clarify cuts', 'Only after the game ended', 'Never during practice', 'Only when eating lunch'], correctIndex: 0 },
+      ],
+    },
+    {
+      id: 'flag_football_story_3', chapterId: 'flag_football', title: 'Reading the Blitz', englishLevel: 'B2',
+      text: 'When defenders blitz, the quarterback has only seconds to decide whether to release the ball quickly, hand off to a runner, or scramble. The Terminale class studied film of previous games and identified patterns — which defender rushed most aggressively and from which side. They adjusted protection schemes so one player blocked the blitz path while receivers ran shorter, faster routes. The coach emphasised that panic throws often lead to interceptions or lost yardage. In practice, quarterbacks counted aloud in English to simulate pressure: "One Mississippi, two Mississippi — throw!" Students learned that composure and preparation reduce mistakes when the defence attacks suddenly.',
+      questions: [
+        { question: 'What must a quarterback decide during a blitz?', options: ['Throw quickly, hand off, or scramble', 'Leave the field immediately', 'Always run backward only', 'Stop the play without reason'], correctIndex: 0 },
+        { question: 'How did the team use film study?', options: ['To identify blitz patterns and adjust protection', 'To avoid all training sessions', 'To choose team uniforms', 'To cancel the next game'], correctIndex: 0 },
+        { question: 'What often results from panic throws?', options: ['Interceptions or lost yardage', 'Automatic touchdowns', 'Extra players on the field', 'No change in possession'], correctIndex: 0 },
+        { question: 'What reduces mistakes under pressure?', options: ['Composure and preparation', 'Closing your eyes before throwing', 'Ignoring the defence', 'Never practicing blitz situations'], correctIndex: 0 },
+      ],
+    },
+    {
+      id: 'flag_football_story_4', chapterId: 'flag_football', title: 'Red Zone Tactics', englishLevel: 'B2',
+      text: 'Scoring inside the red zone — the area near the end zone — requires tighter decisions because the field is compressed. The coach taught students that long passes become riskier and quick handoffs or short catches often produce better results. One team practiced a series of plays designed to spread defenders horizontally before attacking vertically on third down. Defenders responded by pulling flags earlier, so attackers had to protect the ball with two hands and lower their centre of gravity. Students analysed which plays succeeded most often and recorded the results in English. The data showed that patience and precision outweighed heroic deep throws when space was limited.',
+      questions: [
+        { question: 'Why is the red zone challenging?', options: ['The field is compressed and decisions must be tighter', 'Players cannot run at all', 'Flags are removed from the game', 'The end zone disappears'], correctIndex: 0 },
+        { question: 'Which options often work better near the end zone?', options: ['Quick handoffs or short catches', 'Only the longest possible passes', 'Stopping play entirely', 'Running off the field'], correctIndex: 0 },
+        { question: 'What did attackers do when defenders pulled flags earlier?', options: ['Protected the ball with two hands', 'Threw the ball away always', 'Removed their own flags', 'Ignored all coaching advice'], correctIndex: 0 },
+        { question: 'What did the data show about successful plays?', options: ['Patience and precision outweighed deep throws', 'Only luck mattered', 'No play worked in the red zone', 'Defenders never adapted'], correctIndex: 0 },
+      ],
+    },
+    {
+      id: 'flag_football_story_5', chapterId: 'flag_football', title: 'Building a Playbook', englishLevel: 'C1',
+      text: 'For the section euro project, each flag football group compiled a mini-playbook written entirely in English. Every page described a formation, the responsibilities of each position, and the conditions under which the play should be used — for example, on fourth down or after a turnover. Presentations included diagrams, vocabulary definitions, and reflections on why certain strategies failed in earlier matches. The teacher evaluated not only sporting knowledge but also clarity of expression and ability to justify tactical choices with evidence. Students discovered that documenting strategy forces deeper understanding than simply repeating drills. The best playbooks combined analytical language with practical insight, demonstrating that communication skills and athletic intelligence reinforce each other in modern team sports.',
+      questions: [
+        { question: 'What did each group compile for the project?', options: ['A mini-playbook written in English', 'Only a list of player names', 'A collection of music playlists', 'French translations without diagrams'], correctIndex: 0 },
+        { question: 'What information did each page include?', options: ['Formation, responsibilities, and when to use the play', 'Only the final score of one game', 'Homework from other subjects', 'Weather reports only'], correctIndex: 0 },
+        { question: 'What did the teacher evaluate besides sporting knowledge?', options: ['Clarity of expression and justification with evidence', 'Only running speed', 'Shoe brand preferences', 'Attendance in maths class'], correctIndex: 0 },
+        { question: 'What did documenting strategy force students to develop?', options: ['Deeper understanding than repeating drills alone', 'Less interest in the sport', 'Avoidance of all teamwork', 'No need for vocabulary'], correctIndex: 0 },
+      ],
+    },
+    {
+      id: 'baseball_story_1', chapterId: 'baseball', title: 'Baseball Basics', englishLevel: 'B1',
       text: 'The Terminale students visited a local baseball field for an introduction to the sport. The coach showed them home plate, the three bases, and the outfield. The pitcher demonstrated how to throw different types of pitches while the catcher signaled behind the plate. Students took turns as batters, trying to hit the ball and run to first base. One student hit a powerful shot into the outfield and reached second base before the fielders returned the ball. The coach explained that baseball requires patience, hand-eye coordination, and clear communication between pitcher and catcher.',
       questions: [
         { question: 'What did the coach show the students first?', options: ['A basketball hoop', 'Home plate, bases, and outfield', 'A badminton net', 'A laser target'], correctIndex: 1 },
