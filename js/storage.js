@@ -1,5 +1,6 @@
 import { CONFIG, getWordImage } from './config.js';
 import { getSeedData, getSeedCatalog, getSeedStories } from './seed.js';
+import { getSportStoryIds } from './seed-sports.js';
 import { migrateStudentToChapters } from './chapter-progress.js';
 import { CHAPTERS } from './config.js';
 import { isCloudConfigured } from './supabase-config.js';
@@ -70,6 +71,15 @@ function migrateData(data) {
       if (!cls.assignedActivities) cls.assignedActivities = [];
       for (const act of seedCls.assignedActivities || []) {
         if (!cls.assignedActivities.includes(act)) cls.assignedActivities.push(act);
+      }
+    }
+
+    // Ensure all sport chapters have 5 stories assigned (migration for existing classes).
+    const allSportStoryIds = getSportStoryIds();
+    for (const cls of data.classes || []) {
+      if (!cls.assignedStoryIds) cls.assignedStoryIds = [];
+      for (const storyId of allSportStoryIds) {
+        if (!cls.assignedStoryIds.includes(storyId)) cls.assignedStoryIds.push(storyId);
       }
     }
 
