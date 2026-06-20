@@ -1,8 +1,10 @@
 import { CONFIG, getWordImage } from './config.js';
 import { getSeedData, getSeedCatalog, getSeedStories } from './seed.js';
 import { getSportStoryIds } from './seed-sports.js';
+import { getSeedQuizBanks } from './chapter-rules.js';
 import { migrateStudentToChapters } from './chapter-progress.js';
 import { CHAPTERS } from './config.js';
+import { shuffle } from './gamification.js';
 import { isCloudConfigured } from './supabase-config.js';
 import { fetchCloudData, pushCloudData } from './cloud.js';
 
@@ -33,6 +35,7 @@ function migrateData(data) {
   });
   if (!data.activityResults) data.activityResults = [];
   if (!data.wordLists) data.wordLists = [];
+  if (!data.quizBanks) data.quizBanks = [];
 
   try {
     const seed = getSeedCatalog();
@@ -90,6 +93,21 @@ function migrateData(data) {
     }
     for (const story of data.stories) {
       if (!story.chapterId) story.chapterId = 'musculation';
+    }
+
+    for (const seedBank of getSeedQuizBanks()) {
+      if (!data.quizBanks.some(b => b.chapterId === seedBank.chapterId)) {
+        data.quizBanks.push(JSON.parse(JSON.stringify(seedBank)));
+      }
+    }
+    for (const bank of data.quizBanks) {
+      for (let i = 0; i < (bank.questions || []).length; i++) {
+        const q = bank.questions[i];
+        if (!q.id) q.id = `q_${bank.chapterId}_${i}`;
+        if (!Array.isArray(q.options)) q.options = ['', '', '', ''];
+        while (q.options.length < 4) q.options.push('');
+        if (typeof q.correctIndex !== 'number') q.correctIndex = 0;
+      }
     }
   } catch (err) {
     console.error('GymWord seed merge error:', err);
@@ -306,6 +324,37 @@ export function deleteWordList(id) {
   const data = loadData();
   data.wordLists = data.wordLists.filter(l => l.id !== id);
   saveData();
+}
+
+export function getQuizBanks() {
+  return loadData().quizBanks || [];
+}
+
+export function getQuizBank(chapterId) {
+  return getQuizBanks().find(b => b.chapterId === chapterId) || null;
+}
+
+export function saveQuizBank(bank) {
+  const data = loadData();
+  if (!data.quizBanks) data.quizBanks = [];
+  const idx = data.quizBanks.findIndex(b => b.chapterId === bank.chapterId);
+  if (idx >= 0) data.quizBanks[idx] = bank;
+  else data.quizBanks.push(bank);
+  saveData();
+}
+
+/** Quick Quiz — random questions from the teacher-editable bank for a chapter. */
+export function getRulesQuestionsForChapter(chapterId, count = 5) {
+  const bank = getQuizBank(chapterId);
+  const pool = bank?.questions?.length
+    ? bank.questions
+    : (getSeedQuizBanks().find(b => b.chapterId === chapterId)?.questions || []);
+  const shuffled = shuffle([...pool]);
+  return shuffled.slice(0, Math.min(count, shuffled.length)).map(q => ({
+    question: q.question,
+    options: [...q.options],
+    correctIndex: q.correctIndex,
+  }));
 }
 
 export function getStories() {

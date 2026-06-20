@@ -1,5 +1,6 @@
 import { getWordImage } from './config.js';
 import { buildSportContent, getSportListIds, getSportStoryIds } from './seed-sports.js';
+import { getSeedQuizBanks } from './chapter-rules.js';
 
 const starterWords = [
   { english: 'bench press', french: 'développé couché', definition: 'A weightlifting exercise performed lying on a bench, pushing a barbell upward' },
@@ -182,8 +183,9 @@ export function getSeedData() {
   ];
 
   const stories = [...buildStories(), ...sportStories];
+  const quizBanks = getSeedQuizBanks();
 
-  return { classes, wordLists: allWordLists, stories, students: [], activityResults: [] };
+  return { classes, wordLists: allWordLists, stories, quizBanks, students: [], activityResults: [] };
 }
 
 /** Lists + classes only (for migrations — avoids rebuilding stories each time). */

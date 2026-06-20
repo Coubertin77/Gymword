@@ -3,12 +3,12 @@ import { shuffle } from './gamification.js';
 import { escapeHtml } from './utils.js';
 import { wrapStoryWords, createStoryReader, stopStoryAudio } from './story-audio.js';
 
-import { getRulesQuestions } from './chapter-rules.js';
+import { getRulesQuestionsForChapter } from './storage.js';
 import { getMuscleRegionItems, getRegionLabel } from './muscle-regions.js';
 
 export function renderActivity(type, words, container, onComplete, chapterId = 'musculation') {
   if (type === 'qcm') {
-    const questions = getRulesQuestions(chapterId, 5);
+    const questions = getRulesQuestionsForChapter(chapterId, 5);
     if (!questions.length) {
       container.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>No rules quiz available for this sport yet.</p></div>';
       return;
@@ -340,7 +340,7 @@ function renderQCM(questions, container, finish) {
       finish(score, questions.length);
       return;
     }
-    const q = questions[current];
+    const q = shuffleQuestionOptions(questions[current]);
 
     container.innerHTML = `
       <div class="activity-shell">

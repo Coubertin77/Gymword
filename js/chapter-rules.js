@@ -227,6 +227,20 @@ const RULES_BANK = {
   ],
 };
 
+/** Default Quick Quiz banks (one per chapter) — used for seed & migration. */
+export function getSeedQuizBanks() {
+  return Object.entries(RULES_BANK).map(([chapterId, questions]) => ({
+    id: `quiz_${chapterId}`,
+    chapterId,
+    questions: questions.map((q, i) => ({
+      id: `q_${chapterId}_${i}`,
+      question: q.question,
+      options: [...q.options],
+      correctIndex: q.correctIndex,
+    })),
+  }));
+}
+
 export function getRulesQuestions(chapterId, count = 5) {
   const bank = RULES_BANK[chapterId] || RULES_BANK.musculation;
   return shuffleRules([...bank]).slice(0, Math.min(count, bank.length));

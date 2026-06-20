@@ -1197,7 +1197,23 @@ body {
   justify-content: center;
 }
 
+.quiz-options-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.35rem 0.75rem;
+  margin-bottom: 0.5rem;
+}
+
+.quiz-question-row {
+  padding: 0.85rem 1rem;
+  margin-bottom: 0.75rem;
+  background: #f8f9fa;
+  border-radius: var(--radius-sm);
+  border-left: 3px solid var(--purple);
+}
+
 @media (max-width: 600px) {
+  .quiz-options-grid { grid-template-columns: 1fr; }
   .word-editor-row { grid-template-columns: 1fr; }
 }
 

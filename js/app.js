@@ -4,7 +4,7 @@ import {
   getStoriesForClass, getChaptersForClass,
   loginStudentByRoster, updateStudent, getStudentById, getStudentsByClass,
   getRosterByClass, addRosterStudent, addRosterStudentsBulk, removeRosterStudent,
-  getWordLists, saveWordList, deleteWordList, updateClass,
+  getWordLists, saveWordList, deleteWordList, getQuizBank, saveQuizBank, updateClass,
   getSession, setSession, clearSession, addActivityResult,
   getSyncStatus, reloadFromCloud, flushStorage,
 } from './storage.js';
@@ -511,6 +511,7 @@ function renderTeacherDashboard() {
         <div class="tabs">
           <button class="tab ${activeTab === 'classes' ? 'active' : ''}" data-tab="classes">Students</button>
           <button class="tab ${activeTab === 'lists' ? 'active' : ''}" data-tab="lists">Word Lists</button>
+          <button class="tab ${activeTab === 'quiz' ? 'active' : ''}" data-tab="quiz">Quiz Questions</button>
           <button class="tab ${activeTab === 'assign' ? 'active' : ''}" data-tab="assign">Assignments</button>
           <button class="tab ${activeTab === 'results' ? 'active' : ''}" data-tab="results">Results</button>
         </div>
@@ -529,6 +530,7 @@ function renderTeacherDashboard() {
     const content = app.querySelector('#tab-content');
     if (activeTab === 'classes') renderClassesTab(content);
     else if (activeTab === 'lists') renderListsTab(content);
+    else if (activeTab === 'quiz') renderQuizTab(content);
     else if (activeTab === 'assign') renderAssignTab(content);
     else if (activeTab === 'results') renderResultsTab(content);
   }
@@ -875,6 +877,126 @@ function renderListsTab(container) {
     uncategorized.forEach(list => body.appendChild(renderListEditor(list)));
     root.appendChild(block);
   }
+}
+
+function renderQuizTab(container) {
+  const expandedChapters = new Set(CHAPTERS.map(c => c.id));
+
+  container.innerHTML = `
+    <p class="lists-tab-intro card-desc">
+      Edit <strong>Quick Quiz</strong> questions (sport rules in English) for each chapter. Students get 5 random questions from your bank.
+    </p>
+    <div id="quiz-by-chapter" class="lists-by-chapter"></div>`;
+  const root = container.querySelector('#quiz-by-chapter');
+
+  function addQuestionRow(questionsContainer, q = { question: '', options: ['', '', '', ''], correctIndex: 0 }) {
+    if (questionsContainer.children.length >= 30) return toast('Maximum 30 questions per chapter', 'error');
+    const opts = [...(q.options || []), '', '', '', ''].slice(0, 4);
+    const row = document.createElement('div');
+    row.className = 'quiz-question-row';
+    if (q.id) row.dataset.qid = q.id;
+    row.innerHTML = `
+      <div class="form-group" style="margin-bottom:0.5rem">
+        <label>Question (English)</label>
+        <input type="text" class="q-text" value="${escapeHtml(q.question || '')}" placeholder="e.g. How do you win a point in badminton?">
+      </div>
+      <div class="quiz-options-grid">
+        ${opts.map((opt, i) => `
+          <div class="form-group" style="margin-bottom:0.35rem">
+            <label>Option ${['A', 'B', 'C', 'D'][i]}</label>
+            <input type="text" class="q-opt" data-i="${i}" value="${escapeHtml(opt)}" placeholder="Answer ${['A', 'B', 'C', 'D'][i]}">
+          </div>
+        `).join('')}
+      </div>
+      <div class="form-group" style="margin-bottom:0.5rem">
+        <label>Correct answer</label>
+        <select class="q-correct">
+          ${[0, 1, 2, 3].map(i => `
+            <option value="${i}" ${(q.correctIndex ?? 0) === i ? 'selected' : ''}>${['A', 'B', 'C', 'D'][i]}</option>
+          `).join('')}
+        </select>
+      </div>
+      <button type="button" class="btn btn-ghost btn-sm remove-question">Remove question</button>
+    `;
+    row.querySelector('.remove-question').onclick = () => row.remove();
+    questionsContainer.appendChild(row);
+  }
+
+  function renderChapterQuizBlock(ch) {
+    const bank = getQuizBank(ch.id) || { id: `quiz_${ch.id}`, chapterId: ch.id, questions: [] };
+    const questions = bank.questions || [];
+    const isOpen = expandedChapters.has(ch.id);
+
+    const block = document.createElement('div');
+    block.className = 'chapter-lists-block';
+    block.style.borderLeft = `4px solid ${ch.color || 'var(--purple)'}`;
+    block.innerHTML = `
+      <button type="button" class="chapter-lists-header ${isOpen ? 'open' : ''}">
+        <span class="chapter-lists-title">${ch.icon} ${escapeHtml(ch.name)} — Quick Quiz</span>
+        <span class="chapter-lists-count">${questions.length} question${questions.length !== 1 ? 's' : ''}</span>
+        <span class="chapter-lists-chevron">${isOpen ? '▲' : '▼'}</span>
+      </button>
+      <div class="chapter-lists-body ${isOpen ? '' : 'hidden'}">
+        <p class="card-desc" style="margin-bottom:0.75rem">Add or edit questions below, then click Save.</p>
+        <div class="quiz-questions-container"></div>
+        <button type="button" class="btn btn-secondary btn-sm add-quiz-question" style="margin-bottom:0.75rem">+ Add question</button>
+        <button type="button" class="btn btn-primary btn-sm save-quiz-bank">Save ${escapeHtml(ch.name)} quiz</button>
+      </div>
+    `;
+
+    const header = block.querySelector('.chapter-lists-header');
+    const body = block.querySelector('.chapter-lists-body');
+    const questionsContainer = block.querySelector('.quiz-questions-container');
+
+    header.onclick = () => {
+      const isHidden = body.classList.toggle('hidden');
+      header.classList.toggle('open', !isHidden);
+      block.querySelector('.chapter-lists-chevron').textContent = isHidden ? '▼' : '▲';
+      if (isHidden) expandedChapters.delete(ch.id);
+      else expandedChapters.add(ch.id);
+    };
+
+    if (questions.length) questions.forEach(q => addQuestionRow(questionsContainer, q));
+    else addQuestionRow(questionsContainer);
+
+    block.querySelector('.add-quiz-question').onclick = () => addQuestionRow(questionsContainer);
+
+    block.querySelector('.save-quiz-bank').onclick = () => {
+      const parsed = [...questionsContainer.querySelectorAll('.quiz-question-row')].map((row, idx) => {
+        const options = [...row.querySelectorAll('.q-opt')].map(inp => inp.value.trim());
+        return {
+          id: row.dataset.qid || `q_${ch.id}_${idx}`,
+          question: row.querySelector('.q-text').value.trim(),
+          options,
+          correctIndex: parseInt(row.querySelector('.q-correct').value, 10) || 0,
+        };
+      }).filter(q => q.question && q.options.some(o => o));
+
+      if (!parsed.length) return toast('Add at least one complete question', 'error');
+
+      for (const q of parsed) {
+        if (q.options.filter(o => o).length < 2) {
+          return toast('Each question needs at least 2 answer options', 'error');
+        }
+        while (q.options.length < 4) q.options.push('');
+        if (q.correctIndex < 0 || q.correctIndex > 3 || !q.options[q.correctIndex]?.trim()) {
+          return toast('Select a correct answer that is not empty', 'error');
+        }
+      }
+
+      saveQuizBank({
+        id: bank.id || `quiz_${ch.id}`,
+        chapterId: ch.id,
+        questions: parsed,
+      });
+      toast(`${ch.name} quiz saved!`, 'success');
+      renderQuizTab(container);
+    };
+
+    return block;
+  }
+
+  CHAPTERS.forEach(ch => root.appendChild(renderChapterQuizBlock(ch)));
 }
 
 function renderAssignTab(container) {
