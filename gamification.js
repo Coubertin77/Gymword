@@ -104,19 +104,28 @@ export function getLeaderboard(classId, students) {
     }));
 }
 
-export function getChartData(student) {
-  const last7 = [];
-  for (let i = 6; i >= 0; i--) {
-    const d = new Date();
-    d.setDate(d.getDate() - i);
-    const dateStr = d.toISOString().slice(0, 10);
-    const dayPoints = student.scoreHistory
-      .filter(h => h.date === dateStr)
-      .reduce((sum, h) => sum + h.points, 0);
-    last7.push({ date: dateStr, label: d.toLocaleDateString('en', { weekday: 'short' }), points: dayPoints });
-  }
-  const max = Math.max(...last7.map(d => d.points), 1);
-  return last7.map(d => ({ ...d, height: Math.round((d.points / max) * 100) }));
+export function getVocabularyProgress(counts, totalWords) {
+  const total = totalWords || 0;
+  const learned = counts.learned || 0;
+  return {
+    learned,
+    total,
+    percent: total > 0 ? Math.round((learned / total) * 100) : 0,
+  };
+}
+
+export function getActivityProgress(student, activityTypes, labels) {
+  return (activityTypes || []).map(type => {
+    const s = student.activityScores[type];
+    const info = labels[type] || {};
+    return {
+      type,
+      icon: info.icon || '📋',
+      title: info.title || type,
+      best: s?.best ?? null,
+      attempts: s?.attempts ?? 0,
+    };
+  });
 }
 
 export function shuffle(arr) {

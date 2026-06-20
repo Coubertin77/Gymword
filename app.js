@@ -1,5 +1,4 @@
 import { CONFIG, ACTIVITY_LABELS, getWordImage } from './config.js';
-import { isCloudConfigured } from './supabase-config.js';
 import {
   initStorage, loadData, getClasses, getClassById, getWordsForClass, getStories, getStoryById,
   loginStudentByRoster, updateStudent, getStudentById, getStudentsByClass,
@@ -10,13 +9,30 @@ import {
 } from './storage.js';
 import {
   getLevel, countWordsByStatus, recordWordAttempt, awardPoints,
-  recordActivityScore, recordStoryScore, checkBadges, getLeaderboard, getChartData,
+  recordActivityScore, recordStoryScore, checkBadges, getLeaderboard, getVocabularyProgress, getActivityProgress,
 } from './gamification.js';
 import { renderActivity, renderStoryQuiz } from './activities.js';
 import { parseStudentLines, readCsvFile } from './roster-import.js';
 import { toast, escapeHtml, uid } from './utils.js';
 
 const app = document.getElementById('app');
+
+function cloudStatusHtml(sync, { compact = false } = {}) {
+  const tag = compact ? 'span' : 'p';
+  const cls = compact ? 'cloud-badge cloud-badge-sm' : 'cloud-badge';
+  const localCls = `${cls} cloud-badge-local`;
+  if (!sync.cloudEnabled) {
+    if (!compact) return '';
+    return `<span class="${localCls}" title="Supabase non configuré">💾 Local uniquement</span>`;
+  }
+  if (sync.cloudSynced && !sync.syncError) {
+    return `<${tag} class="${cls}" title="Données synchronisées en ligne">☁️ En ligne — données synchronisées</${tag}>`;
+  }
+  if (sync.syncError) {
+    return `<${tag} class="${localCls}" title="Mode hors ligne sur cet appareil">📱 Hors ligne — l'app fonctionne sur cet appareil</${tag}>`;
+  }
+  return `<${tag} class="${cls}">☁️ Connexion en cours…</${tag}>`;
+}
 
 export function navigate(view, params = {}) {
   if ('speechSynthesis' in window) window.speechSynthesis.cancel();
@@ -54,9 +70,9 @@ function renderHome() {
   app.innerHTML = `
     <div class="page" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100dvh">
       <div style="font-size:4rem;margin-bottom:0.5rem">🏋️</div>
-      <h1 class="logo-big">GymWord</h1>
+      <h1 class="logo-big">GymWord EPS</h1>
       <p class="logo-sub">Learn English vocabulary through fitness!</p>
-      ${sync.cloudEnabled ? '<p class="cloud-badge">☁️ Online — progress saved for everyone</p>' : ''}
+      ${cloudStatusHtml(sync)}
       <div class="card" style="width:100%;max-width:400px">
         <button class="btn btn-primary btn-block" id="btn-student" style="margin-bottom:0.75rem">I'm a Student 💪</button>
         <button class="btn btn-secondary btn-block" id="btn-teacher">I'm a Teacher 👩‍🏫</button>
@@ -178,7 +194,9 @@ function renderStudentDashboard() {
   const words = getWordsForClass(student.classId);
   const counts = countWordsByStatus(student, words);
   const level = getLevel(student.points);
-  const chartData = getChartData(student);
+  const vocabProgress = getVocabularyProgress(counts, words.length);
+  const activityTypes = cls?.assignedActivities || Object.keys(ACTIVITY_LABELS);
+  const activityProgress = getActivityProgress(student, activityTypes, ACTIVITY_LABELS);
   const badges = CONFIG.BADGES.map(b => ({ ...b, earned: student.badges.includes(b.id) }));
 
   app.innerHTML = `
@@ -200,15 +218,26 @@ function renderStudentDashboard() {
         <div class="status-box status-review"><span class="status-count">${counts.review}</span>To review</div>
       </div>
       <div class="card">
-        <p class="section-title">My Progress (last 7 days)</p>
-        <div class="chart-wrap">
-          ${chartData.map(d => `
-            <div class="chart-bar-wrap">
-              <div class="chart-bar" style="height:${Math.max(d.height, 4)}%" title="${d.points} pts"></div>
-              <span class="chart-label">${d.label}</span>
-            </div>
-          `).join('')}
+        <p class="section-title">Vocabulary mastery</p>
+        <p class="progress-summary">${vocabProgress.learned} / ${vocabProgress.total} words mastered</p>
+        <div class="progress-track" role="progressbar" aria-valuenow="${vocabProgress.percent}" aria-valuemin="0" aria-valuemax="100">
+          <div class="progress-fill" style="width:${vocabProgress.percent}%"></div>
         </div>
+        ${counts.review > 0 ? `<p class="progress-hint">📌 ${counts.review} word${counts.review > 1 ? 's' : ''} to review today</p>` : ''}
+      </div>
+      <div class="card">
+        <p class="section-title">My best scores</p>
+        ${activityProgress.length
+          ? `<div class="score-list">${activityProgress.map(a => `
+              <div class="score-row">
+                <span class="score-label">${a.icon} ${escapeHtml(a.title)}</span>
+                <div class="score-bar-track">
+                  <div class="score-bar-fill" style="width:${a.best ?? 0}%"></div>
+                </div>
+                <span class="score-value">${a.attempts ? `${a.best}%` : '—'}</span>
+              </div>
+            `).join('')}</div>`
+          : '<p class="progress-hint">Complete an activity to see your scores here.</p>'}
       </div>
       <div class="card">
         <p class="section-title">My Badges</p>
@@ -417,9 +446,7 @@ function renderTeacherDashboard() {
         <div class="page-header">
           <h1 class="page-title">Teacher Dashboard 👩‍🏫</h1>
           <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap">
-            ${sync.cloudEnabled
-              ? `<span class="cloud-badge cloud-badge-sm" title="Data synced online">☁️ Online</span>`
-              : `<span class="cloud-badge cloud-badge-sm cloud-badge-local" title="Configure Supabase for online sync">💾 Local only</span>`}
+            ${cloudStatusHtml(sync, { compact: true })}
             <button class="btn btn-ghost btn-sm" id="refresh-cloud" title="Reload latest data">🔄 Refresh</button>
             <button class="btn btn-ghost btn-sm" id="logout">Logout</button>
           </div>
@@ -436,7 +463,7 @@ function renderTeacherDashboard() {
     app.querySelector('#logout').onclick = () => { clearSession(); navigate('home'); };
     app.querySelector('#refresh-cloud')?.addEventListener('click', async () => {
       const ok = await reloadFromCloud();
-      toast(ok ? 'Data refreshed from cloud' : 'Refresh not available', ok ? 'success' : 'info');
+      toast(ok ? 'Données mises à jour depuis le cloud' : 'Synchronisation indisponible pour le moment', ok ? 'success' : 'info');
       if (ok) render();
     });
     app.querySelectorAll('.tab').forEach(tab => {
@@ -779,17 +806,15 @@ function showLoading(message = 'Loading GymWord…') {
 }
 
 async function bootstrap() {
-  showLoading(isCloudConfigured() ? 'Connecting to online storage…' : 'Loading…');
+  showLoading('Chargement de GymWord…');
   try {
-    await Promise.race([
-      initStorage(),
-      new Promise((_, reject) => {
-        setTimeout(() => reject(new Error('Startup timed out')), 12000);
-      }),
-    ]);
+    await initStorage();
   } catch (err) {
     console.error(err);
-    toast('Could not load online data — working offline', 'error');
+  }
+  const sync = getSyncStatus();
+  if (sync.cloudEnabled && sync.syncError) {
+    toast('Synchronisation en ligne indisponible — vous pouvez quand même utiliser l\'application', 'info');
   }
   const session = getSession();
   if (session?.studentId) navigate('studentDashboard');

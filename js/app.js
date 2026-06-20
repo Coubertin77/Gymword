@@ -9,7 +9,7 @@ import {
 } from './storage.js';
 import {
   getLevel, countWordsByStatus, recordWordAttempt, awardPoints,
-  recordActivityScore, recordStoryScore, checkBadges, getLeaderboard, getChartData,
+  recordActivityScore, recordStoryScore, checkBadges, getLeaderboard, getVocabularyProgress, getActivityProgress,
 } from './gamification.js';
 import { renderActivity, renderStoryQuiz } from './activities.js';
 import { parseStudentLines, readCsvFile } from './roster-import.js';
@@ -194,7 +194,9 @@ function renderStudentDashboard() {
   const words = getWordsForClass(student.classId);
   const counts = countWordsByStatus(student, words);
   const level = getLevel(student.points);
-  const chartData = getChartData(student);
+  const vocabProgress = getVocabularyProgress(counts, words.length);
+  const activityTypes = cls?.assignedActivities || Object.keys(ACTIVITY_LABELS);
+  const activityProgress = getActivityProgress(student, activityTypes, ACTIVITY_LABELS);
   const badges = CONFIG.BADGES.map(b => ({ ...b, earned: student.badges.includes(b.id) }));
 
   app.innerHTML = `
@@ -216,15 +218,26 @@ function renderStudentDashboard() {
         <div class="status-box status-review"><span class="status-count">${counts.review}</span>To review</div>
       </div>
       <div class="card">
-        <p class="section-title">My Progress (last 7 days)</p>
-        <div class="chart-wrap">
-          ${chartData.map(d => `
-            <div class="chart-bar-wrap">
-              <div class="chart-bar" style="height:${Math.max(d.height, 4)}%" title="${d.points} pts"></div>
-              <span class="chart-label">${d.label}</span>
-            </div>
-          `).join('')}
+        <p class="section-title">Vocabulary mastery</p>
+        <p class="progress-summary">${vocabProgress.learned} / ${vocabProgress.total} words mastered</p>
+        <div class="progress-track" role="progressbar" aria-valuenow="${vocabProgress.percent}" aria-valuemin="0" aria-valuemax="100">
+          <div class="progress-fill" style="width:${vocabProgress.percent}%"></div>
         </div>
+        ${counts.review > 0 ? `<p class="progress-hint">📌 ${counts.review} word${counts.review > 1 ? 's' : ''} to review today</p>` : ''}
+      </div>
+      <div class="card">
+        <p class="section-title">My best scores</p>
+        ${activityProgress.length
+          ? `<div class="score-list">${activityProgress.map(a => `
+              <div class="score-row">
+                <span class="score-label">${a.icon} ${escapeHtml(a.title)}</span>
+                <div class="score-bar-track">
+                  <div class="score-bar-fill" style="width:${a.best ?? 0}%"></div>
+                </div>
+                <span class="score-value">${a.attempts ? `${a.best}%` : '—'}</span>
+              </div>
+            `).join('')}</div>`
+          : '<p class="progress-hint">Complete an activity to see your scores here.</p>'}
       </div>
       <div class="card">
         <p class="section-title">My Badges</p>
