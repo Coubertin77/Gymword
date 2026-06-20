@@ -685,29 +685,73 @@ function handleBulkAdd(card) {
 }
 
 function renderListsTab(container) {
-  container.innerHTML = `
-    <button class="btn btn-primary btn-sm" id="new-list" style="margin-bottom:1rem">+ New list</button>
-    <div id="lists-container"></div>
-  `;
-  const listsContainer = container.querySelector('#lists-container');
+  const expandedChapters = new Set(CHAPTERS.map(c => c.id));
+  const expandedLists = new Set();
 
-  function renderListEditor(list) {
+  container.innerHTML = `<div id="lists-by-chapter" class="lists-by-chapter"></div>`;
+  const root = container.querySelector('#lists-by-chapter');
+
+  function renderListEditor(list, { startOpen = false } = {}) {
     const isNew = !list.id;
+    if (startOpen && list.id) expandedLists.add(list.id);
+
     const div = document.createElement('div');
-    div.className = 'card';
+    div.className = 'list-editor-card';
+    div.dataset.listId = list.id || 'new';
+
+    const chapterId = list.chapterId || 'musculation';
+    const isOpen = isNew || startOpen || expandedLists.has(list.id);
+
     div.innerHTML = `
-      <div class="form-group">
-        <label>List name</label>
-        <input type="text" class="list-name" value="${escapeHtml(list.name || '')}" placeholder="e.g. Gym Equipment">
-      </div>
-      <p class="section-title">Words (max 10)</p>
-      <div class="words-container"></div>
-      <button class="btn btn-secondary btn-sm add-word" style="margin-bottom:0.75rem">+ Add word</button>
-      <div class="btn-group">
-        <button class="btn btn-primary save-list">Save</button>
-        ${!isNew ? '<button class="btn btn-ghost delete-list">Delete list</button>' : ''}
+      <button type="button" class="list-editor-toggle ${isOpen ? 'open' : ''}">
+        <span class="list-editor-summary">
+          <strong class="list-editor-name">${escapeHtml(list.name || 'New list')}</strong>
+          <span class="list-editor-meta">${(list.words || []).length} word${(list.words?.length || 0) !== 1 ? 's' : ''}</span>
+        </span>
+        <span class="list-editor-chevron">${isOpen ? '▲' : '▼'}</span>
+      </button>
+      <div class="list-editor-body ${isOpen ? '' : 'hidden'}">
+        <div class="form-group">
+          <label>List name</label>
+          <input type="text" class="list-name" value="${escapeHtml(list.name || '')}" placeholder="e.g. Badminton — Basics">
+        </div>
+        <div class="form-group">
+          <label>Chapter / sport</label>
+          <select class="list-chapter">
+            ${CHAPTERS.map(ch => `
+              <option value="${ch.id}" ${chapterId === ch.id ? 'selected' : ''}>${ch.icon} ${escapeHtml(ch.name)}</option>
+            `).join('')}
+          </select>
+        </div>
+        <p class="section-title">Words (max 10)</p>
+        <div class="words-container"></div>
+        <button type="button" class="btn btn-secondary btn-sm add-word" style="margin-bottom:0.75rem">+ Add word</button>
+        <div class="btn-group">
+          <button type="button" class="btn btn-primary save-list">Save</button>
+          ${!isNew ? '<button type="button" class="btn btn-ghost delete-list">Delete list</button>' : ''}
+        </div>
       </div>
     `;
+
+    const toggleBtn = div.querySelector('.list-editor-toggle');
+    const body = div.querySelector('.list-editor-body');
+    const nameInput = div.querySelector('.list-name');
+    const metaEl = div.querySelector('.list-editor-name');
+
+    toggleBtn.onclick = () => {
+      const isHidden = body.classList.toggle('hidden');
+      toggleBtn.classList.toggle('open', !isHidden);
+      div.querySelector('.list-editor-chevron').textContent = isHidden ? '▼' : '▲';
+      if (list.id) {
+        if (isHidden) expandedLists.delete(list.id);
+        else expandedLists.add(list.id);
+      }
+    };
+
+    nameInput.oninput = () => {
+      metaEl.textContent = nameInput.value.trim() || 'New list';
+    };
+
     const wordsContainer = div.querySelector('.words-container');
 
     function addWordRow(word = { english: '', french: '', definition: '' }) {
@@ -718,7 +762,7 @@ function renderListsTab(container) {
         <input class="w-english" placeholder="English" value="${escapeHtml(word.english)}">
         <input class="w-french" placeholder="French translation" value="${escapeHtml(word.french)}">
         <input class="w-def" placeholder="English definition" value="${escapeHtml(word.definition)}" style="grid-column:1/-1">
-        <button class="btn btn-ghost btn-sm remove-word" style="grid-column:1/-1">Remove</button>
+        <button type="button" class="btn btn-ghost btn-sm remove-word" style="grid-column:1/-1">Remove</button>
       `;
       row.querySelector('.remove-word').onclick = () => row.remove();
       wordsContainer.appendChild(row);
@@ -729,7 +773,7 @@ function renderListsTab(container) {
 
     div.querySelector('.add-word').onclick = () => addWordRow();
     div.querySelector('.save-list').onclick = () => {
-      const name = div.querySelector('.list-name').value.trim();
+      const name = nameInput.value.trim();
       if (!name) return toast('List name required', 'error');
       const words = [...div.querySelectorAll('.word-editor-row')].map(row => ({
         english: row.querySelector('.w-english').value.trim(),
@@ -738,7 +782,14 @@ function renderListsTab(container) {
         imageUrl: getWordImage(row.querySelector('.w-english').value.trim()),
       })).filter(w => w.english);
       if (!words.length) return toast('Add at least one word', 'error');
-      saveWordList({ id: list.id || uid('list'), name, words });
+      const selectedChapter = div.querySelector('.list-chapter').value;
+      saveWordList({
+        id: list.id || uid('list'),
+        name,
+        words,
+        chapterId: selectedChapter,
+        theme: list.theme || (list.id?.includes('image_match') ? 'image_match' : 'basics'),
+      });
       toast('List saved!', 'success');
       renderListsTab(container);
     };
@@ -747,6 +798,7 @@ function renderListsTab(container) {
       div.querySelector('.delete-list').onclick = () => {
         if (confirm('Delete this list?')) {
           deleteWordList(list.id);
+          expandedLists.delete(list.id);
           toast('List deleted', 'info');
           renderListsTab(container);
         }
@@ -755,10 +807,68 @@ function renderListsTab(container) {
     return div;
   }
 
-  getWordLists().forEach(list => listsContainer.appendChild(renderListEditor(list)));
-  container.querySelector('#new-list').onclick = () => {
-    listsContainer.prepend(renderListEditor({ name: '', words: [] }));
-  };
+  function renderChapterBlock(ch) {
+    const lists = getWordLists(ch.id).sort((a, b) => a.name.localeCompare(b.name, 'fr'));
+    const isOpen = expandedChapters.has(ch.id);
+
+    const block = document.createElement('div');
+    block.className = 'chapter-lists-block';
+    block.innerHTML = `
+      <button type="button" class="chapter-lists-header ${isOpen ? 'open' : ''}">
+        <span class="chapter-lists-title">${ch.icon} ${escapeHtml(ch.name)}</span>
+        <span class="chapter-lists-count">${lists.length} list${lists.length !== 1 ? 's' : ''}</span>
+        <span class="chapter-lists-chevron">${isOpen ? '▲' : '▼'}</span>
+      </button>
+      <div class="chapter-lists-body ${isOpen ? '' : 'hidden'}"></div>
+    `;
+
+    const header = block.querySelector('.chapter-lists-header');
+    const body = block.querySelector('.chapter-lists-body');
+
+    header.onclick = () => {
+      const isHidden = body.classList.toggle('hidden');
+      header.classList.toggle('open', !isHidden);
+      block.querySelector('.chapter-lists-chevron').textContent = isHidden ? '▼' : '▲';
+      if (isHidden) expandedChapters.delete(ch.id);
+      else expandedChapters.add(ch.id);
+    };
+
+    lists.forEach(list => body.appendChild(renderListEditor(list)));
+
+    const addBtn = document.createElement('button');
+    addBtn.type = 'button';
+    addBtn.className = 'btn btn-secondary btn-sm add-list-chapter';
+    addBtn.textContent = `+ New list in ${ch.name}`;
+    addBtn.onclick = () => {
+      expandedChapters.add(ch.id);
+      body.classList.remove('hidden');
+      header.classList.add('open');
+      block.querySelector('.chapter-lists-chevron').textContent = '▲';
+      body.prepend(renderListEditor({ name: '', words: [], chapterId: ch.id }, { startOpen: true }));
+    };
+    body.appendChild(addBtn);
+
+    return block;
+  }
+
+  CHAPTERS.forEach(ch => root.appendChild(renderChapterBlock(ch)));
+
+  const uncategorized = getWordLists().filter(l => !l.chapterId || !CHAPTERS.some(c => c.id === l.chapterId));
+  if (uncategorized.length) {
+    const block = document.createElement('div');
+    block.className = 'chapter-lists-block';
+    block.innerHTML = `
+      <button type="button" class="chapter-lists-header open">
+        <span class="chapter-lists-title">📋 Other lists</span>
+        <span class="chapter-lists-count">${uncategorized.length} list${uncategorized.length !== 1 ? 's' : ''}</span>
+        <span class="chapter-lists-chevron">▲</span>
+      </button>
+      <div class="chapter-lists-body"></div>
+    `;
+    const body = block.querySelector('.chapter-lists-body');
+    uncategorized.forEach(list => body.appendChild(renderListEditor(list)));
+    root.appendChild(block);
+  }
 }
 
 function renderAssignTab(container) {
