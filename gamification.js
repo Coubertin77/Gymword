@@ -59,16 +59,15 @@ export function awardPoints(student, points, activityType) {
   else student.scoreHistory.push({ date: today, points, activityType });
 }
 
-export function recordActivityScore(student, activityType, score, total, timeSeconds) {
+export function recordActivityScore(student, activityType, score, total) {
   if (!student.activityScores[activityType]) {
-    student.activityScores[activityType] = { best: 0, attempts: 0, totalScore: 0, bestTime: null };
+    student.activityScores[activityType] = { best: 0, attempts: 0, totalScore: 0 };
   }
   const s = student.activityScores[activityType];
   s.attempts++;
   s.totalScore += score;
   const pct = total > 0 ? Math.round((score / total) * 100) : 0;
   if (pct > s.best) s.best = pct;
-  if (timeSeconds && (!s.bestTime || timeSeconds < s.bestTime)) s.bestTime = timeSeconds;
 }
 
 export function recordStoryScore(student, storyId, score, total) {
@@ -82,7 +81,6 @@ export function checkBadges(student, context = {}) {
 
   if (context.activityCompleted && !earned.has('first_workout')) earned.add('first_workout');
   if (wordsLearned >= 5 && !earned.has('word_master')) earned.add('word_master');
-  if (context.timeSeconds && context.timeSeconds < 60 && !earned.has('speed_demon')) earned.add('speed_demon');
   if (context.storyCompleted && !earned.has('story_reader')) earned.add('story_reader');
   if (context.perfectScore && !earned.has('perfect_score')) earned.add('perfect_score');
   if (getLevel(student.points) >= 3 && !earned.has('level_3')) earned.add('level_3');

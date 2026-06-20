@@ -1,23 +1,7 @@
 import { CONFIG, ACTIVITY_LABELS, filterImageMatchWords } from './config.js';
 import { shuffle } from './gamification.js';
-import { escapeHtml, formatTime } from './utils.js';
+import { escapeHtml } from './utils.js';
 import { wrapStoryWords, createStoryReader, stopStoryAudio } from './story-audio.js';
-
-export function createTimer(onTick) {
-  let seconds = 0;
-  let interval = null;
-  return {
-    start() {
-      if (interval) return;
-      interval = setInterval(() => { seconds++; onTick(seconds); }, 1000);
-    },
-    stop() {
-      if (interval) { clearInterval(interval); interval = null; }
-      return seconds;
-    },
-    get() { return seconds; },
-  };
-}
 
 export function renderActivity(type, words, container, onComplete) {
   const pool = type === 'image_match' ? filterImageMatchWords(words) : words;
@@ -29,15 +13,8 @@ export function renderActivity(type, words, container, onComplete) {
     return;
   }
 
-  const timer = createTimer(s => {
-    const el = container.querySelector('.timer');
-    if (el) el.textContent = formatTime(s);
-  });
-  timer.start();
-
   const finish = (score, total) => {
-    const time = timer.stop();
-    onComplete({ score, total, timeSeconds: time, perfect: score === total });
+    onComplete({ score, total, perfect: score === total });
   };
 
   switch (type) {
@@ -64,7 +41,6 @@ function activityToolbar(matched, total, extra = '') {
   return `
     <div class="activity-toolbar">
       <div class="activity-toolbar-left">
-        <span class="timer-pill">⏱ <span class="timer">0:00</span></span>
         <span class="score-pill">✓ <span id="match-count">${matched}</span> / ${total}</span>
       </div>
       ${extra}
@@ -427,12 +403,6 @@ export function renderStoryQuiz(story, container, onComplete) {
   let storyReader = null;
   let audioState = 'idle';
 
-  const timer = createTimer(s => {
-    const el = container.querySelector('.timer');
-    if (el) el.textContent = formatTime(s);
-  });
-  timer.start();
-
   function getScore() {
     return answers.reduce((sum, ans, i) => {
       if (ans === null) return sum;
@@ -481,7 +451,6 @@ export function renderStoryQuiz(story, container, onComplete) {
       <div class="activity-shell">
         <div class="activity-toolbar">
           <div class="activity-toolbar-left">
-            <span class="timer-pill">⏱ <span class="timer">0:00</span></span>
             <span class="score-pill">${countAnswered()} / ${story.questions.length} answered</span>
           </div>
           <div class="story-audio-controls">
@@ -596,12 +565,10 @@ export function renderStoryQuiz(story, container, onComplete) {
 
   function finishQuiz() {
     stopStoryAudio();
-    const time = timer.stop();
     const score = getScore();
     onComplete({
       score,
       total: story.questions.length,
-      timeSeconds: time,
       perfect: score === story.questions.length,
     });
   }

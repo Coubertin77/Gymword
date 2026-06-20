@@ -2,7 +2,6 @@ export const CONFIG = {
   TEACHER_PASSWORD: 'EPS',
   POINTS: {
     CORRECT: 10,
-    BONUS_FAST: 5,
     STORY_COMPLETE: 25,
   },
   LEVELS: [
@@ -15,7 +14,6 @@ export const CONFIG = {
   BADGES: [
     { id: 'first_workout', name: 'First Workout', icon: '🏋️', desc: 'Complete your first activity' },
     { id: 'word_master', name: 'Word Master', icon: '💪', desc: 'Master 5 words' },
-    { id: 'speed_demon', name: 'Speed Demon', icon: '⚡', desc: 'Finish an activity under 60 seconds' },
     { id: 'story_reader', name: 'Story Reader', icon: '📖', desc: 'Complete a story quiz' },
     { id: 'perfect_score', name: 'Perfect Score', icon: '🌟', desc: 'Get 100% on an activity' },
     { id: 'level_3', name: 'Rising Star', icon: '⭐', desc: 'Reach level 3' },

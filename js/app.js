@@ -285,13 +285,12 @@ function renderStudentDashboard() {
 }
 
 function handleActivityComplete(student, type, words, result) {
-  const pts = result.score * CONFIG.POINTS.CORRECT + (result.timeSeconds < 60 ? CONFIG.POINTS.BONUS_FAST : 0);
+  const pts = result.score * CONFIG.POINTS.CORRECT;
   awardPoints(student, pts, type);
-  recordActivityScore(student, type, result.score, result.total, result.timeSeconds);
+  recordActivityScore(student, type, result.score, result.total);
   words.forEach(w => recordWordAttempt(student, w.english.toLowerCase(), true));
   const newBadges = checkBadges(student, {
     activityCompleted: true,
-    timeSeconds: result.timeSeconds,
     perfectScore: result.perfect,
   });
   updateStudent(student);
