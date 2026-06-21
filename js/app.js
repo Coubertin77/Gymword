@@ -1,4 +1,4 @@
-import { CONFIG, ACTIVITY_LABELS, getWordImage, CHAPTERS, getChapterById, getActivitiesForChapter, APP_VERSION } from './config.js';
+import { CONFIG, ACTIVITY_LABELS, getWordImage, CHAPTERS, getChapterById, getActivitiesForChapter, APP_VERSION, MUSCLE_ANATOMY_IMAGE } from './config.js';
 import {
   initStorage, loadData, getClasses, getClassById, getWordsForClass, getStories, getStoryById,
   getStoriesForClass, getChaptersForClass,
@@ -48,6 +48,7 @@ export function navigate(view, params = {}) {
     studentStories: renderStudentStories,
     studentStory: () => renderStudentStory(params.storyId),
     studentLeaderboard: renderStudentLeaderboard,
+    studentMuscleAnatomy: renderStudentMuscleAnatomy,
     teacherDashboard: renderTeacherDashboard,
   };
   (routes[view] || renderHome)();
@@ -296,6 +297,14 @@ function renderStudentDashboard() {
           ${badges.map(b => `<span class="badge ${b.earned ? '' : 'locked'}" title="${escapeHtml(b.desc)}">${b.icon} ${escapeHtml(b.name)}</span>`).join('')}
         </div>
       </div>
+      ${chapterId === 'musculation' ? `
+      <div class="card card-clickable anatomy-preview-card" id="go-anatomy">
+        <p class="section-title">Muscle map (English)</p>
+        <p class="card-desc">Anatomy of the Human Musculature — muscle names in English</p>
+        <img src="${MUSCLE_ANATOMY_IMAGE}" alt="Anatomy of the Human Musculature" class="anatomy-preview-img" loading="lazy">
+        <p class="progress-hint anatomy-preview-hint">Tap to view full size</p>
+      </div>
+      ` : ''}
       <p class="section-title">Choose an activity</p>
       <div class="card-grid" id="activity-grid"></div>
       <p class="section-title" style="margin-top:1.5rem">More</p>
@@ -318,6 +327,8 @@ function renderStudentDashboard() {
   app.querySelector('#change-chapter').onclick = () => navigate('studentChapterSelect');
   app.querySelector('#go-stories').onclick = () => navigate('studentStories');
   app.querySelector('#go-leaderboard').onclick = () => navigate('studentLeaderboard');
+  const anatomyBtn = app.querySelector('#go-anatomy');
+  if (anatomyBtn) anatomyBtn.onclick = () => navigate('studentMuscleAnatomy');
 
   const grid = app.querySelector('#activity-grid');
   getActivitiesForChapter(cls?.assignedActivities, chapterId).forEach(type => {
@@ -462,6 +473,31 @@ function renderStudentStory(storyId) {
     resultArea.querySelector('#home-btn').onclick = () => navigate('studentDashboard');
     toast(`+${pts} points!`, 'success');
   });
+}
+
+function renderStudentMuscleAnatomy() {
+  const student = requireStudentSession();
+  if (!student) return;
+  if (getSessionChapterId() !== 'musculation') {
+    navigate('studentDashboard');
+    return;
+  }
+
+  app.innerHTML = `
+    <div class="page page-anatomy">
+      <button class="nav-back" id="back">← Dashboard</button>
+      <h1 class="page-title">💪 Muscle Anatomy</h1>
+      <p class="card-desc">Anatomy of the Human Musculature — English labels for major muscle groups</p>
+      <div class="card anatomy-card">
+        <img
+          src="${MUSCLE_ANATOMY_IMAGE}"
+          alt="Anatomy of the Human Musculature — labelled diagram of major muscles in English"
+          class="anatomy-full-img"
+        >
+      </div>
+    </div>
+  `;
+  app.querySelector('#back').onclick = () => navigate('studentDashboard');
 }
 
 function renderStudentLeaderboard() {
