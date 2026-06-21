@@ -154,9 +154,9 @@ export function getSeedData() {
   const allChapterIds = ['musculation', 'badminton', 'basket', 'touch_rugby', 'flag_football', 'baseball', 'laser_run'];
   const allActivities = ['image_match', 'translation', 'definition', 'qcm', 'spelling', 'muscle_region'];
 
-  const musculationStoriesSeconde = ['story_1', 'story_2', 'story_3', 'story_11', 'story_12'];
-  const musculationStoriesPremiere = ['story_1', 'story_2', 'story_3', 'story_4', 'story_5', 'story_11', 'story_12', 'story_13', 'story_14', 'story_15'];
-  const musculationStoriesTerminale = ['story_1', 'story_2', 'story_3', 'story_4', 'story_5', 'story_6', 'story_7', 'story_8', 'story_9', 'story_10', 'story_11', 'story_12', 'story_13', 'story_14', 'story_15', 'story_16', 'story_17'];
+  const musculationStoriesSeconde = ['story_1', 'story_2', 'story_3', 'story_11', 'story_12', 'story_18'];
+  const musculationStoriesPremiere = ['story_1', 'story_2', 'story_3', 'story_4', 'story_5', 'story_11', 'story_12', 'story_13', 'story_14', 'story_15', 'story_18'];
+  const musculationStoriesTerminale = ['story_1', 'story_2', 'story_3', 'story_4', 'story_5', 'story_6', 'story_7', 'story_8', 'story_9', 'story_10', 'story_11', 'story_12', 'story_13', 'story_14', 'story_15', 'story_16', 'story_17', 'story_18'];
 
   const classes = [
     {
@@ -374,6 +374,16 @@ function buildStories() {
         { question: 'According to the coach, what does peak performance depend on?', options: ['Last-minute cramming', 'Consistency over time', 'Skipping warm ups', 'Training alone without communication'], correctIndex: 1 },
         { question: 'Why did students review English vocabulary before training blocks?', options: ['To pass a maths exam', 'To communicate clearly about technique during team workouts', 'To impress the judges with poetry', 'Because English replaces physical training'], correctIndex: 1 },
         { question: 'What overall conclusion did the team reach?', options: ['Progress is impossible without winning first place', 'Sustainable progress and language skills support effective training', 'Recovery days are a sign of weakness', 'Teamwork is less important than individual records'], correctIndex: 1 },
+      ],
+    },
+    {
+      id: 'story_18', chapterId: 'musculation', title: 'What Are Your Goals?', englishLevel: 'B1',
+      text: 'A new member met the gym coach for the first time. "What are your goals?" the coach asked. "Do you want to gain muscle?" The member replied, "My first goal is to lose weight. I would like to melt my belly fat." The coach answered, "Okay, I got it, but the human body doesn\'t work that way — you can\'t get lean in one area only." The coach then asked how many times a week she could come to train. She said she could come three times a week and use each piece of equipment: the treadmill, the rowing machine, the elliptical, the bicycle, and maybe some weight machines. She also asked on which floor they were located. The coach explained that the weight machines were on the 3rd floor, and suggested warming up beforehand in the cardio training area on the 2nd floor. When she asked which training method was best for weight loss and endurance, the coach advised her to warm up properly on any cardio machine and increase training time every day, adjusting the difficulty gradually. He promised to give her a workout programme showing how many sets and reps to do. Finally, she asked how to manage muscle recovery. The coach insisted that staying hydrated before, during, and especially after exercise was essential, along with watching her diet — avoiding sweets and eating plenty of protein such as eggs, turkey, chicken, and fish.',
+      questions: [
+        { question: 'What is the member\'s first goal?', options: ['To lose weight and reduce belly fat', 'To gain muscle mass only', 'To compete in powerlifting', 'To stop exercising completely'], correctIndex: 0 },
+        { question: 'What does the coach say about losing fat in one body area?', options: ['It is easy with crunches only', 'The body cannot get lean in one area only', 'It requires no cardio training', 'It happens in one week'], correctIndex: 1 },
+        { question: 'On which floor are the weight machines?', options: ['1st floor', '2nd floor', '3rd floor', 'Outside the building'], correctIndex: 2 },
+        { question: 'What advice does the coach give for muscle recovery?', options: ['Avoid all food after training', 'Stay hydrated and eat plenty of protein', 'Train every hour without rest', 'Drink only sugary drinks'], correctIndex: 1 },
       ],
     },
   ];
