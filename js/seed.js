@@ -207,7 +207,7 @@ export function getSeedStories() {
 function buildStories() {
   return [
     {
-      id: 'story_1', chapterId: 'musculation', title: 'First Day at the Gym',
+      id: 'story_1', chapterId: 'musculation', title: 'First Day at the Gym', englishLevel: 'A2',
       text: 'Tom was nervous on his first day at the gym. He watched other people doing their warm up exercises — stretching arms and legs before the real training began. A friendly coach showed him the bench press station. "Start light," the coach said. Tom learned he must bend his knees slightly when picking up weights. After thirty minutes, Tom felt his hamstring muscles stretching during the cool-down. He was tired but proud. "See you tomorrow for more training!" the coach shouted. Tom smiled. The gym was not so scary after all.',
       questions: [
         { question: 'How did Tom feel at the beginning?', options: ['Excited and confident', 'Nervous', 'Angry', 'Bored'], correctIndex: 1 },
@@ -217,7 +217,7 @@ function buildStories() {
       ],
     },
     {
-      id: 'story_2', chapterId: 'musculation', title: 'The Perfect Warm Up',
+      id: 'story_2', chapterId: 'musculation', title: 'The Perfect Warm Up', englishLevel: 'A2',
       text: 'Every good workout starts with a warm up. Coach Maria always told her students this rule. Before any training session, she made them jog lightly for five minutes. Then they would bend forward to touch their toes, stretching the hamstring muscles carefully. Maria explained that a proper warm up prevents injuries during exercises like the bench press or squats. One student, Lisa, used to skip her warm up and ended up with sore muscles for three days. After that, she never missed it again. Now Lisa helps new students understand why warming up matters. Maria is proud of her class.',
       questions: [
         { question: 'What does Coach Maria require before training?', options: ['Heavy lifting first', 'A warm up', 'Skipping stretches', 'Running a marathon'], correctIndex: 1 },
@@ -227,7 +227,7 @@ function buildStories() {
       ],
     },
     {
-      id: 'story_3', chapterId: 'musculation', title: 'Training Together',
+      id: 'story_3', chapterId: 'musculation', title: 'Training Together', englishLevel: 'A2',
       text: 'Jake and Emma decided to start training together every Tuesday after school. Their first session focused on basic exercises. They shared a bench press station, taking turns with light weights. During their warm up, they jogged around the sports hall and practiced bending and stretching movements. Emma struggled with the word "hamstring" in English class, but now she could point to the muscle and name it correctly. Their PE teacher recorded their progress on a chart. After four weeks, both students felt stronger and more confident. Teamwork made their training sessions fun and effective.',
       questions: [
         { question: 'When do Jake and Emma train?', options: ['Every morning', 'Every Tuesday after school', 'Only on weekends', 'Never'], correctIndex: 1 },
@@ -237,7 +237,7 @@ function buildStories() {
       ],
     },
     {
-      id: 'story_4', chapterId: 'musculation', title: 'The Squat Challenge',
+      id: 'story_4', chapterId: 'musculation', title: 'The Squat Challenge', englishLevel: 'B1',
       text: 'The PE class organised a squat challenge for all levels. Students had to complete three sets of ten squats with correct form. Before starting, everyone did a thorough warm up including leg stretches and light jogging. The teacher reminded students to bend their knees properly and keep their backs straight. During the challenge, some students felt their hamstring muscles working hard. Those who skipped the warm up struggled more than others. At the end, the class discussed how proper training technique prevents injuries. The winners received a "Strong Legs" badge. Everyone agreed it was a great learning experience.',
       questions: [
         { question: 'What was the main exercise in the challenge?', options: ['Bench press', 'Squats', 'Pull-ups', 'Running'], correctIndex: 1 },
@@ -247,7 +247,7 @@ function buildStories() {
       ],
     },
     {
-      id: 'story_5', chapterId: 'musculation', title: 'Rest and Recovery',
+      id: 'story_5', chapterId: 'musculation', title: 'Rest and Recovery', englishLevel: 'B1',
       text: 'After an intense week of training, the Terminale class learned about recovery. Their teacher explained that muscles need rest to grow stronger. Students who trained every day without rest often developed sore muscles and felt exhausted. The class practiced gentle stretching and discussed the importance of sleep and hydration. One student asked about the difference between a warm up and a cool-down. The teacher explained that both are essential parts of a complete training programme. By the end of the lesson, everyone understood that recovery is not laziness — it is smart training.',
       questions: [
         { question: 'What was the lesson mainly about?', options: ['Bench press technique', 'Recovery and rest', 'Competition rules', 'Nutrition only'], correctIndex: 1 },
@@ -257,7 +257,7 @@ function buildStories() {
       ],
     },
     {
-      id: 'story_6', chapterId: 'musculation', title: 'The New Dumbbells',
+      id: 'story_6', chapterId: 'musculation', title: 'The New Dumbbells', englishLevel: 'B1',
       text: 'The school gym received new dumbbells over the summer. On the first day back, the Première class was excited to try them. Their teacher started with a warm up routine before introducing the new equipment. Students practiced basic movements, learning to bend their elbows correctly while lifting. The teacher paired students for the bench press and dumbbell exercises. Everyone recorded their reps in a training journal. By the end of the session, students felt confident using the new equipment safely. The teacher reminded them that good training habits start with proper preparation.',
       questions: [
         { question: 'What new equipment did the gym receive?', options: ['Treadmills', 'Dumbbells', 'Bicycles', 'Mats only'], correctIndex: 1 },
@@ -267,7 +267,7 @@ function buildStories() {
       ],
     },
     {
-      id: 'story_7', chapterId: 'musculation', title: 'Core Strength Day',
+      id: 'story_7', chapterId: 'musculation', title: 'Core Strength Day', englishLevel: 'B1',
       text: 'Wednesday was core strength day in the Terminale programme. Students learned that the core includes abdominal and lower back muscles. The session began with a dynamic warm up including planks and stretching. The teacher demonstrated how a strong core helps during exercises like the deadlift and squat. Students practiced bending and twisting movements to engage their core. Some found the exercises challenging but rewarding. The teacher explained that core training supports every other type of exercise. Students left the session understanding why core work is essential for overall fitness.',
       questions: [
         { question: 'What day was core strength day?', options: ['Monday', 'Wednesday', 'Friday', 'Sunday'], correctIndex: 1 },
@@ -277,7 +277,7 @@ function buildStories() {
       ],
     },
     {
-      id: 'story_8', chapterId: 'musculation', title: 'Pull-Up Progress',
+      id: 'story_8', chapterId: 'musculation', title: 'Pull-Up Progress', englishLevel: 'B1',
       text: 'Marc could not do a single pull-up at the start of the year. His goal was to complete five by the end of the term. Every training session, he worked on his upper body strength. He always began with a warm up and finished with stretching for his sore muscles. His friends encouraged him during group training sessions. The teacher showed him how to use resistance bands to build strength gradually. After two months of consistent training, Marc completed his first pull-up. The whole class cheered. Marc learned that patience and regular practice lead to real progress.',
       questions: [
         { question: "What was Marc's goal?", options: ['Run a marathon', 'Complete five pull-ups', 'Bench press 200 kg', 'Skip every warm up'], correctIndex: 1 },
@@ -287,7 +287,7 @@ function buildStories() {
       ],
     },
     {
-      id: 'story_9', chapterId: 'musculation', title: 'The PE Exam',
+      id: 'story_9', chapterId: 'musculation', title: 'The PE Exam', englishLevel: 'B2',
       text: 'Before the PE vocabulary exam, the Seconde class reviewed key words together. They practiced saying "warm up", "training", "bench press", and "hamstring" aloud. The teacher created fun activities to help them remember the definitions in English. Students who had been training regularly felt more confident because they used these words every week in the gym. On exam day, students had to match words with definitions and answer comprehension questions about a short gym story. Most students passed with good scores. The teacher was pleased to see vocabulary learned through real physical activity.',
       questions: [
         { question: 'What did the class review before the exam?', options: ['Math formulas', 'PE vocabulary', 'History dates', 'Music notes'], correctIndex: 1 },
@@ -297,7 +297,7 @@ function buildStories() {
       ],
     },
     {
-      id: 'story_10', chapterId: 'musculation', title: 'Championship Day',
+      id: 'story_10', chapterId: 'musculation', title: 'Championship Day', englishLevel: 'B2',
       text: 'The annual school fitness championship brought together all three levels. Students competed in teams, combining strength and vocabulary knowledge. Each team had to name exercises correctly in English before performing them — bench press, squats, pull-ups, and more. Every team started with a group warm up led by the Terminale students. The competition was close, but Team B from Première won by knowing all their vocabulary words and completing exercises with perfect form. The PE teacher gave a speech about how language and sport work together. Everyone celebrated with a cool-down stretch session together.',
       questions: [
         { question: 'What did teams need to do before each exercise?', options: ['Pay money', 'Name exercises correctly in English', 'Write an essay', 'Call their parents'], correctIndex: 1 },

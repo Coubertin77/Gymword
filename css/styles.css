@@ -108,6 +108,12 @@ body {
   background: rgba(108, 60, 224, 0.1);
   padding: 0.1rem 0.45rem;
   border-radius: 999px;
+  vertical-align: middle;
+}
+
+.stories-level-hint {
+  margin: -0.25rem 0 1rem;
+  font-size: 0.9rem;
 }
 
 .lists-tab-intro {

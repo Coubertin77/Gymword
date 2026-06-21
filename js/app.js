@@ -404,6 +404,7 @@ function renderStudentStories() {
     <div class="page">
       <button class="nav-back" id="back">← Dashboard</button>
       <h1 class="page-title">📖 ${escapeHtml(chapter.name)} Stories</h1>
+      ${chapterId === 'musculation' ? '<p class="card-desc stories-level-hint">English level shown on each story: A2 → B1 → B2 → C1</p>' : ''}
       <div class="card-grid">
         ${stories.length ? stories.map(s => {
           const best = progress.storyScores[s.id]?.best;
@@ -411,7 +412,7 @@ function renderStudentStories() {
             <div class="card card-clickable story-card" data-id="${s.id}">
               <div class="card-icon">📖</div>
               <div class="card-label">${escapeHtml(s.title)}</div>
-              <div class="card-desc">${s.englishLevel ? `<span class="story-level">${escapeHtml(s.englishLevel)}</span> · ` : ''}${(s.questions || []).length} questions${best ? ` · Best: ${best}%` : ''}</div>
+              <div class="card-desc">${s.englishLevel ? `<span class="story-level">${escapeHtml(s.englishLevel)}</span>` : ''}${s.englishLevel ? ' · ' : ''}${(s.questions || []).length} questions${best ? ` · Best: ${best}%` : ''}</div>
             </div>
           `;
         }).join('') : '<p class="empty-state">No stories for this sport yet.</p>'}

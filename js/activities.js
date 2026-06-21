@@ -516,7 +516,7 @@ export function renderStoryQuiz(story, container, onComplete) {
         </nav>
         <div class="story-layout">
           <div class="story-col card">
-            <h2 class="story-title">${escapeHtml(story.title)}</h2>
+            <h2 class="story-title">${escapeHtml(story.title)}${story.englishLevel ? ` <span class="story-level">${escapeHtml(story.englishLevel)}</span>` : ''}</h2>
             <div class="story-text" id="story-text">${wrapStoryWords(story.text)}</div>
           </div>
           <div class="story-quiz-col card" id="quiz-panel">

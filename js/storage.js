@@ -91,8 +91,11 @@ function migrateData(data) {
     for (const story of getSeedStories()) {
       if (!existingStoryIds.has(story.id)) data.stories.push(story);
     }
+    const seedStoryMap = Object.fromEntries(getSeedStories().map(s => [s.id, s]));
     for (const story of data.stories) {
       if (!story.chapterId) story.chapterId = 'musculation';
+      const seedStory = seedStoryMap[story.id];
+      if (seedStory?.englishLevel) story.englishLevel = seedStory.englishLevel;
     }
 
     for (const seedBank of getSeedQuizBanks()) {
