@@ -27,10 +27,7 @@ export const CONFIG = {
 };
 
 /** Bump when publishing — shown on home screen to confirm the latest version loaded. */
-export const APP_VERSION = '2.3.6';
-
-/** Reference diagram for the musculation chapter (English muscle names). */
-export const MUSCLE_ANATOMY_IMAGE = 'images/anatomy-muscles-en.png';
+export const APP_VERSION = '2.3.8';
 
 export const CHAPTERS = [
   { id: 'musculation', name: 'Musculation', icon: '🏋️', color: '#6c3ce0' },

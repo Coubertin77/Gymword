@@ -1448,6 +1448,60 @@ body {
   cursor: pointer;
 }
 
+.anatomy-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.anatomy-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(45, 52, 54, 0.65);
+}
+
+.anatomy-modal-panel {
+  position: relative;
+  z-index: 1;
+  width: min(960px, 100%);
+  max-height: 92dvh;
+  overflow: auto;
+  background: var(--card);
+  border-radius: var(--radius);
+  padding: 1rem 1.25rem 1.25rem;
+  box-shadow: var(--shadow);
+}
+
+.anatomy-modal-close {
+  position: absolute;
+  top: 0.75rem;
+  right: 0.75rem;
+  width: 2rem;
+  height: 2rem;
+  border: none;
+  border-radius: 50%;
+  background: #f1f3f5;
+  color: var(--text);
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+.anatomy-modal-title {
+  font-size: 1.35rem;
+  margin-bottom: 0.35rem;
+  padding-right: 2.5rem;
+}
+
+.anatomy-fallback {
+  padding: 1rem;
+  text-align: center;
+  color: var(--text-muted);
+}
+
 .anatomy-preview-img {
   display: block;
   width: 100%;

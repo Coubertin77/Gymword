@@ -28,7 +28,9 @@ export function renderActivity(type, words, container, onComplete, chapterId = '
   }
 
   const pool = type === 'image_match' ? filterImageMatchWords(words) : words;
-  const subset = shuffle(pool).slice(0, Math.min(pool.length, 5));
+  const subset = type === 'image_match'
+    ? pickUniqueImageWords(pool, 5)
+    : shuffle(pool).slice(0, Math.min(pool.length, 5));
 
   if (subset.length === 0) {
     container.innerHTML = type === 'image_match'
@@ -49,6 +51,20 @@ export function renderActivity(type, words, container, onComplete, chapterId = '
     default:
       container.innerHTML = '<p>Unknown activity</p>';
   }
+}
+
+/** Avoid two labels sharing the same picture in one image-match round. */
+function pickUniqueImageWords(words, count) {
+  const picked = [];
+  const usedUrls = new Set();
+  for (const word of shuffle(words)) {
+    const url = word.imageUrl || '';
+    if (usedUrls.has(url)) continue;
+    picked.push(word);
+    usedUrls.add(url);
+    if (picked.length >= count) break;
+  }
+  return picked;
 }
 
 function activityProgressBar(current, total) {

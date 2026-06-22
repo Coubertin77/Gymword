@@ -1,5 +1,11 @@
 /** Word lists and stories for sports chapters (badminton → laser run). */
 
+const BAD_REF = (file) => `images/badminton/referee/${file}`;
+
+function makeRefGesture(makeWord, { english, french, definition, image }) {
+  return { ...makeWord({ english, french, definition }), imageUrl: BAD_REF(image) };
+}
+
 export function buildSportContent(makeWord) {
   const wordLists = [
     {
@@ -27,6 +33,71 @@ export function buildSportContent(makeWord) {
         makeWord({ english: 'serve', french: 'service', definition: 'Starting shot of a rally' }),
         makeWord({ english: 'smash', french: 'smash', definition: 'Powerful attacking shot' }),
         makeWord({ english: 'drop shot', french: 'amorti', definition: 'Soft shot near the net' }),
+      ],
+    },
+    {
+      id: 'badminton_referee_gestures', chapterId: 'badminton', name: 'Badminton — Referee Gestures', theme: 'image_match',
+      words: [
+        makeRefGesture(makeWord, {
+          english: 'Not hitting the base first',
+          french: 'Ne pas frapper le cork en premier',
+          definition: 'Service fault: the server hits the feathers before the cork base',
+          image: 'not-hitting-base-first.png',
+        }),
+        makeRefGesture(makeWord, {
+          english: 'Foot touching line',
+          french: 'Pied touchant la ligne',
+          definition: 'Service fault: a foot is on or over a line at the moment of the serve',
+          image: 'foot-not-stationary.png',
+        }),
+        makeRefGesture(makeWord, {
+          english: 'Shuttle OUT',
+          french: 'Volant OUT',
+          definition: 'Line judge signal: the shuttle landed outside the court',
+          image: 'shuttle-out.png',
+        }),
+        makeRefGesture(makeWord, {
+          english: 'Shuttle IN',
+          french: 'Volant IN',
+          definition: 'Line judge signal: the shuttle landed inside the court',
+          image: 'shuttle-in.png',
+        }),
+        makeRefGesture(makeWord, {
+          english: 'Movement of the racket interrupted',
+          french: 'Mouvement de raquette interrompu',
+          definition: 'Service fault: the serving motion stops and starts again',
+          image: 'movement-interrupted.png',
+        }),
+        makeRefGesture(makeWord, {
+          english: 'Judge unsighted',
+          french: 'Juge n\'a pas vu',
+          definition: 'Line judge signal: the official could not see where the shuttle landed',
+          image: 'judge-unsighted.png',
+        }),
+        makeRefGesture(makeWord, {
+          english: 'Foot not stationary',
+          french: 'Pied non fixe',
+          definition: 'Service fault: the server moves a foot before completing the serve',
+          image: 'foot-not-stationary.png',
+        }),
+        makeRefGesture(makeWord, {
+          english: 'Shuttle above waist',
+          french: 'Volant au-dessus de la taille',
+          definition: 'Service fault: the shuttle is struck above the server\'s waist',
+          image: 'shuttle-above-waist.png',
+        }),
+        makeRefGesture(makeWord, {
+          english: 'Double movement of racket',
+          french: 'Double mouvement de raquette',
+          definition: 'Service fault: the racket is moved twice during the serving action',
+          image: 'double-movement-racket.png',
+        }),
+        makeRefGesture(makeWord, {
+          english: 'Racket not pointing down',
+          french: 'Raquette ne pointant pas vers le bas',
+          definition: 'Service fault: the racket head is not pointing downward at the start of the serve',
+          image: 'shuttle-in.png',
+        }),
       ],
     },
     {
@@ -469,7 +540,7 @@ export function buildSportContent(makeWord) {
 
 export function getSportListIds() {
   return [
-    'badminton_basics', 'badminton_image_match',
+    'badminton_basics', 'badminton_image_match', 'badminton_referee_gestures',
     'basket_basics', 'basket_image_match',
     'touch_rugby_basics', 'touch_rugby_image_match',
     'flag_football_basics', 'flag_football_image_match',

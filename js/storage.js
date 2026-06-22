@@ -44,7 +44,7 @@ function migrateData(data) {
       if (!existingListIds.has(list.id)) data.wordLists.push(list);
     }
 
-    const SYNC_LIST_IDS = ['list_image_match'];
+    const SYNC_LIST_IDS = ['list_image_match', 'badminton_referee_gestures'];
     for (const listId of SYNC_LIST_IDS) {
       const seedList = seed.wordLists.find(l => l.id === listId);
       const existing = data.wordLists.find(l => l.id === listId);

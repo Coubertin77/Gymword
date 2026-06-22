@@ -1,4 +1,6 @@
-import { CONFIG, ACTIVITY_LABELS, getWordImage, CHAPTERS, getChapterById, getActivitiesForChapter, APP_VERSION, MUSCLE_ANATOMY_IMAGE } from './config.js';
+import { CONFIG, ACTIVITY_LABELS, getWordImage, CHAPTERS, getChapterById, getActivitiesForChapter, APP_VERSION } from './config.js?v=2.3.8';
+
+const MUSCLE_ANATOMY_IMAGE = `images/anatomy-muscles-en.png?v=${APP_VERSION}`;
 import {
   initStorage, loadData, getClasses, getClassById, getWordsForClass, getStories, getStoryById,
   getStoriesForClass, getChaptersForClass,
@@ -48,7 +50,6 @@ export function navigate(view, params = {}) {
     studentStories: renderStudentStories,
     studentStory: () => renderStudentStory(params.storyId),
     studentLeaderboard: renderStudentLeaderboard,
-    studentMuscleAnatomy: renderStudentMuscleAnatomy,
     teacherDashboard: renderTeacherDashboard,
   };
   (routes[view] || renderHome)();
@@ -328,7 +329,7 @@ function renderStudentDashboard() {
   app.querySelector('#go-stories').onclick = () => navigate('studentStories');
   app.querySelector('#go-leaderboard').onclick = () => navigate('studentLeaderboard');
   const anatomyBtn = app.querySelector('#go-anatomy');
-  if (anatomyBtn) anatomyBtn.onclick = () => navigate('studentMuscleAnatomy');
+  if (anatomyBtn) anatomyBtn.onclick = () => showMuscleAnatomyModal();
 
   const grid = app.querySelector('#activity-grid');
   getActivitiesForChapter(cls?.assignedActivities, chapterId).forEach(type => {
@@ -475,29 +476,46 @@ function renderStudentStory(storyId) {
   });
 }
 
-function renderStudentMuscleAnatomy() {
-  const student = requireStudentSession();
-  if (!student) return;
-  if (getSessionChapterId() !== 'musculation') {
-    navigate('studentDashboard');
-    return;
-  }
+function showMuscleAnatomyModal() {
+  if (document.getElementById('anatomy-modal')) return;
 
-  app.innerHTML = `
-    <div class="page page-anatomy">
-      <button class="nav-back" id="back">← Dashboard</button>
-      <h1 class="page-title">💪 Muscle Anatomy</h1>
-      <p class="card-desc">Anatomy of the Human Musculature — English labels for major muscle groups</p>
-      <div class="card anatomy-card">
+  const overlay = document.createElement('div');
+  overlay.id = 'anatomy-modal';
+  overlay.className = 'anatomy-modal';
+  overlay.innerHTML = `
+    <div class="anatomy-modal-backdrop" data-close="1" aria-hidden="true"></div>
+    <div class="anatomy-modal-panel" role="dialog" aria-modal="true" aria-labelledby="anatomy-modal-title">
+      <button type="button" class="anatomy-modal-close" id="anatomy-modal-close" aria-label="Close">✕</button>
+      <h2 class="anatomy-modal-title" id="anatomy-modal-title">💪 Muscle Anatomy</h2>
+      <p class="card-desc">Anatomy of the Human Musculature — English labels</p>
+      <div class="anatomy-card">
         <img
           src="${MUSCLE_ANATOMY_IMAGE}"
           alt="Anatomy of the Human Musculature — labelled diagram of major muscles in English"
           class="anatomy-full-img"
+          id="anatomy-modal-img"
         >
+        <p class="anatomy-fallback hidden" id="anatomy-fallback">
+          Image unavailable — reload with <strong>Ctrl+Shift+R</strong> or check that the image was published on GitHub.
+        </p>
       </div>
     </div>
   `;
-  app.querySelector('#back').onclick = () => navigate('studentDashboard');
+
+  const close = () => {
+    overlay.remove();
+    document.removeEventListener('keydown', onKey);
+  };
+  const onKey = (e) => { if (e.key === 'Escape') close(); };
+
+  overlay.querySelector('#anatomy-modal-close').onclick = close;
+  overlay.querySelector('[data-close]').onclick = close;
+  overlay.querySelector('#anatomy-modal-img').onerror = () => {
+    overlay.querySelector('#anatomy-modal-img').classList.add('hidden');
+    overlay.querySelector('#anatomy-fallback').classList.remove('hidden');
+  };
+  document.addEventListener('keydown', onKey);
+  document.body.appendChild(overlay);
 }
 
 function renderStudentLeaderboard() {
