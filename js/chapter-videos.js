@@ -1,4 +1,4 @@
-/** Teacher-editable video banks per chapter + activity (YouTube links). */
+/** Teacher-editable video banks per chapter (YouTube links). */
 
 export function parseYoutubeVideoId(url) {
   if (!url || typeof url !== 'string') return null;
@@ -21,7 +21,6 @@ export function getSeedChapterVideos() {
   return [
     {
       chapterId: 'badminton',
-      activityType: 'image_match',
       videos: [
         {
           id: 'vid_badminton_referee_gestures',
