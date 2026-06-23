@@ -96,7 +96,7 @@ export function buildSportContent(makeWord) {
           english: 'Racket not pointing down',
           french: 'Raquette ne pointant pas vers le bas',
           definition: 'Service fault: the racket head is not pointing downward at the start of the serve',
-          image: 'shuttle-in.png',
+          image: 'racket-not-pointing-down.png',
         }),
       ],
     },
