@@ -1,4 +1,4 @@
-import { CONFIG, ACTIVITY_LABELS, getWordImage, CHAPTERS, getChapterById, getActivitiesForChapter, APP_VERSION } from './config.js?v=2.4.3';
+import { CONFIG, ACTIVITY_LABELS, getWordImage, CHAPTERS, getChapterById, getActivitiesForChapter, APP_VERSION } from './config.js?v=2.5.0';
 
 const MUSCLE_ANATOMY_IMAGE = `images/anatomy-muscles-en.png?v=${APP_VERSION}`;
 import {
@@ -7,6 +7,7 @@ import {
   loginStudentByRoster, updateStudent, getStudentById, getStudentsByClass,
   getRosterByClass, addRosterStudent, addRosterStudentsBulk, removeRosterStudent,
   getWordLists, saveWordList, deleteWordList, getQuizBank, saveQuizBank, updateClass,
+  getChapterVideoBanks, saveChapterVideoBank, getVideosForActivity,
   getSession, setSession, clearSession, addActivityResult,
   getSyncStatus, reloadFromCloud, flushStorage,
 } from './storage.js';
@@ -18,6 +19,7 @@ import { renderActivity, renderStoryQuiz } from './activities.js';
 import { getChapterProgress, getTotalPoints, migrateStudentToChapters } from './chapter-progress.js';
 import { parseStudentLines, readCsvFile } from './roster-import.js';
 import { toast, escapeHtml, uid } from './utils.js';
+import { parseYoutubeVideoId, youtubeEmbedUrl } from './chapter-videos.js';
 
 const app = document.getElementById('app');
 
@@ -50,6 +52,7 @@ export function navigate(view, params = {}) {
     studentStories: renderStudentStories,
     studentStory: () => renderStudentStory(params.storyId),
     studentLeaderboard: renderStudentLeaderboard,
+    studentVideos: renderStudentVideos,
     teacherDashboard: renderTeacherDashboard,
   };
   (routes[view] || renderHome)();
@@ -73,6 +76,42 @@ function requireTeacherSession() {
   const session = getSession();
   if (!session?.isTeacher) { navigate('teacherLogin'); return false; }
   return true;
+}
+
+function getActivityTypesForChapter(chapterId) {
+  return Object.keys(ACTIVITY_LABELS).filter(type => {
+    const info = ACTIVITY_LABELS[type];
+    if (info?.chapters) return info.chapters.includes(chapterId);
+    return true;
+  });
+}
+
+function renderVideosSectionHtml(videos, { heading = '' } = {}) {
+  const items = (videos || [])
+    .map(v => {
+      const videoId = parseYoutubeVideoId(v.url);
+      if (!videoId) return '';
+      return `
+        <div class="video-card">
+          <p class="video-card-title">${escapeHtml(v.title || 'Video')}</p>
+          <div class="video-embed-wrap">
+            <iframe
+              src="${youtubeEmbedUrl(videoId)}"
+              title="${escapeHtml(v.title || 'YouTube video')}"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen
+              loading="lazy"
+            ></iframe>
+          </div>
+        </div>
+      `;
+    })
+    .filter(Boolean);
+  if (!items.length) return '';
+  return `
+    ${heading ? `<p class="section-title">${escapeHtml(heading)}</p>` : ''}
+    <div class="video-grid">${items.join('')}</div>
+  `;
 }
 
 function renderHome() {
@@ -320,6 +359,11 @@ function renderStudentDashboard() {
           <div class="card-label">Leaderboard</div>
           <div class="card-desc">See your class ranking</div>
         </div>
+        <div class="card card-clickable" id="go-videos">
+          <div class="card-icon">🎬</div>
+          <div class="card-label">Videos</div>
+          <div class="card-desc">Watch lesson videos for each activity</div>
+        </div>
       </div>
     </div>
   `;
@@ -328,6 +372,7 @@ function renderStudentDashboard() {
   app.querySelector('#change-chapter').onclick = () => navigate('studentChapterSelect');
   app.querySelector('#go-stories').onclick = () => navigate('studentStories');
   app.querySelector('#go-leaderboard').onclick = () => navigate('studentLeaderboard');
+  app.querySelector('#go-videos').onclick = () => navigate('studentVideos');
   const anatomyBtn = app.querySelector('#go-anatomy');
   if (anatomyBtn) anatomyBtn.onclick = () => showMuscleAnatomyModal();
 
@@ -370,11 +415,14 @@ function renderStudentActivity(type) {
   const chapterId = getSessionChapterId();
   const info = ACTIVITY_LABELS[type];
   const words = getWordsForClass(student.classId, chapterId);
+  const activityVideos = getVideosForActivity(chapterId, type);
+  const videosHtml = renderVideosSectionHtml(activityVideos, { heading: activityVideos.length ? '🎬 Watch & learn' : '' });
 
   app.innerHTML = `
     <div class="page">
       <button class="nav-back" id="back">← Dashboard</button>
       <h1 class="page-title">${info?.icon || ''} ${escapeHtml(info?.title || type)}</h1>
+      ${videosHtml ? `<div class="card activity-videos-card">${videosHtml}</div>` : ''}
       <div id="activity-area"></div>
       <div id="result-area" class="hidden"></div>
     </div>
@@ -519,6 +567,41 @@ function showMuscleAnatomyModal() {
   document.body.appendChild(overlay);
 }
 
+function renderStudentVideos() {
+  const student = requireStudentSession();
+  if (!student) return;
+  const chapterId = getSessionChapterId();
+  const chapter = getChapterById(chapterId);
+  const cls = getClassById(student.classId);
+  const activityTypes = getActivitiesForChapter(cls?.assignedActivities, chapterId);
+
+  const sections = activityTypes.map(type => {
+    const info = ACTIVITY_LABELS[type];
+    const videos = getVideosForActivity(chapterId, type);
+    if (!videos.length) return '';
+    const html = renderVideosSectionHtml(videos);
+    return `
+      <div class="card video-activity-block">
+        <h2 class="video-activity-heading">${info?.icon || ''} ${escapeHtml(info?.title || type)}</h2>
+        <p class="card-desc">${escapeHtml(info?.chapterDescs?.[chapterId] || info?.desc || '')}</p>
+        ${html}
+      </div>
+    `;
+  }).filter(Boolean);
+
+  app.innerHTML = `
+    <div class="page">
+      <button class="nav-back" id="back">← Dashboard</button>
+      <h1 class="page-title">🎬 ${escapeHtml(chapter.name)} Videos</h1>
+      <p class="card-desc">Lesson videos grouped by activity — watch before you practise.</p>
+      ${sections.length
+        ? sections.join('')
+        : '<p class="empty-state">No videos for this sport yet. Your teacher can add YouTube links in the teacher dashboard.</p>'}
+    </div>
+  `;
+  app.querySelector('#back').onclick = () => navigate('studentDashboard');
+}
+
 function renderStudentLeaderboard() {
   const student = requireStudentSession();
   if (!student) return;
@@ -571,6 +654,7 @@ function renderTeacherDashboard() {
           <button class="tab ${activeTab === 'classes' ? 'active' : ''}" data-tab="classes">Students</button>
           <button class="tab ${activeTab === 'lists' ? 'active' : ''}" data-tab="lists">Word Lists</button>
           <button class="tab ${activeTab === 'quiz' ? 'active' : ''}" data-tab="quiz">Quiz Questions</button>
+          <button class="tab ${activeTab === 'videos' ? 'active' : ''}" data-tab="videos">Videos</button>
           <button class="tab ${activeTab === 'assign' ? 'active' : ''}" data-tab="assign">Assignments</button>
           <button class="tab ${activeTab === 'results' ? 'active' : ''}" data-tab="results">Results</button>
         </div>
@@ -590,6 +674,7 @@ function renderTeacherDashboard() {
     if (activeTab === 'classes') renderClassesTab(content);
     else if (activeTab === 'lists') renderListsTab(content);
     else if (activeTab === 'quiz') renderQuizTab(content);
+    else if (activeTab === 'videos') renderVideosTab(content);
     else if (activeTab === 'assign') renderAssignTab(content);
     else if (activeTab === 'results') renderResultsTab(content);
   }
@@ -1056,6 +1141,134 @@ function renderQuizTab(container) {
   }
 
   CHAPTERS.forEach(ch => root.appendChild(renderChapterQuizBlock(ch)));
+}
+
+function renderVideosTab(container) {
+  const expanded = new Set(['badminton']);
+
+  container.innerHTML = `
+    <p class="lists-tab-intro card-desc">
+      Add <strong>YouTube videos</strong> for each chapter and activity. Students see them on the <strong>Videos</strong> page and at the top of each activity.
+    </p>
+    <div id="videos-by-chapter" class="lists-by-chapter"></div>`;
+  const root = container.querySelector('#videos-by-chapter');
+
+  function addVideoRow(videosContainer, video = { title: '', url: '' }) {
+    if (videosContainer.children.length >= 10) return toast('Maximum 10 videos per activity', 'error');
+    const row = document.createElement('div');
+    row.className = 'video-edit-row';
+    if (video.id) row.dataset.vid = video.id;
+    row.innerHTML = `
+      <div class="form-group" style="margin-bottom:0.5rem">
+        <label>Title (English)</label>
+        <input type="text" class="v-title" value="${escapeHtml(video.title || '')}" placeholder="e.g. Badminton referee signals">
+      </div>
+      <div class="form-group" style="margin-bottom:0.5rem">
+        <label>YouTube link</label>
+        <input type="url" class="v-url" value="${escapeHtml(video.url || '')}" placeholder="https://www.youtube.com/watch?v=...">
+      </div>
+      <button type="button" class="btn btn-ghost btn-sm remove-video">Remove video</button>
+    `;
+    row.querySelector('.remove-video').onclick = () => row.remove();
+    videosContainer.appendChild(row);
+  }
+
+  function renderActivityVideoBlock(ch, activityType) {
+    const info = ACTIVITY_LABELS[activityType];
+    if (!info) return null;
+    const banks = getChapterVideoBanks();
+    const bank = banks.find(b => b.chapterId === ch.id && b.activityType === activityType)
+      || { chapterId: ch.id, activityType, videos: [] };
+    const videos = bank.videos || [];
+    const key = `${ch.id}_${activityType}`;
+    const isOpen = expanded.has(key);
+
+    const block = document.createElement('div');
+    block.className = 'video-activity-edit-block';
+    block.innerHTML = `
+      <button type="button" class="chapter-lists-header video-activity-header ${isOpen ? 'open' : ''}">
+        <span class="chapter-lists-title">${info.icon} ${escapeHtml(info.title)}</span>
+        <span class="chapter-lists-count">${videos.length} video${videos.length !== 1 ? 's' : ''}</span>
+        <span class="chapter-lists-chevron">${isOpen ? '▲' : '▼'}</span>
+      </button>
+      <div class="chapter-lists-body video-activity-body ${isOpen ? '' : 'hidden'}">
+        <p class="card-desc" style="margin-bottom:0.75rem">${escapeHtml(info.chapterDescs?.[ch.id] || info.desc || '')}</p>
+        <div class="video-rows-container"></div>
+        <button type="button" class="btn btn-secondary btn-sm add-video-row" style="margin-bottom:0.75rem">+ Add video</button>
+        <button type="button" class="btn btn-primary btn-sm save-video-bank">Save ${escapeHtml(info.title)} videos</button>
+      </div>
+    `;
+
+    const header = block.querySelector('.video-activity-header');
+    const body = block.querySelector('.video-activity-body');
+    const videosContainer = block.querySelector('.video-rows-container');
+
+    header.onclick = () => {
+      const isHidden = body.classList.toggle('hidden');
+      header.classList.toggle('open', !isHidden);
+      block.querySelector('.chapter-lists-chevron').textContent = isHidden ? '▼' : '▲';
+      if (isHidden) expanded.delete(key);
+      else expanded.add(key);
+    };
+
+    if (videos.length) videos.forEach(v => addVideoRow(videosContainer, v));
+    else addVideoRow(videosContainer);
+
+    block.querySelector('.add-video-row').onclick = () => addVideoRow(videosContainer);
+
+    block.querySelector('.save-video-bank').onclick = () => {
+      const parsed = [...videosContainer.querySelectorAll('.video-edit-row')].map((row, idx) => ({
+        id: row.dataset.vid || uid('vid'),
+        title: row.querySelector('.v-title').value.trim(),
+        url: row.querySelector('.v-url').value.trim(),
+      })).filter(v => v.title && v.url);
+
+      for (const v of parsed) {
+        if (!parseYoutubeVideoId(v.url)) {
+          return toast(`Invalid YouTube link: ${v.title}`, 'error');
+        }
+      }
+
+      saveChapterVideoBank({
+        chapterId: ch.id,
+        activityType,
+        videos: parsed,
+      });
+      toast(`${ch.name} — ${info.title} videos saved!`, 'success');
+      renderVideosTab(container);
+    };
+
+    return block;
+  }
+
+  CHAPTERS.forEach(ch => {
+    const chapterBlock = document.createElement('div');
+    chapterBlock.className = 'chapter-lists-block';
+    chapterBlock.style.borderLeft = `4px solid ${ch.color || 'var(--purple)'}`;
+    const chKey = ch.id;
+    const chOpen = expanded.has(chKey);
+    chapterBlock.innerHTML = `
+      <button type="button" class="chapter-lists-header ${chOpen ? 'open' : ''}">
+        <span class="chapter-lists-title">${ch.icon} ${escapeHtml(ch.name)}</span>
+        <span class="chapter-lists-chevron">${chOpen ? '▲' : '▼'}</span>
+      </button>
+      <div class="chapter-lists-body chapter-videos-body ${chOpen ? '' : 'hidden'}"></div>
+    `;
+    const chHeader = chapterBlock.querySelector('.chapter-lists-header');
+    const chBody = chapterBlock.querySelector('.chapter-videos-body');
+    chHeader.onclick = () => {
+      const isHidden = chBody.classList.toggle('hidden');
+      chHeader.classList.toggle('open', !isHidden);
+      chapterBlock.querySelector('.chapter-lists-chevron').textContent = isHidden ? '▼' : '▲';
+      if (isHidden) expanded.delete(chKey);
+      else expanded.add(chKey);
+    };
+    getActivityTypesForChapter(ch.id).forEach(type => {
+      const actBlock = renderActivityVideoBlock(ch, type);
+      if (actBlock) chBody.appendChild(actBlock);
+    });
+    root.appendChild(chapterBlock);
+  });
 }
 
 function renderAssignTab(container) {

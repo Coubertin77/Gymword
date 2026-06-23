@@ -2,6 +2,7 @@ import { CONFIG, getWordImage } from './config.js';
 import { getSeedData, getSeedCatalog, getSeedStories } from './seed.js';
 import { getSportStoryIds } from './seed-sports.js';
 import { getSeedQuizBanks } from './chapter-rules.js';
+import { getSeedChapterVideos } from './chapter-videos.js';
 import { migrateStudentToChapters } from './chapter-progress.js';
 import { CHAPTERS } from './config.js';
 import { shuffle } from './gamification.js';
@@ -36,6 +37,7 @@ function migrateData(data) {
   if (!data.activityResults) data.activityResults = [];
   if (!data.wordLists) data.wordLists = [];
   if (!data.quizBanks) data.quizBanks = [];
+  if (!data.chapterVideoBanks) data.chapterVideoBanks = [];
 
   try {
     const seed = getSeedCatalog();
@@ -110,6 +112,18 @@ function migrateData(data) {
         if (!Array.isArray(q.options)) q.options = ['', '', '', ''];
         while (q.options.length < 4) q.options.push('');
         if (typeof q.correctIndex !== 'number') q.correctIndex = 0;
+      }
+    }
+
+    for (const seedVideos of getSeedChapterVideos()) {
+      const exists = data.chapterVideoBanks.some(
+        b => b.chapterId === seedVideos.chapterId && b.activityType === seedVideos.activityType
+      );
+      if (!exists) data.chapterVideoBanks.push(JSON.parse(JSON.stringify(seedVideos)));
+    }
+    for (const bank of data.chapterVideoBanks) {
+      for (const video of bank.videos || []) {
+        if (!video.id) video.id = `vid_${bank.chapterId}_${bank.activityType}_${Date.now()}`;
       }
     }
   } catch (err) {
@@ -346,6 +360,28 @@ export function saveQuizBank(bank) {
   const idx = data.quizBanks.findIndex(b => b.chapterId === bank.chapterId);
   if (idx >= 0) data.quizBanks[idx] = bank;
   else data.quizBanks.push(bank);
+  saveData();
+}
+
+export function getChapterVideoBanks() {
+  return loadData().chapterVideoBanks || [];
+}
+
+export function getVideosForActivity(chapterId, activityType) {
+  const bank = getChapterVideoBanks().find(
+    b => b.chapterId === chapterId && b.activityType === activityType
+  );
+  return bank?.videos?.filter(v => v.url?.trim()) || [];
+}
+
+export function saveChapterVideoBank(bank) {
+  const data = loadData();
+  if (!data.chapterVideoBanks) data.chapterVideoBanks = [];
+  const idx = data.chapterVideoBanks.findIndex(
+    b => b.chapterId === bank.chapterId && b.activityType === bank.activityType
+  );
+  if (idx >= 0) data.chapterVideoBanks[idx] = bank;
+  else data.chapterVideoBanks.push(bank);
   saveData();
 }
 
