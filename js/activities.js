@@ -27,7 +27,7 @@ export function renderActivity(type, words, container, onComplete, chapterId = '
     return renderMuscleRegionMatch(muscles, container, finish);
   }
 
-  const pool = type === 'image_match' ? filterImageMatchWords(words) : words;
+  const pool = type === 'image_match' ? filterImageMatchWords(words, chapterId) : words;
   const subset = type === 'image_match'
     ? pickUniqueImageWords(pool, 5)
     : shuffle(pool).slice(0, Math.min(pool.length, 5));

@@ -1,4 +1,4 @@
-import { CONFIG, ACTIVITY_LABELS, getWordImage, CHAPTERS, getChapterById, getActivitiesForChapter, APP_VERSION } from './config.js?v=2.3.8';
+import { CONFIG, ACTIVITY_LABELS, getWordImage, CHAPTERS, getChapterById, getActivitiesForChapter, APP_VERSION } from './config.js?v=2.3.9';
 
 const MUSCLE_ANATOMY_IMAGE = `images/anatomy-muscles-en.png?v=${APP_VERSION}`;
 import {
@@ -338,10 +338,11 @@ function renderStudentDashboard() {
     const best = progress.activityScores[type]?.best;
     const card = document.createElement('div');
     card.className = 'card card-clickable';
+    const actDesc = info.chapterDescs?.[chapterId] || info.desc;
     card.innerHTML = `
       <div class="card-icon">${info.icon}</div>
       <div class="card-label">${escapeHtml(info.title)}</div>
-      <div class="card-desc">${escapeHtml(info.desc)}${best ? ` · Best: ${best}%` : ''}</div>
+      <div class="card-desc">${escapeHtml(actDesc)}${best ? ` · Best: ${best}%` : ''}</div>
     `;
     card.onclick = () => navigate('studentActivity', { type });
     grid.appendChild(card);

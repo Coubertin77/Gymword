@@ -27,7 +27,7 @@ export const CONFIG = {
 };
 
 /** Bump when publishing — shown on home screen to confirm the latest version loaded. */
-export const APP_VERSION = '2.3.8';
+export const APP_VERSION = '2.3.9';
 
 export const CHAPTERS = [
   { id: 'musculation', name: 'Musculation', icon: '🏋️', color: '#6c3ce0' },
@@ -53,7 +53,7 @@ export const ACTIVITY_TYPES = {
 };
 
 export const ACTIVITY_LABELS = {
-  [ACTIVITY_TYPES.IMAGE_MATCH]:   { icon: '🖼️', title: 'Match Images', desc: 'Match pictures to sport vocabulary' },
+  [ACTIVITY_TYPES.IMAGE_MATCH]:   { icon: '🖼️', title: 'Match Images', desc: 'Match pictures to sport vocabulary', chapterDescs: { badminton: 'Match referee gestures to the correct call in English' } },
   [ACTIVITY_TYPES.TRANSLATION]: { icon: '🇫🇷', title: 'Translations', desc: 'Tap a translation, then tap the English word' },
   [ACTIVITY_TYPES.DEFINITION]: { icon: '📝', title: 'Definitions', desc: 'Tap a definition, then tap the correct word' },
   [ACTIVITY_TYPES.QCM]: { icon: '❓', title: 'Quick Quiz', desc: 'Answer questions about the rules of the sport' },
@@ -178,7 +178,10 @@ export function getWordImage(word) {
   return IMAGE_BANK[key] || IMAGE_BANK.default;
 }
 
-export function filterImageMatchWords(words) {
+export function filterImageMatchWords(words, chapterId) {
+  if (chapterId === 'badminton') {
+    return words.filter(w => w.listId === 'badminton_referee_gestures');
+  }
   return words.filter(w =>
     w.listTheme === 'image_match'
     || (w.listId && String(w.listId).includes('image_match'))
