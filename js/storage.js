@@ -120,7 +120,10 @@ function migrateData(data) {
     for (const list of data.wordLists) {
       if (!list.chapterId) list.chapterId = 'musculation';
       for (const word of list.words || []) {
-        if (word.english) word.imageUrl = getWordImage(word.english);
+        if (!word.english) continue;
+        // Keep custom local images (referee gestures, exercise photos, etc.)
+        if (word.imageUrl?.startsWith('images/')) continue;
+        word.imageUrl = getWordImage(word.english);
       }
     }
   } catch (err) {
