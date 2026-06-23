@@ -66,7 +66,7 @@ export function buildSportContent(makeWord) {
           english: 'Movement of the racket interrupted',
           french: 'Mouvement de raquette interrompu',
           definition: 'Service fault: the serving motion stops and starts again',
-          image: 'movement-interrupted.png',
+          image: 'racket-movement-fault.png',
         }),
         makeRefGesture(makeWord, {
           english: 'Judge unsighted',
@@ -90,7 +90,7 @@ export function buildSportContent(makeWord) {
           english: 'Double movement of racket',
           french: 'Double mouvement de raquette',
           definition: 'Service fault: the racket is moved twice during the serving action',
-          image: 'double-movement-racket.png',
+          image: 'racket-movement-fault.png',
         }),
         makeRefGesture(makeWord, {
           english: 'Racket not pointing down',
