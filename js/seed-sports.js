@@ -48,7 +48,7 @@ export function buildSportContent(makeWord) {
           english: 'Foot touching line',
           french: 'Pied touchant la ligne',
           definition: 'Service fault: a foot is on or over a line at the moment of the serve',
-          image: 'foot-not-stationary.png',
+          image: 'foot-fault.png',
         }),
         makeRefGesture(makeWord, {
           english: 'Shuttle OUT',
@@ -78,7 +78,7 @@ export function buildSportContent(makeWord) {
           english: 'Foot not stationary',
           french: 'Pied non fixe',
           definition: 'Service fault: the server moves a foot before completing the serve',
-          image: 'foot-not-stationary.png',
+          image: 'foot-fault.png',
         }),
         makeRefGesture(makeWord, {
           english: 'Shuttle above waist',
