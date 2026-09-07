@@ -1,4 +1,4 @@
-import { CONFIG, ACTIVITY_LABELS, getWordImage, CHAPTERS, getChapterById, getActivitiesForChapter, APP_VERSION } from './config.js?v=2.5.2';
+import { CONFIG, ACTIVITY_LABELS, getWordImage, CHAPTERS, getChapterById, getActivitiesForChapter, APP_VERSION, APP_URL, APP_QR_IMAGE } from './config.js?v=2.5.3';
 import {
   initStorage, loadData, getClasses, getClassById, getWordsForClass, getStories, getStoryById,
   getStoriesForClass, getChaptersForClass,
@@ -122,6 +122,13 @@ function renderHome() {
         <button class="btn btn-primary btn-block" id="btn-student" style="margin-bottom:0.75rem">I'm a Student 💪</button>
         <button class="btn btn-secondary btn-block" id="btn-teacher">I'm a Teacher 👩‍🏫</button>
       </div>
+      <details class="home-qr-panel">
+        <summary>📱 Scan to open on your phone</summary>
+        <div class="qr-block">
+          <img src="${APP_QR_IMAGE}?v=${APP_VERSION}" alt="QR code for SportWord" class="qr-image" width="220" height="220">
+          <a class="qr-link" href="${APP_URL}" target="_blank" rel="noopener">${escapeHtml(APP_URL)}</a>
+        </div>
+      </details>
       <p class="gdpr-notice" style="max-width:400px">
         This app stores your first name and learning progress. Data is used only for vocabulary revision in PE class.
       </p>
@@ -632,6 +639,7 @@ function renderTeacherDashboard() {
           <button class="tab ${activeTab === 'videos' ? 'active' : ''}" data-tab="videos">Videos</button>
           <button class="tab ${activeTab === 'assign' ? 'active' : ''}" data-tab="assign">Assignments</button>
           <button class="tab ${activeTab === 'results' ? 'active' : ''}" data-tab="results">Results</button>
+          <button class="tab ${activeTab === 'qr' ? 'active' : ''}" data-tab="qr">QR Code</button>
         </div>
         <div id="tab-content"></div>
       </div>
@@ -652,8 +660,28 @@ function renderTeacherDashboard() {
     else if (activeTab === 'videos') renderVideosTab(content);
     else if (activeTab === 'assign') renderAssignTab(content);
     else if (activeTab === 'results') renderResultsTab(content);
+    else if (activeTab === 'qr') renderQrTab(content);
   }
   render();
+}
+
+function renderQrTab(container) {
+  container.innerHTML = `
+    <div class="card qr-print-card">
+      <h3 class="section-title">Classroom QR code</h3>
+      <p class="card-desc">Project or print this page so students can open SportWord on their phones.</p>
+      <div class="qr-block qr-block-lg">
+        <img src="${APP_QR_IMAGE}?v=${APP_VERSION}" alt="QR code for SportWord" class="qr-image qr-image-lg" width="320" height="320">
+        <p class="qr-brand">SportWord Section Euro</p>
+        <a class="qr-link" href="${APP_URL}" target="_blank" rel="noopener">${escapeHtml(APP_URL)}</a>
+      </div>
+      <div class="btn-group" style="margin-top:1rem">
+        <button type="button" class="btn btn-primary" id="print-qr">🖨️ Print QR code</button>
+        <a class="btn btn-secondary" href="${APP_QR_IMAGE}" download="sportword-qr-code.png">⬇️ Download PNG</a>
+      </div>
+    </div>
+  `;
+  container.querySelector('#print-qr').onclick = () => window.print();
 }
 
 function renderClassesTab(container) {

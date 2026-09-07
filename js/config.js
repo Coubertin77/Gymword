@@ -27,7 +27,11 @@ export const CONFIG = {
 };
 
 /** Bump when publishing — shown on home screen to confirm the latest version loaded. */
-export const APP_VERSION = '2.5.2';
+export const APP_VERSION = '2.5.3';
+
+/** Public GitHub Pages URL — used for the classroom QR code. */
+export const APP_URL = 'https://coubertin77.github.io/Gymword/';
+export const APP_QR_IMAGE = 'images/app-qr-code.png';
 
 export const CHAPTERS = [
   { id: 'musculation', name: 'Musculation', icon: '🏋️', color: '#6c3ce0' },
