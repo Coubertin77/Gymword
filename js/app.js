@@ -1,4 +1,4 @@
-import { CONFIG, ACTIVITY_LABELS, getWordImage, CHAPTERS, getChapterById, getActivitiesForChapter, APP_VERSION, APP_URL, APP_QR_IMAGE } from './config.js?v=2.5.6';
+import { CONFIG, ACTIVITY_LABELS, getWordImage, CHAPTERS, getChapterById, getActivitiesForChapter, APP_VERSION, APP_URL, APP_QR_IMAGE } from './config.js';
 import {
   initStorage, loadData, getClasses, getClassById, getWordsForClass, getStories, getStoryById,
   getStoriesForClass, getChaptersForClass,
@@ -7,7 +7,7 @@ import {
   getWordLists, saveWordList, deleteWordList, getQuizBank, saveQuizBank, updateClass,
   getChapterVideoBanks, saveChapterVideoBank, getVideosForChapter,
   getSession, setSession, clearSession, addActivityResult,
-  getSyncStatus, reloadFromCloud, flushStorage, publishLocalToCloud,
+  getSyncStatus, reloadFromCloud, flushStorage,
 } from './storage.js';
 import {
   getLevel, countWordsByStatus, recordWordAttempt, awardPoints,
@@ -18,8 +18,50 @@ import { getChapterProgress, getTotalPoints, migrateStudentToChapters } from './
 import { parseStudentLines, readCsvFile } from './roster-import.js';
 import { toast, escapeHtml, uid } from './utils.js';
 import { parseYoutubeVideoId, youtubeEmbedUrl } from './chapter-videos.js';
+import { isCloudConfigured } from './supabase-config.js';
+import { pushCloudData } from './cloud.js';
 
 const MUSCLE_ANATOMY_IMAGE = `images/anatomy-muscles-en.png?v=${APP_VERSION}`;
+
+async function safePublishToCloud() {
+  try {
+    if (!isCloudConfigured()) {
+      return { ok: false, reason: 'Cloud non configure.' };
+    }
+    const data = loadData();
+    if (!data) {
+      return { ok: false, reason: 'Aucune donnee locale a publier.' };
+    }
+    await pushCloudData(data);
+    try { await flushStorage(); } catch { /* optional */ }
+    return { ok: true };
+  } catch (err) {
+    const msg = err?.message || String(err || '');
+    const blocked = /networkerror|failed to fetch|load failed|connexion|timeout|délai|network/i.test(msg);
+    return {
+      ok: false,
+      reason: blocked
+        ? 'Reseau bloque (Wi-Fi lycee ou hors ligne). Vos donnees restent sur ce PC. Reessayez avec la 4G ou un autre reseau.'
+        : (msg || 'Publication impossible'),
+    };
+  }
+}
+
+function downloadLocalBackup() {
+  try {
+    const data = loadData();
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `sportword-backup-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast('Sauvegarde telechargee (vos donnees sont en securite sur ce PC)', 'success');
+  } catch {
+    toast('Impossible de creer la sauvegarde', 'error');
+  }
+}
 
 const app = document.getElementById('app');
 
@@ -621,25 +663,26 @@ function renderTeacherDashboard() {
   let activeTab = 'classes';
 
   function render() {
-    const sync = getSyncStatus();
-    app.innerHTML = `
+    try {
+      const sync = getSyncStatus();
+      app.innerHTML = `
       <div class="page">
         <div class="page-header">
-          <h1 class="page-title">Teacher Dashboard 👩‍🏫</h1>
+          <h1 class="page-title">Teacher Dashboard</h1>
           <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap">
             ${cloudStatusHtml(sync, { compact: true })}
             <button class="btn btn-ghost btn-sm" id="logout">Logout</button>
           </div>
         </div>
         <div class="card publish-banner">
-          <p class="section-title">☁️ Share with students' phones</p>
+          <p class="section-title">Share with phones</p>
           <p class="card-desc">
-            Your vocabulary and videos stay on this computer until you publish them.
-            Click the button below, then reload the app on the phone.
+            Publish vocabulary and videos from this computer so students can see them on their phones.
           </p>
           <div class="btn-group">
-            <button type="button" class="btn btn-primary" id="publish-cloud">☁️ Publish my data to the cloud</button>
-            <button type="button" class="btn btn-ghost btn-sm" id="refresh-cloud">🔄 Refresh from cloud</button>
+            <button type="button" class="btn btn-primary" id="publish-cloud">Publish my data to the cloud</button>
+            <button type="button" class="btn btn-secondary btn-sm" id="backup-local">Download backup</button>
+            <button type="button" class="btn btn-ghost btn-sm" id="refresh-cloud">Refresh from cloud</button>
           </div>
         </div>
         <div class="tabs">
@@ -654,41 +697,69 @@ function renderTeacherDashboard() {
         <div id="tab-content"></div>
       </div>
     `;
-    app.querySelector('#logout').onclick = () => { clearSession(); navigate('home'); };
-    app.querySelector('#publish-cloud')?.addEventListener('click', async () => {
-      const btn = app.querySelector('#publish-cloud');
-      if (btn) {
-        btn.disabled = true;
-        btn.textContent = '☁️ Publishing…';
-      }
-      const result = await publishLocalToCloud();
-      if (btn) {
-        btn.disabled = false;
-        btn.textContent = '☁️ Publish my data to the cloud';
-      }
-      if (result.ok) {
-        toast('Données publiées — rechargez la page sur le téléphone', 'success');
-        render();
-      } else {
-        toast(result.reason || 'Publication impossible (réseau / hors ligne)', 'error');
-      }
-    });
-    app.querySelector('#refresh-cloud')?.addEventListener('click', async () => {
-      const ok = await reloadFromCloud();
-      toast(ok ? 'Données mises à jour depuis le cloud' : 'Synchronisation indisponible pour le moment', ok ? 'success' : 'info');
-      if (ok) render();
-    });
-    app.querySelectorAll('.tab').forEach(tab => {
-      tab.onclick = () => { activeTab = tab.dataset.tab; render(); };
-    });
-    const content = app.querySelector('#tab-content');
-    if (activeTab === 'classes') renderClassesTab(content);
-    else if (activeTab === 'lists') renderListsTab(content);
-    else if (activeTab === 'quiz') renderQuizTab(content);
-    else if (activeTab === 'videos') renderVideosTab(content);
-    else if (activeTab === 'assign') renderAssignTab(content);
-    else if (activeTab === 'results') renderResultsTab(content);
-    else if (activeTab === 'qr') renderQrTab(content);
+      app.querySelector('#logout').onclick = () => { clearSession(); navigate('home'); };
+      app.querySelector('#publish-cloud')?.addEventListener('click', async () => {
+        const btn = app.querySelector('#publish-cloud');
+        if (btn) {
+          btn.disabled = true;
+          btn.textContent = 'Publishing…';
+        }
+        try {
+          const result = await safePublishToCloud();
+          if (result.ok) {
+            toast('Donnees publiees — rechargez la page sur le telephone', 'success');
+            render();
+          } else {
+            toast(result.reason || 'Publication impossible (reseau / hors ligne)', 'error');
+          }
+        } catch (err) {
+          toast(err?.message || 'Erreur de publication', 'error');
+        } finally {
+          if (btn) {
+            btn.disabled = false;
+            btn.textContent = 'Publish my data to the cloud';
+          }
+        }
+      });
+      app.querySelector('#refresh-cloud')?.addEventListener('click', async () => {
+        try {
+          const ok = await reloadFromCloud();
+          toast(ok ? 'Donnees mises a jour depuis le cloud' : 'Synchronisation indisponible — vos donnees locales sont conservees', ok ? 'success' : 'info');
+          if (ok) render();
+        } catch {
+          toast('Reseau bloque — vos donnees locales sont conservees', 'info');
+        }
+      });
+      app.querySelector('#backup-local')?.addEventListener('click', () => downloadLocalBackup());
+      app.querySelectorAll('.tab').forEach(tab => {
+        tab.onclick = () => { activeTab = tab.dataset.tab; render(); };
+      });
+      const content = app.querySelector('#tab-content');
+      if (activeTab === 'classes') renderClassesTab(content);
+      else if (activeTab === 'lists') renderListsTab(content);
+      else if (activeTab === 'quiz') renderQuizTab(content);
+      else if (activeTab === 'videos') renderVideosTab(content);
+      else if (activeTab === 'assign') renderAssignTab(content);
+      else if (activeTab === 'results') renderResultsTab(content);
+      else if (activeTab === 'qr') renderQrTab(content);
+    } catch (err) {
+      console.error(err);
+      app.innerHTML = `
+        <div class="page">
+          <button class="btn btn-ghost btn-sm" id="logout">Logout</button>
+          <h1 class="page-title">Teacher Dashboard — erreur</h1>
+          <div class="card">
+            <p class="card-desc">Une erreur affiche le tableau de bord. Vos donnees locales sont toujours la.</p>
+            <p class="card-desc" style="font-family:monospace;font-size:0.85rem;word-break:break-word">${escapeHtml(err?.message || String(err))}</p>
+            <button type="button" class="btn btn-primary" id="retry-teacher">Reessayer</button>
+            <button type="button" class="btn btn-secondary" id="go-home" style="margin-top:0.5rem">Retour accueil</button>
+          </div>
+        </div>
+      `;
+      app.querySelector('#logout')?.addEventListener('click', () => { clearSession(); navigate('home'); });
+      app.querySelector('#retry-teacher')?.addEventListener('click', () => render());
+      app.querySelector('#go-home')?.addEventListener('click', () => navigate('home'));
+    }
   }
   render();
 }
@@ -766,11 +837,12 @@ function renderClassesTab(container) {
             <tbody>
               ${roster.map(r => {
                 const s = progressMap[r.id];
+                const pts = s ? getTotalPoints(s) : null;
                 return `
                   <tr>
                     <td>${escapeHtml(r.firstName)} ${escapeHtml(r.lastName)}</td>
-                    <td>${s ? s.points : '—'}</td>
-                    <td>${s ? 'Lv.' + getLevel(s.points) : '—'}</td>
+                    <td>${pts != null ? pts : '—'}</td>
+                    <td>${pts != null ? 'Lv.' + getLevel(pts) : '—'}</td>
                     <td><button type="button" class="btn btn-ghost btn-sm remove-roster-student" data-roster-id="${r.id}">Remove</button></td>
                   </tr>
                 `;

@@ -20,7 +20,7 @@ async function loadSupabase() {
       console.warn('GymWord Supabase CDN failed:', url, err);
     }
   }
-  throw lastErr || new Error('Impossible de charger la bibliothèque Supabase');
+  throw lastErr || new Error('Impossible de charger la bibliothèque Supabase (reseau bloque)');
 }
 
 export async function getSupabase() {
