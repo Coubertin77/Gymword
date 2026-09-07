@@ -49,7 +49,9 @@ export async function pushCloudData(payload) {
 /** Shared file on GitHub Pages — works when Supabase is blocked at school. */
 export async function fetchSharedClassroomFile() {
   try {
-    const res = await fetch(`data/shared-classroom.json?t=${Date.now()}`, { cache: 'no-store' });
+    const url = new URL('data/shared-classroom.json', location.href);
+    url.searchParams.set('t', String(Date.now()));
+    const res = await fetch(url.href, { cache: 'no-store' });
     if (!res.ok) return null;
     const data = await res.json();
     if (!data || typeof data !== 'object') return null;

@@ -319,10 +319,11 @@ export async function initStorage() {
   writeLocalCache();
 
   // Shared file on GitHub Pages (works even when Supabase is blocked at school).
+  let sharedSnapshot = null;
   try {
-    const shared = await withTimeout(fetchSharedClassroomFile(), 8000);
-    if (shared) {
-      cache = applySharedClassroom(cache, shared);
+    sharedSnapshot = await withTimeout(fetchSharedClassroomFile(), 8000);
+    if (sharedSnapshot) {
+      cache = applySharedClassroom(cache, sharedSnapshot);
       writeLocalCache();
     }
   } catch (err) {
@@ -337,10 +338,15 @@ export async function initStorage() {
       && (remote.classes?.length || remote.students?.length || remote.wordLists?.length);
 
     if (hasRemote) {
-      // Keep local teacher edits (vocab, videos) if they are richer than the cloud copy.
-      cache = migrateData(pickRicherDataset(local, remote));
+      // Compare against current cache (already includes shared), not the raw pre-shared local copy.
+      cache = migrateData(pickRicherDataset(cache, remote));
     } else if (!local) {
       cache = getSeedData();
+    }
+
+    // Teacher shared catalog must win over an older cloud snapshot.
+    if (sharedSnapshot) {
+      cache = applySharedClassroom(cache, sharedSnapshot);
     }
 
     writeLocalCache();
@@ -357,6 +363,7 @@ export async function initStorage() {
     cloudSynced = false;
     syncError = err.message || 'Connexion au cloud impossible';
     cache = local || cache || getSeedData();
+    if (sharedSnapshot) cache = applySharedClassroom(cache, sharedSnapshot);
     writeLocalCache();
   }
 
@@ -368,6 +375,17 @@ export function loadData() {
     cache = readLocalCache() || getSeedData();
   }
   return cache;
+}
+
+/** Info shown on home screen so phones can confirm shared content was loaded. */
+export function getSharedImportInfo() {
+  const data = loadData();
+  const videoCount = (data.chapterVideoBanks || []).reduce((n, b) => n + (b.videos?.length || 0), 0);
+  return {
+    importedAt: data.sharedImportedAt || null,
+    listCount: data.wordLists?.length || 0,
+    videoCount,
+  };
 }
 
 export function saveData() {

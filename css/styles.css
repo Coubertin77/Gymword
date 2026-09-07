@@ -1681,6 +1681,18 @@ body {
   }
 }
 
+.shared-status {
+  font-size: 0.8rem;
+  color: var(--purple-dark);
+  font-weight: 700;
+  text-align: center;
+  max-width: 400px;
+  margin: 0.35rem 0 0.75rem;
+  padding: 0.5rem 0.75rem;
+  background: #f3edff;
+  border-radius: var(--radius-sm);
+}
+
 .publish-banner {
   margin-bottom: 1.25rem;
   border: 2px solid rgba(108, 60, 224, 0.35);

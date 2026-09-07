@@ -1,4 +1,4 @@
-import { CONFIG, ACTIVITY_LABELS, getWordImage, CHAPTERS, getChapterById, getActivitiesForChapter, APP_VERSION, APP_URL, APP_QR_IMAGE } from './config.js?v=2.5.8b';
+import { CONFIG, ACTIVITY_LABELS, getWordImage, CHAPTERS, getChapterById, getActivitiesForChapter, APP_VERSION, APP_URL, APP_QR_IMAGE } from './config.js';
 import {
   initStorage, loadData, getClasses, getClassById, getWordsForClass, getStories, getStoryById,
   getStoriesForClass, getChaptersForClass,
@@ -7,7 +7,7 @@ import {
   getWordLists, saveWordList, deleteWordList, getQuizBank, saveQuizBank, updateClass,
   getChapterVideoBanks, saveChapterVideoBank, getVideosForChapter,
   getSession, setSession, clearSession, addActivityResult,
-  getSyncStatus, reloadFromCloud, flushStorage,
+  getSyncStatus, reloadFromCloud, flushStorage, getSharedImportInfo,
 } from './storage.js';
 import {
   getLevel, countWordsByStatus, recordWordAttempt, awardPoints,
@@ -179,6 +179,10 @@ function renderVideosSectionHtml(videos, { heading = '' } = {}) {
 
 function renderHome() {
   const sync = getSyncStatus();
+  const shared = getSharedImportInfo();
+  const sharedLabel = shared.importedAt
+    ? `Contenu classe charge: ${shared.listCount} listes, ${shared.videoCount} video(s) — ${new Date(shared.importedAt).toLocaleString('fr-FR')}`
+    : 'Contenu classe: fichier partage non charge (ouvrez v262.html)';
   app.innerHTML = `
     <div class="page" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100dvh">
       <div class="home-icons" aria-hidden="true">
@@ -188,6 +192,7 @@ function renderHome() {
       <h1 class="logo-big">SportWord Section Euro</h1>
       <p class="logo-sub">Revise PE vocabulary in English</p>
       <p class="app-version" aria-label="Application version">v${APP_VERSION}</p>
+      <p class="shared-status">${escapeHtml(sharedLabel)}</p>
       ${cloudStatusHtml(sync)}
       <div class="card" style="width:100%;max-width:400px">
         <button class="btn btn-primary btn-block" id="btn-student" style="margin-bottom:0.75rem">I'm a Student 💪</button>
