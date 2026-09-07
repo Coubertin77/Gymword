@@ -1,10 +1,4723 @@
 {
-  "note": "Replace this file with Download shared file from the teacher dashboard, then commit + push. Students will see the updated vocabulary and videos.",
-  "wordLists": [],
-  "chapterVideoBanks": [],
-  "quizBanks": [],
-  "stories": [],
-  "classes": [],
+  "exportedAt": "2026-09-07T15:01:46.467Z",
+  "wordLists": [
+    {
+      "id": "list_equipment",
+      "name": "Equipment & Basics",
+      "theme": "equipment",
+      "words": [
+        {
+          "french": "développé couché",
+          "english": "bench press",
+          "imageUrl": "images/exercises/bench-press.png",
+          "definition": "A weightlifting exercise performed lying on a bench, pushing a barbell upward"
+        },
+        {
+          "french": "ischio-jambiers",
+          "english": "hamstring",
+          "imageUrl": "https://images.pexels.com/photos/6550859/pexels-photo-6550859.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "The group of muscles at the back of the thigh"
+        },
+        {
+          "french": "plier / se pencher",
+          "english": "to bend",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "To move a body part or object at a joint or angle"
+        },
+        {
+          "french": "entraînement",
+          "english": "training",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "Physical exercise and practice to improve fitness and skills"
+        },
+        {
+          "french": "échauffement",
+          "english": "warm up",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "Light exercises done before the main workout to prepare the body"
+        },
+        {
+          "french": "descendre",
+          "english": "to lower",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "to move something down to a lower position or level"
+        },
+        {
+          "french": "tendre",
+          "english": "to straighten",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "to make something straight"
+        }
+      ],
+      "chapterId": "musculation"
+    },
+    {
+      "id": "list_exercises",
+      "name": "Exercises / Muscles",
+      "theme": "exercises",
+      "words": [
+        {
+          "french": "s'inscrire à la salle",
+          "english": "to join a gym",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "to become a member of a fitness center"
+        },
+        {
+          "french": "squat / flexion des jambes",
+          "english": "squat",
+          "imageUrl": "https://images.pexels.com/photos/3823039/pexels-photo-3823039.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "A lower body exercise where you bend your knees and lower your hips"
+        },
+        {
+          "french": "soulevé de terre",
+          "english": "deadlift",
+          "imageUrl": "https://images.unsplash.com/photo-1517838277536-f5f99be501cd?w=300&h=200&fit=crop",
+          "definition": "A weightlifting exercise where you lift a barbell from the floor"
+        },
+        {
+          "french": "traction",
+          "english": "pull-up",
+          "imageUrl": "https://images.pexels.com/photos/6388459/pexels-photo-6388459.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "An upper body exercise where you pull yourself up on a bar"
+        },
+        {
+          "french": "pompes",
+          "english": "push up",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "An upper body exercise in which you lower and raise your body using your arms"
+        },
+        {
+          "french": "trapèze",
+          "english": "trapezius",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "a large muscle that covers the upper back and neck"
+        },
+        {
+          "french": "fessiers",
+          "english": "glutes",
+          "imageUrl": "https://images.pexels.com/photos/914759/pexels-photo-914759.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "muscles in your buttocks"
+        },
+        {
+          "french": "adducteurs",
+          "english": "adductors",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "muscles in the inner thigh that bring your legs toward the center of you body"
+        },
+        {
+          "french": "Jumeaux",
+          "english": "Gastrocnemius",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "the main calf muscle"
+        },
+        {
+          "french": "grand dorsal",
+          "english": "Latissimus dorsi / Lats",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "A large muscle on the back that helps you move your arms and your shoulders"
+        }
+      ],
+      "chapterId": "musculation"
+    },
+    {
+      "id": "list_body",
+      "name": "Body & Recovery",
+      "theme": "body",
+      "words": [
+        {
+          "french": "biceps",
+          "english": "biceps",
+          "imageUrl": "https://images.pexels.com/photos/1638336/pexels-photo-1638336.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "The muscle on the front of the upper arm"
+        },
+        {
+          "french": "sangle abdominale / centre du corps",
+          "english": "core",
+          "imageUrl": "https://images.pexels.com/photos/6455891/pexels-photo-6455891.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "The muscles of the abdomen and lower back that stabilise the body"
+        },
+        {
+          "french": "étirement",
+          "english": "stretching",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "To extend muscles to improve flexibility"
+        },
+        {
+          "french": "courbatures",
+          "english": "sore muscles",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "Muscle pain felt after intense exercise"
+        },
+        {
+          "french": "récupération",
+          "english": "recovery",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "The rest period after exercise when the body repairs itself"
+        },
+        {
+          "french": "perdre du poids",
+          "english": "to lose weight",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "to become lighter by reducing body weight through exercise and diet"
+        },
+        {
+          "french": "gagner du muscle",
+          "english": "to gain muscles / to build muscles",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "To increase the size and strength of your muscles"
+        },
+        {
+          "french": "cuisse",
+          "english": "thigh",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "the part of your leg between your hip and your knee"
+        },
+        {
+          "french": "mollet /mollets",
+          "english": "calf / calves",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "the muscles at the back of your lower legs below the knees"
+        },
+        {
+          "french": "avant bras",
+          "english": "forearm",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "the part of the arm between the elbow and the wrist"
+        }
+      ],
+      "chapterId": "musculation"
+    },
+    {
+      "id": "list_mix_1",
+      "name": "Musculation — Mix 1",
+      "theme": "musculation",
+      "words": [
+        {
+          "french": "barre (haltères)",
+          "english": "barbell",
+          "imageUrl": "https://images.pexels.com/photos/416778/pexels-photo-416778.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "A long metal bar used for weightlifting"
+        },
+        {
+          "french": "soulever",
+          "english": "to lift",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "To raise something heavy using your muscles"
+        },
+        {
+          "french": "fort(e)",
+          "english": "strong",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "Having powerful muscles and physical ability"
+        },
+        {
+          "french": "haltère",
+          "english": "dumbbell",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "A short bar with weights on each end"
+        },
+        {
+          "french": "contracter (un muscle)",
+          "english": "to flex",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "To tighten a muscle on purpose"
+        },
+        {
+          "french": "lourd(e)",
+          "english": "heavy",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "Weighing a lot; difficult to lift"
+        },
+        {
+          "french": "répétition",
+          "english": "rep",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "One complete movement of an exercise"
+        },
+        {
+          "french": "respirer",
+          "english": "to breathe",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "To take air in and out during exercise"
+        },
+        {
+          "french": "musclé(e)",
+          "english": "muscular",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "Having well-developed muscles"
+        },
+        {
+          "french": "pareur",
+          "english": "spotter",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "A person who helps and protects someone lifting weights"
+        }
+      ],
+      "chapterId": "musculation"
+    },
+    {
+      "id": "list_mix_2",
+      "name": "Musculation — Mix 2",
+      "theme": "musculation",
+      "words": [
+        {
+          "french": "triceps",
+          "english": "triceps",
+          "imageUrl": "https://images.pexels.com/photos/5327523/pexels-photo-5327523.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "The muscle on the back of the upper arm"
+        },
+        {
+          "french": "pousser",
+          "english": "to push",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "To move something away from your body with force"
+        },
+        {
+          "french": "puissant(e)",
+          "english": "powerful",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "Very strong and able to produce a lot of force"
+        },
+        {
+          "french": "épaule",
+          "english": "shoulder",
+          "imageUrl": "https://images.pexels.com/photos/703014/pexels-photo-703014.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "The joint connecting the arm to the body"
+        },
+        {
+          "french": "tirer",
+          "english": "to pull",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "To move something toward your body with force"
+        },
+        {
+          "french": "fatigué(e)",
+          "english": "tired",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "Needing rest after physical effort"
+        },
+        {
+          "french": "pectoraux",
+          "english": "pectorals",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "The muscles of the chest"
+        },
+        {
+          "french": "s'étirer / étirer",
+          "english": "to stretch",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "To lengthen muscles to improve flexibility"
+        },
+        {
+          "french": "souple",
+          "english": "flexible",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "Able to bend and move easily"
+        },
+        {
+          "french": "Ecarter les pieds à la largeur du bassin / hanches",
+          "english": "Stand with your feet hip-width apart",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "The distance between your feet is about the same aas the width of your hips"
+        }
+      ],
+      "chapterId": "musculation"
+    },
+    {
+      "id": "list_mix_3",
+      "name": "Musculation — Mix 3",
+      "theme": "musculation",
+      "words": [
+        {
+          "french": "gainage dans l'axe / côté",
+          "english": "plank / side plank",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "An exercise where you work your abs and obliques"
+        },
+        {
+          "french": "renforcer",
+          "english": "to strengthen",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "To make muscles stronger through training"
+        },
+        {
+          "french": "épuisé(e)",
+          "english": "exhausted",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "Completely tired after intense effort"
+        },
+        {
+          "french": "fente",
+          "english": "lunge",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "An exercise where you step forward, backward or sideways and bend your knees to lower body"
+        },
+        {
+          "french": "transpirer",
+          "english": "to sweat",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "To produce moisture on the skin during exercise"
+        },
+        {
+          "french": "être en forme",
+          "english": "to be fit",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "In good physical condition"
+        },
+        {
+          "french": "série",
+          "english": "set",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "A group of repetitions done one after another"
+        },
+        {
+          "french": "se reposer",
+          "english": "to rest",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "To stop exercising to recover energy"
+        },
+        {
+          "french": "être courbaturé(e)",
+          "english": "to be sore",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "Feeling muscle pain after hard training"
+        },
+        {
+          "french": "endurance",
+          "english": "endurance",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "The ability to keep exercising for a long time"
+        }
+      ],
+      "chapterId": "musculation"
+    },
+    {
+      "id": "list_mix_4",
+      "name": "Musculation — Mix 4",
+      "theme": "musculation",
+      "words": [
+        {
+          "french": "séance d'entraînement",
+          "english": "workout",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "A period of physical exercise at the gym"
+        },
+        {
+          "french": "s'échauffer",
+          "english": "to warm up",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "To prepare the body with light exercise before training"
+        },
+        {
+          "french": "être sec / tonique",
+          "english": "to be lean",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "Thin with little fat and visible muscle tone"
+        },
+        {
+          "french": "un entraîneur",
+          "english": "a trainer",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "Someone who helps people to improve performance"
+        },
+        {
+          "french": "faire un curl",
+          "english": "to curl",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "To bend the arm to lift a weight toward the shoulder"
+        },
+        {
+          "french": "équilibré(e)",
+          "english": "balanced",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "Well-developed on all sides; stable"
+        },
+        {
+          "french": "force",
+          "english": "strength",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "The power your muscles can produce"
+        },
+        {
+          "french": "augmenter",
+          "english": "to increase",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "To make weights or reps greater over time"
+        },
+        {
+          "french": "exigeant(e)",
+          "english": "challenging",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "Difficult but good for progress"
+        },
+        {
+          "french": "progrès",
+          "english": "progress",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "Improvement in strength or fitness over time"
+        }
+      ],
+      "chapterId": "musculation"
+    },
+    {
+      "id": "list_image_match",
+      "name": "Match Images — Machines",
+      "theme": "image_match",
+      "words": [
+        {
+          "english": "bench press",
+          "french": "développé couché",
+          "definition": "Lying on a bench, pushing a barbell upward",
+          "imageUrl": "images/exercises/bench-press.png"
+        },
+        {
+          "english": "lat pull down",
+          "french": "tirage vertical",
+          "definition": "Pulling a bar down toward your chest on a cable machine",
+          "imageUrl": "images/exercises/lat-pull-down.png"
+        },
+        {
+          "english": "machine fly",
+          "french": "écarté à la machine",
+          "definition": "Bringing your arms together in front of your chest on a pec deck machine",
+          "imageUrl": "images/exercises/machine-fly.png"
+        },
+        {
+          "english": "machine squat",
+          "french": "squat à la machine",
+          "definition": "Squatting with a barbell on your shoulders",
+          "imageUrl": "images/exercises/machine-squat.png"
+        },
+        {
+          "english": "barbell preacher curl",
+          "french": "curl pupitre",
+          "definition": "Curling a barbell on a preacher bench to work the biceps",
+          "imageUrl": "images/exercises/barbell-preacher-curl.png"
+        },
+        {
+          "english": "leg extension",
+          "french": "extension des jambes",
+          "definition": "Straightening your legs against resistance on a leg extension machine",
+          "imageUrl": "images/exercises/leg-extension.png"
+        },
+        {
+          "english": "leg curl",
+          "french": "curl ischio-jambiers",
+          "definition": "Curling your legs backward to work the hamstrings on a leg curl machine",
+          "imageUrl": "images/exercises/leg-curl.png"
+        },
+        {
+          "english": "incline leg press",
+          "french": "presse à cuisses inclinée",
+          "definition": "Pushing a weighted platform away with your legs on an incline leg press machine",
+          "imageUrl": "images/exercises/incline-leg-press.png"
+        }
+      ],
+      "chapterId": "musculation"
+    },
+    {
+      "id": "badminton_basics",
+      "name": "Badminton — Basics",
+      "theme": "basics",
+      "words": [
+        {
+          "french": "volant",
+          "english": "shuttlecock",
+          "imageUrl": "https://images.pexels.com/photos/3660420/pexels-photo-3660420.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "The feathered object hit back and forth over the net"
+        },
+        {
+          "french": "raquette",
+          "english": "racket",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "The equipment used to hit the shuttlecock"
+        },
+        {
+          "french": "filet",
+          "english": "net",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "The barrier dividing the two sides of the court"
+        },
+        {
+          "french": "terrain / court",
+          "english": "court",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "The rectangular playing area for badminton"
+        },
+        {
+          "french": "service",
+          "english": "serve",
+          "imageUrl": "https://images.pexels.com/photos/3660204/pexels-photo-3660204.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "The shot that starts each point"
+        },
+        {
+          "french": "smash",
+          "english": "smash",
+          "imageUrl": "https://images.pexels.com/photos/3660420/pexels-photo-3660420.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "A powerful downward shot"
+        },
+        {
+          "french": "amorti",
+          "english": "drop shot",
+          "imageUrl": "https://images.pexels.com/photos/1171084/pexels-photo-1171084.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "A soft shot that lands just over the net"
+        },
+        {
+          "french": "double",
+          "english": "doubles",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "A match with two players on each side"
+        },
+        {
+          "french": "simple",
+          "english": "singles",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "A match with one player on each side"
+        },
+        {
+          "french": "déplacement",
+          "english": "footwork",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "Quick, efficient movement around the court"
+        }
+      ],
+      "chapterId": "badminton"
+    },
+    {
+      "id": "badminton_image_match",
+      "name": "Badminton — Match Images",
+      "theme": "image_match",
+      "words": [
+        {
+          "french": "volant",
+          "english": "shuttlecock",
+          "imageUrl": "https://images.pexels.com/photos/3660420/pexels-photo-3660420.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "The object hit over the net"
+        },
+        {
+          "french": "raquette de badminton",
+          "english": "badminton racket",
+          "imageUrl": "https://images.pexels.com/photos/3660204/pexels-photo-3660204.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "Equipment used to hit the shuttlecock"
+        },
+        {
+          "french": "filet de badminton",
+          "english": "badminton net",
+          "imageUrl": "https://images.pexels.com/photos/6550872/pexels-photo-6550872.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "The net on the court"
+        },
+        {
+          "french": "terrain de badminton",
+          "english": "badminton court",
+          "imageUrl": "https://images.pexels.com/photos/1171084/pexels-photo-1171084.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "The playing area"
+        },
+        {
+          "french": "service",
+          "english": "serve",
+          "imageUrl": "https://images.pexels.com/photos/3660204/pexels-photo-3660204.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "Starting shot of a rally"
+        },
+        {
+          "french": "smash",
+          "english": "smash",
+          "imageUrl": "https://images.pexels.com/photos/3660420/pexels-photo-3660420.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "Powerful attacking shot"
+        },
+        {
+          "french": "amorti",
+          "english": "drop shot",
+          "imageUrl": "https://images.pexels.com/photos/1171084/pexels-photo-1171084.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "Soft shot near the net"
+        }
+      ],
+      "chapterId": "badminton"
+    },
+    {
+      "id": "basket_basics",
+      "name": "Basketball — Basics",
+      "theme": "basics",
+      "words": [
+        {
+          "french": "basket-ball",
+          "english": "basketball",
+          "imageUrl": "https://images.pexels.com/photos/33204406/pexels-photo-33204406.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "The orange ball used in the sport"
+        },
+        {
+          "french": "panier",
+          "english": "hoop",
+          "imageUrl": "https://images.pexels.com/photos/1752757/pexels-photo-1752757.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "The ring and net where players score"
+        },
+        {
+          "french": "dribbler",
+          "english": "dribble",
+          "imageUrl": "https://images.pexels.com/photos/33204406/pexels-photo-33204406.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "To bounce the ball while moving"
+        },
+        {
+          "french": "tirer",
+          "english": "shoot",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "To throw the ball toward the hoop"
+        },
+        {
+          "french": "passer",
+          "english": "pass",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "To throw the ball to a teammate"
+        },
+        {
+          "french": "rebond",
+          "english": "rebound",
+          "imageUrl": "https://images.pexels.com/photos/33204406/pexels-photo-33204406.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "To catch the ball after a missed shot"
+        },
+        {
+          "french": "défenseur",
+          "english": "defender",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "A player who tries to stop the other team scoring"
+        },
+        {
+          "french": "attaque",
+          "english": "offence",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "The team trying to score points"
+        },
+        {
+          "french": "lay-up / tir près du panier",
+          "english": "lay-up",
+          "imageUrl": "https://images.pexels.com/photos/1752757/pexels-photo-1752757.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "A close-range shot near the hoop"
+        },
+        {
+          "french": "faute",
+          "english": "foul",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "An illegal contact punished by free throws"
+        }
+      ],
+      "chapterId": "basket"
+    },
+    {
+      "id": "basket_image_match",
+      "name": "Basketball — Match Images",
+      "theme": "image_match",
+      "words": [
+        {
+          "french": "basket-ball",
+          "english": "basketball",
+          "imageUrl": "https://images.pexels.com/photos/33204406/pexels-photo-33204406.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "The ball used in the game"
+        },
+        {
+          "french": "panier",
+          "english": "hoop",
+          "imageUrl": "https://images.pexels.com/photos/1752757/pexels-photo-1752757.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "Ring and net for scoring"
+        },
+        {
+          "french": "dribble",
+          "english": "dribble",
+          "imageUrl": "https://images.pexels.com/photos/33204406/pexels-photo-33204406.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "Bouncing the ball while moving"
+        },
+        {
+          "french": "terrain de basket",
+          "english": "basketball court",
+          "imageUrl": "https://images.pexels.com/photos/1752757/pexels-photo-1752757.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "The playing surface"
+        },
+        {
+          "french": "rebond",
+          "english": "rebound",
+          "imageUrl": "https://images.pexels.com/photos/33204406/pexels-photo-33204406.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "Catching the ball after a miss"
+        },
+        {
+          "french": "lay-up",
+          "english": "lay-up",
+          "imageUrl": "https://images.pexels.com/photos/1752757/pexels-photo-1752757.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "Close-range scoring shot"
+        }
+      ],
+      "chapterId": "basket"
+    },
+    {
+      "id": "touch_rugby_basics",
+      "name": "Touch Rugby — Basics",
+      "theme": "basics",
+      "words": [
+        {
+          "french": "essai",
+          "english": "try",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "Scoring by grounding the ball in the in-goal area"
+        },
+        {
+          "french": "passer",
+          "english": "pass",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "To throw the ball to a teammate"
+        },
+        {
+          "french": "touché",
+          "english": "touch",
+          "imageUrl": "https://images.pexels.com/photos/3621105/pexels-photo-3621105.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "Contact with an opponent that stops play"
+        },
+        {
+          "french": "attaque",
+          "english": "attack",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "The team in possession trying to score"
+        },
+        {
+          "french": "défense",
+          "english": "defence",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "The team trying to stop the attack"
+        },
+        {
+          "french": "passer en contact",
+          "english": "offload",
+          "imageUrl": "https://images.pexels.com/photos/47730/pexels-photo-47730.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "To pass the ball while being touched"
+        },
+        {
+          "french": "soutien",
+          "english": "support",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "Running to help the ball carrier"
+        },
+        {
+          "french": "terrain",
+          "english": "pitch",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "The field where rugby is played"
+        },
+        {
+          "french": "feinte de corps",
+          "english": "sidestep",
+          "imageUrl": "https://images.pexels.com/photos/3621105/pexels-photo-3621105.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "A quick move to avoid a defender"
+        },
+        {
+          "french": "feinte de passe",
+          "english": "dummy pass",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "A fake pass to trick the defence"
+        }
+      ],
+      "chapterId": "touch_rugby"
+    },
+    {
+      "id": "touch_rugby_image_match",
+      "name": "Touch Rugby — Match Images",
+      "theme": "image_match",
+      "words": [
+        {
+          "french": "ballon de rugby",
+          "english": "rugby ball",
+          "imageUrl": "https://images.pexels.com/photos/47730/pexels-photo-47730.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "The oval ball used in rugby"
+        },
+        {
+          "french": "ligne d'essai",
+          "english": "try line",
+          "imageUrl": "https://images.pexels.com/photos/47730/pexels-photo-47730.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "The line that must be crossed to score"
+        },
+        {
+          "french": "touché",
+          "english": "touch",
+          "imageUrl": "https://images.pexels.com/photos/3621105/pexels-photo-3621105.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "Two-hand contact to stop the attacker"
+        },
+        {
+          "french": "terrain de rugby",
+          "english": "rugby pitch",
+          "imageUrl": "https://images.pexels.com/photos/3621105/pexels-photo-3621105.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "The playing field"
+        },
+        {
+          "french": "passer en contact",
+          "english": "offload",
+          "imageUrl": "https://images.pexels.com/photos/47730/pexels-photo-47730.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "Passing while being touched"
+        },
+        {
+          "french": "feinte de corps",
+          "english": "sidestep",
+          "imageUrl": "https://images.pexels.com/photos/3621105/pexels-photo-3621105.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "Evading a defender"
+        }
+      ],
+      "chapterId": "touch_rugby"
+    },
+    {
+      "id": "flag_football_basics",
+      "name": "Flag Football — Basics",
+      "words": [
+        {
+          "english": "a flag",
+          "french": "drapeau",
+          "definition": "A cloth attached to the belt; pulling it stops the play",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop"
+        },
+        {
+          "english": "a quarterback",
+          "french": "quarterback",
+          "definition": "The player who throws passes and leads the attack",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop"
+        },
+        {
+          "english": "a touchdown",
+          "french": "touchdown",
+          "definition": "Scoring by reaching the end zone",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop"
+        },
+        {
+          "english": "to catch",
+          "french": "attraper",
+          "definition": "To receive the ball in the air",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop"
+        },
+        {
+          "english": "to run",
+          "french": "courir",
+          "definition": "To advance with the ball on foot",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop"
+        },
+        {
+          "english": "the end zone",
+          "french": "zone d'en-but",
+          "definition": "The scoring area at each end of the field",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop"
+        },
+        {
+          "english": "the defence",
+          "french": "défense",
+          "definition": "The team trying to pull flags and stop scoring",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop"
+        },
+        {
+          "english": "a snap",
+          "french": "mise en jeu",
+          "definition": "The backward pass that starts each play",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop"
+        },
+        {
+          "english": "a blitz",
+          "french": "action défensive visant à mettre rapidement la pression sur le quarterback.",
+          "definition": "When defenders rush the quarterback quickly",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop"
+        },
+        {
+          "english": "the handoff",
+          "french": "remise",
+          "definition": "Giving the ball directly to a running teammate",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop"
+        }
+      ],
+      "chapterId": "flag_football",
+      "theme": "basics"
+    },
+    {
+      "id": "flag_football_image_match",
+      "name": "Flag Football",
+      "words": [
+        {
+          "english": "the flag belt",
+          "french": "la ceinture à drapeaux",
+          "definition": "Belt with flags defenders must pull",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop"
+        },
+        {
+          "english": "the ball carrier",
+          "french": "le porteur de balle",
+          "definition": "The player who has the ball",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop"
+        },
+        {
+          "english": "the center",
+          "french": "le centre, mllieu, joueur qui fait le snap",
+          "definition": "The player who snaps the ball to the quarterback",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop"
+        },
+        {
+          "english": "the receiver",
+          "french": "le receveur",
+          "definition": "A player who catches passes",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop"
+        },
+        {
+          "english": "a football field",
+          "french": "un terrain de football américain",
+          "definition": "The playing field",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop"
+        },
+        {
+          "english": "a helmet",
+          "french": "un casque",
+          "definition": "Protective headgear (optional in flag football)",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop"
+        },
+        {
+          "english": "the defender",
+          "french": "le défenseur",
+          "definition": "A player who tries to stop the offense",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop"
+        },
+        {
+          "english": "the rusher",
+          "french": "la personne qui met la pression",
+          "definition": "A defender who rushes towards the quarterback",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop"
+        },
+        {
+          "english": "the offense",
+          "french": "l'attaque",
+          "definition": "The team that has possession of the ball",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop"
+        },
+        {
+          "english": "to defend",
+          "french": "défendre",
+          "definition": "when you try to stop the offense",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop"
+        }
+      ],
+      "chapterId": "flag_football",
+      "theme": "image_match"
+    },
+    {
+      "id": "baseball_basics",
+      "name": "Baseball — Basics",
+      "theme": "basics",
+      "words": [
+        {
+          "french": "batte",
+          "english": "bat",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "The wooden or metal stick used to hit the ball"
+        },
+        {
+          "french": "lancer",
+          "english": "pitch",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "The throw from the pitcher to the batter"
+        },
+        {
+          "french": "receveur",
+          "english": "catcher",
+          "imageUrl": "https://images.pexels.com/photos/6724492/pexels-photo-6724492.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "The player behind home plate who catches pitches"
+        },
+        {
+          "french": "coup de circuit",
+          "english": "home run",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "Hitting the ball out of the field for maximum points"
+        },
+        {
+          "french": "base",
+          "english": "base",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "One of four positions runners must reach"
+        },
+        {
+          "french": "gant",
+          "english": "glove",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "The padded mitt used to catch the ball"
+        },
+        {
+          "french": "strike",
+          "english": "strike",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "A missed swing or a pitch in the strike zone"
+        },
+        {
+          "french": "frappeur",
+          "english": "batter",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "The player who tries to hit the pitched ball"
+        },
+        {
+          "french": "manche",
+          "english": "inning",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "A division of the game when both teams bat and field"
+        },
+        {
+          "french": "champ extérieur",
+          "english": "outfield",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "The area far from home plate"
+        }
+      ],
+      "chapterId": "baseball"
+    },
+    {
+      "id": "baseball_image_match",
+      "name": "Baseball — Match Images",
+      "theme": "image_match",
+      "words": [
+        {
+          "french": "batte de baseball",
+          "english": "baseball bat",
+          "imageUrl": "https://images.pexels.com/photos/6724492/pexels-photo-6724492.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "Equipment for hitting the ball"
+        },
+        {
+          "french": "gant de baseball",
+          "english": "baseball glove",
+          "imageUrl": "https://images.pexels.com/photos/6724492/pexels-photo-6724492.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "Mitt for catching the ball"
+        },
+        {
+          "french": "marbre / home plate",
+          "english": "home plate",
+          "imageUrl": "https://images.pexels.com/photos/6724492/pexels-photo-6724492.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "The base where the batter stands"
+        },
+        {
+          "french": "lanceur",
+          "english": "pitcher",
+          "imageUrl": "https://images.pexels.com/photos/6724492/pexels-photo-6724492.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "Player who throws the ball to the batter"
+        },
+        {
+          "french": "receveur",
+          "english": "catcher",
+          "imageUrl": "https://images.pexels.com/photos/6724492/pexels-photo-6724492.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "Player behind home plate"
+        },
+        {
+          "french": "terrain de baseball",
+          "english": "baseball field",
+          "imageUrl": "https://images.pexels.com/photos/6724492/pexels-photo-6724492.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "The diamond-shaped playing area"
+        }
+      ],
+      "chapterId": "baseball"
+    },
+    {
+      "id": "laser_run_basics",
+      "name": "Laser Run — Basics",
+      "theme": "basics",
+      "words": [
+        {
+          "french": "pistolet laser",
+          "english": "laser pistol",
+          "imageUrl": "https://images.pexels.com/photos/5690931/pexels-photo-5690931.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "The device used to shoot at targets"
+        },
+        {
+          "french": "cible",
+          "english": "target",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "The object athletes must hit with the laser"
+        },
+        {
+          "french": "tirer",
+          "english": "shoot",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "To aim and fire at the target"
+        },
+        {
+          "french": "obstacle",
+          "english": "obstacle",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "A barrier on the course that runners must cross"
+        },
+        {
+          "french": "parcours",
+          "english": "course",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "The full route combining running and shooting"
+        },
+        {
+          "french": "transition",
+          "english": "transition",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "Moving from running to shooting and back"
+        },
+        {
+          "french": "pénalité",
+          "english": "penalty",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "Extra time added for missed shots"
+        },
+        {
+          "french": "escrime",
+          "english": "fencing",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "The sport of sword fighting, part of modern pentathlon"
+        },
+        {
+          "french": "combiner",
+          "english": "combine",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "To mix running and shooting in one event"
+        },
+        {
+          "french": "endurance",
+          "english": "endurance",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "The ability to keep running between shooting stages"
+        }
+      ],
+      "chapterId": "laser_run"
+    },
+    {
+      "id": "laser_run_image_match",
+      "name": "Laser Run — Match Images",
+      "theme": "image_match",
+      "words": [
+        {
+          "french": "pistolet laser",
+          "english": "laser pistol",
+          "imageUrl": "https://images.pexels.com/photos/5690931/pexels-photo-5690931.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "Device for shooting at targets"
+        },
+        {
+          "french": "cible de tir",
+          "english": "shooting target",
+          "imageUrl": "https://images.pexels.com/photos/5690931/pexels-photo-5690931.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "Target to hit with the laser"
+        },
+        {
+          "french": "parcours d'obstacles",
+          "english": "obstacle course",
+          "imageUrl": "https://images.pexels.com/photos/3621105/pexels-photo-3621105.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "Running route with barriers"
+        },
+        {
+          "french": "piste d'escrime",
+          "english": "fencing piste",
+          "imageUrl": "https://images.pexels.com/photos/5690931/pexels-photo-5690931.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "The strip where fencers compete"
+        },
+        {
+          "french": "parcours laser run",
+          "english": "laser run course",
+          "imageUrl": "https://images.pexels.com/photos/3621105/pexels-photo-3621105.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "Combined run and shoot route"
+        },
+        {
+          "french": "zone de transition",
+          "english": "transition zone",
+          "imageUrl": "https://images.pexels.com/photos/3621105/pexels-photo-3621105.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop",
+          "definition": "Area between running and shooting"
+        }
+      ],
+      "chapterId": "laser_run"
+    },
+    {
+      "id": "badminton_referee_gestures",
+      "name": "Badminton — Referee Gestures",
+      "theme": "image_match",
+      "words": [
+        {
+          "english": "Not hitting the base first",
+          "french": "Ne pas frapper le cork en premier",
+          "definition": "Service fault: the server hits the feathers before the cork base",
+          "imageUrl": "images/badminton/referee/not-hitting-base-first.png"
+        },
+        {
+          "english": "Foot touching line",
+          "french": "Pied touchant la ligne",
+          "definition": "Service fault: a foot is on or over a line at the moment of the serve",
+          "imageUrl": "images/badminton/referee/foot-fault.png"
+        },
+        {
+          "english": "Shuttle OUT",
+          "french": "Volant OUT",
+          "definition": "Line judge signal: the shuttle landed outside the court",
+          "imageUrl": "images/badminton/referee/shuttle-out.png"
+        },
+        {
+          "english": "Shuttle IN",
+          "french": "Volant IN",
+          "definition": "Line judge signal: the shuttle landed inside the court",
+          "imageUrl": "images/badminton/referee/shuttle-in.png"
+        },
+        {
+          "english": "Movement of the racket interrupted",
+          "french": "Mouvement de raquette interrompu",
+          "definition": "Service fault: the serving motion stops and starts again",
+          "imageUrl": "images/badminton/referee/racket-movement-fault.png"
+        },
+        {
+          "english": "Judge unsighted",
+          "french": "Juge n'a pas vu",
+          "definition": "Line judge signal: the official could not see where the shuttle landed",
+          "imageUrl": "images/badminton/referee/judge-unsighted.png"
+        },
+        {
+          "english": "Foot not stationary",
+          "french": "Pied non fixe",
+          "definition": "Service fault: the server moves a foot before completing the serve",
+          "imageUrl": "images/badminton/referee/foot-fault.png"
+        },
+        {
+          "english": "Shuttle above waist",
+          "french": "Volant au-dessus de la taille",
+          "definition": "Service fault: the shuttle is struck above the server's waist",
+          "imageUrl": "images/badminton/referee/shuttle-above-waist.png"
+        },
+        {
+          "english": "Double movement of racket",
+          "french": "Double mouvement de raquette",
+          "definition": "Service fault: the racket is moved twice during the serving action",
+          "imageUrl": "images/badminton/referee/racket-movement-fault.png"
+        },
+        {
+          "english": "Racket not pointing down",
+          "french": "Raquette ne pointant pas vers le bas",
+          "definition": "Service fault: the racket head is not pointing downward at the start of the serve",
+          "imageUrl": "images/badminton/referee/racket-not-pointing-down.png"
+        }
+      ],
+      "chapterId": "badminton"
+    },
+    {
+      "id": "list_1788784506723_jpdrh",
+      "name": "Vocabulary 1",
+      "words": [
+        {
+          "english": "a down",
+          "french": "une tentative, action de jeu",
+          "definition": "One offensive play",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop"
+        },
+        {
+          "english": "the line of scrimmage",
+          "french": "la ligne de mise en jeu",
+          "definition": "The imaginary line where the play starts",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop"
+        },
+        {
+          "english": "a pass",
+          "french": "une passe",
+          "definition": "Throwing the ball to a teammate",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop"
+        },
+        {
+          "english": "a complete pass",
+          "french": "une passe réussie",
+          "definition": "A pass that is caught",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop"
+        },
+        {
+          "english": "an incomplete pass",
+          "french": "une passe incomplète",
+          "definition": "A pass that is not caught",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop"
+        },
+        {
+          "english": "a turnover",
+          "french": "un changement de possession",
+          "definition": "When the other team gets the ball",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop"
+        },
+        {
+          "english": "the goal line",
+          "french": "la ligne d'en but",
+          "definition": "The line separating the field from the end zone",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop"
+        },
+        {
+          "english": "the side line",
+          "french": "la ligne de touche",
+          "definition": "The boundary along the side of the field",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop"
+        },
+        {
+          "english": "out of bounds",
+          "french": "hors limites",
+          "definition": "Outside the playing area",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop"
+        },
+        {
+          "english": "a play",
+          "french": "une action de jeu",
+          "definition": "One period of action during the game",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop"
+        }
+      ],
+      "chapterId": "flag_football",
+      "theme": "basics"
+    },
+    {
+      "id": "list_1788784938723_xnah4",
+      "name": "Vocabulary 2",
+      "words": [
+        {
+          "english": "the possession",
+          "french": "la possession",
+          "definition": "Having control of the ball",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop"
+        },
+        {
+          "english": "the reception",
+          "french": "la réception",
+          "definition": "Catching the ball successfully",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop"
+        },
+        {
+          "english": "the interception",
+          "french": "l'interception",
+          "definition": "When a defender catches a pass",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop"
+        },
+        {
+          "english": "a play book",
+          "french": "un cahier de stratégies / de jeu",
+          "definition": "A collection of offensive and defensive plays",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop"
+        },
+        {
+          "english": "a route",
+          "french": "une trajectoire / une course",
+          "definition": "The path a receiver runs",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop"
+        },
+        {
+          "english": "open",
+          "french": "démarqué",
+          "definition": "Not closely covered by a defender",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop"
+        },
+        {
+          "english": "no contact",
+          "french": "sans contact",
+          "definition": "Players cannot tackle or deliberately hit opponents",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop"
+        },
+        {
+          "english": "To tackle / a tackle",
+          "french": "plaquer / un plaquage",
+          "definition": "Stopping a player by physically bringing them down — generally not allowed in Flag Football",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop"
+        },
+        {
+          "english": "a penalty",
+          "french": "une faute / une pénalité",
+          "definition": "A punishment for breaking a rule",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop"
+        },
+        {
+          "english": "a game clock",
+          "french": "un chronomètre du jeu",
+          "definition": "The clock showing the remaining game time",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop"
+        }
+      ],
+      "chapterId": "flag_football",
+      "theme": "basics"
+    },
+    {
+      "id": "list_1788785027115_p3vzu",
+      "name": "Vocabulary 3",
+      "words": [
+        {
+          "english": "a referee",
+          "french": "un arbitre",
+          "definition": "The official who enforces the rules",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop"
+        },
+        {
+          "english": "a timeout",
+          "french": "un temps mort",
+          "definition": "A short break requested by a team",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop"
+        },
+        {
+          "english": "a flag pull / to pull a flag",
+          "french": "arrachage de drapeaux / arracher un flag",
+          "definition": "When you take the oppenent's flag",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop"
+        },
+        {
+          "english": "to attack",
+          "french": "attaquer",
+          "definition": "when you have the ball and you try to score",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop"
+        },
+        {
+          "english": "to score",
+          "french": "marquer",
+          "definition": "when you do a touchdown",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop"
+        },
+        {
+          "english": "to rush",
+          "french": "mettre la pression",
+          "definition": "when the defender is close to the offensive player",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop"
+        },
+        {
+          "english": "an offensive player",
+          "french": "un attaquant",
+          "definition": "A player on offense",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop"
+        },
+        {
+          "english": "a forwards pass",
+          "french": "une passe vers l'avant",
+          "definition": "A pass thrown forwards",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop"
+        },
+        {
+          "english": "a backward pass",
+          "french": "une passe vers l'arrière",
+          "definition": "A pass thrown backwards",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop"
+        },
+        {
+          "english": "a lateral pass",
+          "french": "une passe de côté / latérale",
+          "definition": "A pass thrown sideways",
+          "imageUrl": "https://images.pexels.com/photos/841130/pexels-photo-841130.jpeg?auto=compress&cs=tinysrgb&w=300&h=200&fit=crop"
+        }
+      ],
+      "chapterId": "flag_football",
+      "theme": "basics"
+    }
+  ],
+  "chapterVideoBanks": [
+    {
+      "chapterId": "badminton",
+      "videos": [
+        {
+          "id": "vid_badminton_referee_gestures",
+          "title": "Badminton referee signals — service judge",
+          "url": "https://www.youtube.com/watch?v=tMBJgyml4jg"
+        }
+      ]
+    },
+    {
+      "chapterId": "flag_football",
+      "videos": [
+        {
+          "id": "vid_1788786316228_jdotk",
+          "title": "Flag Football rules",
+          "url": "https://www.youtube.com/watch?v=G-916j8b5c0"
+        },
+        {
+          "id": "vid_1788786316228_lv6yw",
+          "title": "What' Flag Football?",
+          "url": "https://www.youtube.com/watch?v=TC5Wz_PXS1E"
+        },
+        {
+          "id": "vid_1788786316228_n0s9y",
+          "title": "Flag football 2",
+          "url": "https://www.youtube.com/watch?v=rb_FKW_4pLs"
+        }
+      ]
+    }
+  ],
+  "quizBanks": [
+    {
+      "id": "quiz_musculation",
+      "chapterId": "musculation",
+      "questions": [
+        {
+          "id": "q_musculation_0",
+          "options": [
+            "To skip the workout",
+            "To prepare muscles and reduce injury risk",
+            "To lift heavier immediately",
+            "To avoid drinking water"
+          ],
+          "question": "Why should you warm up before lifting weights?",
+          "correctIndex": 1
+        },
+        {
+          "id": "q_musculation_1",
+          "options": [
+            "Look at their phone",
+            "Help and protect the lifter if needed",
+            "Add weight without asking",
+            "Leave the gym"
+          ],
+          "question": "What should a spotter do during a bench press?",
+          "correctIndex": 1
+        },
+        {
+          "id": "q_musculation_2",
+          "options": [
+            "Speed and heavy weight",
+            "Correct technique and control",
+            "Maximum reps as fast as possible",
+            "Closing your eyes"
+          ],
+          "question": "When learning a new exercise, what matters most?",
+          "correctIndex": 1
+        },
+        {
+          "id": "q_musculation_3",
+          "options": [
+            "To eat immediately",
+            "To stretch and help muscles recover",
+            "To start another heavy session",
+            "To replace sleep"
+          ],
+          "question": "What is the purpose of a cool-down after training?",
+          "correctIndex": 1
+        },
+        {
+          "id": "q_musculation_4",
+          "options": [
+            "Double the weight every session",
+            "Progress gradually when technique is good",
+            "Never change the weight",
+            "Let someone else choose randomly"
+          ],
+          "question": "How should you increase weight over time?",
+          "correctIndex": 1
+        },
+        {
+          "id": "q_musculation_5",
+          "options": [
+            "Continue with heavier weight",
+            "Stop and tell the coach",
+            "Hold your breath and push harder",
+            "Ignore it completely"
+          ],
+          "question": "What should you do if you feel sharp pain during an exercise?",
+          "correctIndex": 1
+        }
+      ]
+    },
+    {
+      "id": "quiz_badminton",
+      "chapterId": "badminton",
+      "questions": [
+        {
+          "id": "q_badminton_0",
+          "options": [
+            "When the shuttlecock lands in the opponent's court or they make a fault",
+            "When you shout louder",
+            "When you drop your racket",
+            "When the net falls down"
+          ],
+          "question": "How do you win a point in badminton?",
+          "correctIndex": 0
+        },
+        {
+          "id": "q_badminton_1",
+          "options": [
+            "Two",
+            "One",
+            "Four",
+            "Six"
+          ],
+          "question": "In singles, how many players are on each side?",
+          "correctIndex": 1
+        },
+        {
+          "id": "q_badminton_2",
+          "options": [
+            "Always a fault",
+            "It can be a valid serve if it lands in the correct service box",
+            "The server loses the match",
+            "Both players change sides"
+          ],
+          "question": "What happens if the shuttlecock hits the net and goes over during a serve?",
+          "correctIndex": 1
+        },
+        {
+          "id": "q_badminton_3",
+          "options": [
+            "Yes, always",
+            "No — you must let it cross to your side first",
+            "Only in doubles",
+            "Only if the coach agrees"
+          ],
+          "question": "Can you hit the shuttlecock before it crosses the net to your side?",
+          "correctIndex": 1
+        },
+        {
+          "id": "q_badminton_4",
+          "options": [
+            "A perfect smash",
+            "An illegal shot or rule violation",
+            "Winning a rally",
+            "Changing rackets"
+          ],
+          "question": "What is a fault in badminton?",
+          "correctIndex": 1
+        },
+        {
+          "id": "q_badminton_5",
+          "options": [
+            "First to 21 only",
+            "Two clear points (e.g. 22–20)",
+            "A coin toss",
+            "The game ends in a draw"
+          ],
+          "question": "When the score reaches 20–20, what is usually needed to win a game?",
+          "correctIndex": 1
+        }
+      ]
+    },
+    {
+      "id": "quiz_basket",
+      "chapterId": "basket",
+      "questions": [
+        {
+          "id": "q_basket_0",
+          "options": [
+            "One point",
+            "Two points",
+            "Three points",
+            "Four points"
+          ],
+          "question": "How many points is a shot scored inside the three-point arc worth?",
+          "correctIndex": 1
+        },
+        {
+          "id": "q_basket_1",
+          "options": [
+            "Running without dribbling illegally",
+            "Passing to a teammate",
+            "Shooting from the free-throw line",
+            "Jumping for a rebound"
+          ],
+          "question": "What is travelling in basketball?",
+          "correctIndex": 0
+        },
+        {
+          "id": "q_basket_2",
+          "options": [
+            "They score extra points",
+            "They may foul out and leave the game",
+            "The game stops forever",
+            "They become captain"
+          ],
+          "question": "What happens when a player commits too many personal fouls?",
+          "correctIndex": 1
+        },
+        {
+          "id": "q_basket_3",
+          "options": [
+            "Unlimited time",
+            "Only a few seconds — they must pass or shoot",
+            "Ten minutes",
+            "Until the bell rings"
+          ],
+          "question": "How long can a player hold the ball without dribbling or passing (held ball / closely guarded)?",
+          "correctIndex": 1
+        },
+        {
+          "id": "q_basket_4",
+          "options": [
+            "An unguarded shot from the free-throw line after a foul",
+            "A shot from half court",
+            "A pass to the coach",
+            "A type of dribble"
+          ],
+          "question": "What is a free throw?",
+          "correctIndex": 0
+        },
+        {
+          "id": "q_basket_5",
+          "options": [
+            "Yes, anytime",
+            "No — it is a violation",
+            "Only in the last minute",
+            "Only the captain can"
+          ],
+          "question": "Can you kick the basketball on purpose during play?",
+          "correctIndex": 1
+        }
+      ]
+    },
+    {
+      "id": "quiz_touch_rugby",
+      "chapterId": "touch_rugby",
+      "questions": [
+        {
+          "id": "q_touch_rugby_0",
+          "options": [
+            "Full tackle to the ground",
+            "A two-hand touch on the ball carrier",
+            "Pulling their shirt only",
+            "Shouting \"stop\""
+          ],
+          "question": "How do you stop an attacker in touch rugby?",
+          "correctIndex": 1
+        },
+        {
+          "id": "q_touch_rugby_1",
+          "options": [
+            "Forward",
+            "Backward or sideways — not forward",
+            "Straight up",
+            "Any direction"
+          ],
+          "question": "In which direction must the ball be passed?",
+          "correctIndex": 1
+        },
+        {
+          "id": "q_touch_rugby_2",
+          "options": [
+            "The game stops permanently",
+            "The attacker performs a rollball or pass within a few metres",
+            "The defender scores a try",
+            "Everyone changes teams"
+          ],
+          "question": "What happens after a touch is made?",
+          "correctIndex": 1
+        },
+        {
+          "id": "q_touch_rugby_3",
+          "options": [
+            "By kicking through the posts",
+            "By grounding the ball over the try line",
+            "By pulling a flag",
+            "By hitting a target"
+          ],
+          "question": "How do you score in touch rugby?",
+          "correctIndex": 1
+        },
+        {
+          "id": "q_touch_rugby_4",
+          "options": [
+            "Yes, full contact",
+            "No — only touches",
+            "Only for the captain",
+            "Only in the second half"
+          ],
+          "question": "Is tackling allowed in touch rugby?",
+          "correctIndex": 1
+        },
+        {
+          "id": "q_touch_rugby_5",
+          "options": [
+            "The player who receives the ball immediately after the rollball",
+            "The slowest player",
+            "The referee",
+            "The coach on the sideline"
+          ],
+          "question": "What is the \"dummy half\" in touch rugby?",
+          "correctIndex": 0
+        }
+      ]
+    },
+    {
+      "id": "quiz_flag_football",
+      "chapterId": "flag_football",
+      "questions": [
+        {
+          "id": "q_flag_football_0",
+          "question": "How do you stop the ball carrier in flag football?",
+          "options": [
+            "Tackle them to the ground",
+            "Pull one of their flags",
+            "Push them hard",
+            "Grab the ball only"
+          ],
+          "correctIndex": 1
+        },
+        {
+          "id": "q_flag_football_1",
+          "question": "How many points is a touchdown worth?",
+          "options": [
+            "Three",
+            "Ten",
+            "One",
+            "Six"
+          ],
+          "correctIndex": 3
+        },
+        {
+          "id": "q_flag_football_2",
+          "question": "What is the role of the quarterback?",
+          "options": [
+            "Only to defend",
+            "To pull flags only",
+            "To receive the snap and pass or hand off the ball",
+            "To referee the game"
+          ],
+          "correctIndex": 2
+        },
+        {
+          "id": "q_flag_football_3",
+          "question": "What happens when a flag falls off without being pulled?",
+          "options": [
+            "The play continues — the player is still active",
+            "Automatic touchdown",
+            "The team is disqualified",
+            "The game ends"
+          ],
+          "correctIndex": 0
+        },
+        {
+          "id": "q_flag_football_4",
+          "question": "Can the quarterback run with the ball in most school flag football rules?",
+          "options": [
+            "Never",
+            "Often yes, depending on the rules used in class",
+            "Only backwards",
+            "Only if they shout first"
+          ],
+          "correctIndex": 1
+        },
+        {
+          "id": "q_flag_football_5",
+          "question": "What is a rusher?",
+          "options": [
+            "Defenders rush the quarterback quickly after the snap",
+            "A long rest break",
+            "A type of touchdown dance",
+            "Changing sides"
+          ],
+          "correctIndex": 0
+        }
+      ]
+    },
+    {
+      "id": "quiz_baseball",
+      "chapterId": "baseball",
+      "questions": [
+        {
+          "id": "q_baseball_0",
+          "options": [
+            "Two",
+            "Three",
+            "Four",
+            "Five"
+          ],
+          "question": "How many strikes make a batter out (when the third strike is caught or missed)?",
+          "correctIndex": 1
+        },
+        {
+          "id": "q_baseball_1",
+          "options": [
+            "Hit the ball out of the stadium only",
+            "Touch all bases and reach home plate",
+            "Stay on first base",
+            "Catch the ball in the outfield"
+          ],
+          "question": "What must a runner do to score a run?",
+          "correctIndex": 1
+        },
+        {
+          "id": "q_baseball_2",
+          "options": [
+            "A pitch outside the strike zone",
+            "Any hit into the crowd",
+            "When the batter runs",
+            "When the catcher drops the bat"
+          ],
+          "question": "What is a \"ball\" in baseball?",
+          "correctIndex": 0
+        },
+        {
+          "id": "q_baseball_3",
+          "options": [
+            "One batter and possible runners on bases",
+            "Nine batters at the same time",
+            "The whole class",
+            "None"
+          ],
+          "question": "How many players from the batting team are on the field at once (as batters/runners)?",
+          "correctIndex": 0
+        },
+        {
+          "id": "q_baseball_4",
+          "options": [
+            "Yes — a caught fly ball is an out",
+            "No — only ground balls count",
+            "Only on home plate",
+            "Only in the last inning"
+          ],
+          "question": "Can a fielder catch a fly ball for an out?",
+          "correctIndex": 0
+        },
+        {
+          "id": "q_baseball_5",
+          "options": [
+            "The batter walks to first base",
+            "The batter is out",
+            "The game stops",
+            "The teams swap sports"
+          ],
+          "question": "What happens on three balls (in many simplified school rules)?",
+          "correctIndex": 0
+        }
+      ]
+    },
+    {
+      "id": "quiz_laser_run",
+      "chapterId": "laser_run",
+      "questions": [
+        {
+          "id": "q_laser_run_0",
+          "options": [
+            "Only fencing",
+            "A combined running and laser shooting event",
+            "A swimming race",
+            "A basketball drill"
+          ],
+          "question": "What is laser run?",
+          "correctIndex": 1
+        },
+        {
+          "id": "q_laser_run_1",
+          "options": [
+            "You win automatically",
+            "You lose time to the competitors",
+            "The race stops",
+            "Nothing ever happens"
+          ],
+          "question": "What usually happens if you miss a target in laser run?",
+          "correctIndex": 1
+        },
+        {
+          "id": "q_laser_run_2",
+          "options": [
+            "Running fast makes aiming harder",
+            "It slows the clock only",
+            "Rules forbid breathing",
+            "It replaces the warm up"
+          ],
+          "question": "Why is breathing control important before shooting?",
+          "correctIndex": 0
+        },
+        {
+          "id": "q_laser_run_3",
+          "options": [
+            "Where athletes switch from running to shooting",
+            "the front of the pistol",
+            "the part of the back of a pistol",
+            "The finish line banner"
+          ],
+          "question": "What is the rear sight?",
+          "correctIndex": 2
+        },
+        {
+          "id": "q_laser_run_4",
+          "options": [
+            "Only football and tennis",
+            "Fencing, swimming, riding, running and shooting",
+            "Only badminton",
+            "Only weightlifting"
+          ],
+          "question": "In modern pentathlon, which sports are combined (including laser run)?",
+          "correctIndex": 1
+        },
+        {
+          "id": "q_laser_run_5",
+          "options": [
+            "Accuracy and focus under pressure",
+            "Only singing",
+            "Only team shouting",
+            "Memory of French words"
+          ],
+          "question": "What skill does laser run mainly test besides speed?",
+          "correctIndex": 0
+        }
+      ]
+    }
+  ],
+  "stories": [
+    {
+      "id": "story_1",
+      "text": "Tom was nervous on his first day at the gym. He watched other people doing their warm up exercises — stretching arms and legs before the real training began. A friendly coach showed him the bench press station. \"Start light,\" the coach said. Tom learned he must bend his knees slightly when picking up weights. After thirty minutes, Tom felt his hamstring muscles stretching during the cool-down. He was tired but proud. \"See you tomorrow for more training!\" the coach shouted. Tom smiled. The gym was not so scary after all.",
+      "title": "First Day at the Gym",
+      "chapterId": "musculation",
+      "questions": [
+        {
+          "options": [
+            "Excited and confident",
+            "Nervous",
+            "Angry",
+            "Bored"
+          ],
+          "question": "How did Tom feel at the beginning?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "Go heavy immediately",
+            "Start light",
+            "Skip it",
+            "Do 100 reps"
+          ],
+          "question": "What did the coach tell Tom about the bench press?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "His biceps only",
+            "His hamstring muscles stretching",
+            "Nothing",
+            "Pain in his shoulder"
+          ],
+          "question": "What did Tom feel during the cool-down?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "Gyms are dangerous",
+            "A positive first gym experience",
+            "Tom quit the gym",
+            "The coach was mean"
+          ],
+          "question": "What is the main idea of the story?",
+          "correctIndex": 1
+        }
+      ],
+      "englishLevel": "A2"
+    },
+    {
+      "id": "story_2",
+      "text": "Every good workout starts with a warm up. Coach Maria always told her students this rule. Before any training session, she made them jog lightly for five minutes. Then they would bend forward to touch their toes, stretching the hamstring muscles carefully. Maria explained that a proper warm up prevents injuries during exercises like the bench press or squats. One student, Lisa, used to skip her warm up and ended up with sore muscles for three days. After that, she never missed it again. Now Lisa helps new students understand why warming up matters. Maria is proud of her class.",
+      "title": "The Perfect Warm Up",
+      "chapterId": "musculation",
+      "questions": [
+        {
+          "options": [
+            "Heavy lifting first",
+            "A warm up",
+            "Skipping stretches",
+            "Running a marathon"
+          ],
+          "question": "What does Coach Maria require before training?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "She ate too much",
+            "She skipped her warm up",
+            "She slept too much",
+            "She drank water"
+          ],
+          "question": "Why did Lisa have sore muscles?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "Biceps",
+            "Hamstrings",
+            "Shoulders",
+            "Neck"
+          ],
+          "question": "Which muscles are mentioned during toe-touching?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "She quit the gym",
+            "She never skipped warm up again",
+            "She became a coach",
+            "She stopped exercising"
+          ],
+          "question": "What changed for Lisa after her injury?",
+          "correctIndex": 1
+        }
+      ],
+      "englishLevel": "A2"
+    },
+    {
+      "id": "story_3",
+      "text": "Jake and Emma decided to start training together every Tuesday after school. Their first session focused on basic exercises. They shared a bench press station, taking turns with light weights. During their warm up, they jogged around the sports hall and practiced bending and stretching movements. Emma struggled with the word \"hamstring\" in English class, but now she could point to the muscle and name it correctly. Their PE teacher recorded their progress on a chart. After four weeks, both students felt stronger and more confident. Teamwork made their training sessions fun and effective.",
+      "title": "Training Together",
+      "chapterId": "musculation",
+      "questions": [
+        {
+          "options": [
+            "Every morning",
+            "Every Tuesday after school",
+            "Only on weekends",
+            "Never"
+          ],
+          "question": "When do Jake and Emma train?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "Swimming",
+            "Bench press",
+            "Cycling",
+            "Yoga"
+          ],
+          "question": "What exercise did they share?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "Warm up",
+            "Hamstring",
+            "Training",
+            "All of the above"
+          ],
+          "question": "What English word did Emma learn to use?",
+          "correctIndex": 3
+        },
+        {
+          "options": [
+            "They gave up",
+            "They felt stronger and more confident",
+            "They got injured",
+            "They changed schools"
+          ],
+          "question": "What was the result after four weeks?",
+          "correctIndex": 1
+        }
+      ],
+      "englishLevel": "A2"
+    },
+    {
+      "id": "story_4",
+      "text": "The PE class organised a squat challenge for all levels. Students had to complete three sets of ten squats with correct form. Before starting, everyone did a thorough warm up including leg stretches and light jogging. The teacher reminded students to bend their knees properly and keep their backs straight. During the challenge, some students felt their hamstring muscles working hard. Those who skipped the warm up struggled more than others. At the end, the class discussed how proper training technique prevents injuries. The winners received a \"Strong Legs\" badge. Everyone agreed it was a great learning experience.",
+      "title": "The Squat Challenge",
+      "chapterId": "musculation",
+      "questions": [
+        {
+          "options": [
+            "Bench press",
+            "Squats",
+            "Pull-ups",
+            "Running"
+          ],
+          "question": "What was the main exercise in the challenge?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "They won easily",
+            "They struggled more",
+            "They left early",
+            "Nothing"
+          ],
+          "question": "What happened to students who skipped the warm up?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "Speed over technique",
+            "Bend knees and keep back straight",
+            "Close your eyes",
+            "Use heavy weights"
+          ],
+          "question": "What did the teacher emphasise about form?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "Money",
+            "A \"Strong Legs\" badge",
+            "A holiday",
+            "Nothing"
+          ],
+          "question": "What did winners receive?",
+          "correctIndex": 1
+        }
+      ],
+      "englishLevel": "B1"
+    },
+    {
+      "id": "story_5",
+      "text": "After an intense week of training, the Terminale class learned about recovery. Their teacher explained that muscles need rest to grow stronger. Students who trained every day without rest often developed sore muscles and felt exhausted. The class practiced gentle stretching and discussed the importance of sleep and hydration. One student asked about the difference between a warm up and a cool-down. The teacher explained that both are essential parts of a complete training programme. By the end of the lesson, everyone understood that recovery is not laziness — it is smart training.",
+      "title": "Rest and Recovery",
+      "chapterId": "musculation",
+      "questions": [
+        {
+          "options": [
+            "Bench press technique",
+            "Recovery and rest",
+            "Competition rules",
+            "Nutrition only"
+          ],
+          "question": "What was the lesson mainly about?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "They became champions",
+            "They got sore muscles and felt exhausted",
+            "Nothing changed",
+            "They grew taller"
+          ],
+          "question": "What happened to students who trained every day without rest?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "Warm up vs cool-down",
+            "The price of dumbbells",
+            "School holidays",
+            "Exam dates"
+          ],
+          "question": "What did one student ask about?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "It is laziness",
+            "It is smart training",
+            "It is unnecessary",
+            "It is only for beginners"
+          ],
+          "question": "What is the teacher's message about recovery?",
+          "correctIndex": 1
+        }
+      ],
+      "englishLevel": "B1"
+    },
+    {
+      "id": "story_6",
+      "text": "The school gym received new dumbbells over the summer. On the first day back, the Première class was excited to try them. Their teacher started with a warm up routine before introducing the new equipment. Students practiced basic movements, learning to bend their elbows correctly while lifting. The teacher paired students for the bench press and dumbbell exercises. Everyone recorded their reps in a training journal. By the end of the session, students felt confident using the new equipment safely. The teacher reminded them that good training habits start with proper preparation.",
+      "title": "The New Dumbbells",
+      "chapterId": "musculation",
+      "questions": [
+        {
+          "options": [
+            "Treadmills",
+            "Dumbbells",
+            "Bicycles",
+            "Mats only"
+          ],
+          "question": "What new equipment did the gym receive?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "Their reps",
+            "Their lunch",
+            "Their homework",
+            "Phone numbers"
+          ],
+          "question": "What did students record in their journals?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "Lunch breaks",
+            "Bench press and dumbbell exercises",
+            "Exams",
+            "Running races"
+          ],
+          "question": "What did the teacher pair students for?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "Skip warm ups",
+            "Good habits start with preparation",
+            "Lift as heavy as possible",
+            "Never use dumbbells"
+          ],
+          "question": "What message did the teacher give at the end?",
+          "correctIndex": 1
+        }
+      ],
+      "englishLevel": "B1"
+    },
+    {
+      "id": "story_7",
+      "text": "Wednesday was core strength day in the Terminale programme. Students learned that the core includes abdominal and lower back muscles. The session began with a dynamic warm up including planks and stretching. The teacher demonstrated how a strong core helps during exercises like the deadlift and squat. Students practiced bending and twisting movements to engage their core. Some found the exercises challenging but rewarding. The teacher explained that core training supports every other type of exercise. Students left the session understanding why core work is essential for overall fitness.",
+      "title": "Core Strength Day",
+      "chapterId": "musculation",
+      "questions": [
+        {
+          "options": [
+            "Monday",
+            "Wednesday",
+            "Friday",
+            "Sunday"
+          ],
+          "question": "What day was core strength day?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "Only arms",
+            "Abdominal and lower back",
+            "Only legs",
+            "Only neck"
+          ],
+          "question": "What muscles does the core include?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "Deadlift and squat",
+            "Only swimming",
+            "Only cycling",
+            "None"
+          ],
+          "question": "Which exercises benefit from a strong core?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "Challenging but rewarding",
+            "Too easy and boring",
+            "Impossible and unfair",
+            "They refused to try"
+          ],
+          "question": "How did students feel about the exercises?",
+          "correctIndex": 0
+        }
+      ],
+      "englishLevel": "B1"
+    },
+    {
+      "id": "story_8",
+      "text": "Marc could not do a single pull-up at the start of the year. His goal was to complete five by the end of the term. Every training session, he worked on his upper body strength. He always began with a warm up and finished with stretching for his sore muscles. His friends encouraged him during group training sessions. The teacher showed him how to use resistance bands to build strength gradually. After two months of consistent training, Marc completed his first pull-up. The whole class cheered. Marc learned that patience and regular practice lead to real progress.",
+      "title": "Pull-Up Progress",
+      "chapterId": "musculation",
+      "questions": [
+        {
+          "options": [
+            "Run a marathon",
+            "Complete five pull-ups",
+            "Bench press 200 kg",
+            "Skip every warm up"
+          ],
+          "question": "What was Marc's goal?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "Heavy weights only",
+            "Resistance bands",
+            "Nothing",
+            "A bicycle"
+          ],
+          "question": "What did Marc use to build strength gradually?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "One day",
+            "Two months",
+            "One year",
+            "Never"
+          ],
+          "question": "How long did it take Marc to do his first pull-up?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "Give up quickly",
+            "Patience and practice lead to progress",
+            "Pull-ups are impossible",
+            "Warm ups are useless"
+          ],
+          "question": "What lesson did Marc learn?",
+          "correctIndex": 1
+        }
+      ],
+      "englishLevel": "B1"
+    },
+    {
+      "id": "story_9",
+      "text": "Before the PE vocabulary exam, the Seconde class reviewed key words together. They practiced saying \"warm up\", \"training\", \"bench press\", and \"hamstring\" aloud. The teacher created fun activities to help them remember the definitions in English. Students who had been training regularly felt more confident because they used these words every week in the gym. On exam day, students had to match words with definitions and answer comprehension questions about a short gym story. Most students passed with good scores. The teacher was pleased to see vocabulary learned through real physical activity.",
+      "title": "The PE Exam",
+      "chapterId": "musculation",
+      "questions": [
+        {
+          "options": [
+            "Math formulas",
+            "PE vocabulary",
+            "History dates",
+            "Music notes"
+          ],
+          "question": "What did the class review before the exam?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "They cheated",
+            "They used the words every week",
+            "The exam was cancelled",
+            "They did not study"
+          ],
+          "question": "Why did regular gym-goers feel more confident?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "Match words with definitions and comprehension",
+            "Only writing essays",
+            "Only listening",
+            "Drawing pictures"
+          ],
+          "question": "What types of tasks were on the exam?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "Disappointed",
+            "Pleased",
+            "Angry",
+            "Indifferent"
+          ],
+          "question": "How did the teacher feel about the results?",
+          "correctIndex": 1
+        }
+      ],
+      "englishLevel": "B2"
+    },
+    {
+      "id": "story_10",
+      "text": "The annual school fitness championship brought together all three levels. Students competed in teams, combining strength and vocabulary knowledge. Each team had to name exercises correctly in English before performing them — bench press, squats, pull-ups, and more. Every team started with a group warm up led by the Terminale students. The competition was close, but Team B from Première won by knowing all their vocabulary words and completing exercises with perfect form. The PE teacher gave a speech about how language and sport work together. Everyone celebrated with a cool-down stretch session together.",
+      "title": "Championship Day",
+      "chapterId": "musculation",
+      "questions": [
+        {
+          "options": [
+            "Pay money",
+            "Name exercises correctly in English",
+            "Write an essay",
+            "Call their parents"
+          ],
+          "question": "What did teams need to do before each exercise?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "Teachers only",
+            "Terminale students",
+            "Parents",
+            "Nobody"
+          ],
+          "question": "Who led the group warm up?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "Team A from Seconde",
+            "Team B from Première",
+            "Team C from Terminale",
+            "No team"
+          ],
+          "question": "Which team won?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "Language and sport work together",
+            "Only strength matters",
+            "Vocabulary is useless",
+            "Competition is bad"
+          ],
+          "question": "What was the teacher's main message?",
+          "correctIndex": 0
+        }
+      ],
+      "englishLevel": "B2"
+    },
+    {
+      "id": "story_11",
+      "text": "During their first session on the leg press machine, the Première students listened carefully to the safety instructions. The coach explained that they had to keep their back flat against the seat and push the platform with their heels, not their toes. Before loading any weight plates, everyone completed a warm up with bodyweight squats and light stretching for the quadriceps and hamstrings. Nora was surprised by how much the exercise worked her glutes as well as her legs. When she tried to increase the weight too quickly, the coach reminded her that progress should be gradual. By the end of the lesson, the class understood that good technique matters more than heavy loads.",
+      "title": "The Leg Press Station",
+      "chapterId": "musculation",
+      "questions": [
+        {
+          "options": [
+            "Push with your toes",
+            "Push with your heels",
+            "Keep feet off the platform",
+            "Stand on the machine"
+          ],
+          "question": "What did the coach say about foot position?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "Biceps and triceps",
+            "Quadriceps and hamstrings",
+            "Shoulders and chest",
+            "Neck and wrists"
+          ],
+          "question": "Which muscles were stretched during the warm up?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "She won a prize",
+            "The coach told her to progress gradually",
+            "She skipped the exercise",
+            "The machine broke"
+          ],
+          "question": "What happened when Nora increased the weight too fast?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "Heavy weights are always best",
+            "Good technique matters more than heavy loads",
+            "Warm ups are optional",
+            "The leg press is dangerous"
+          ],
+          "question": "What is the main lesson of the story?",
+          "correctIndex": 1
+        }
+      ],
+      "englishLevel": "B1"
+    },
+    {
+      "id": "story_12",
+      "text": "Coach Dupont designed a circuit that combined cardio equipment with core exercises. Students spent three minutes on the exercise bike, then moved to the rowing machine, and finally walked at a steady pace on the treadmill. Between each station, they held a plank for thirty seconds to strengthen their core muscles. Although the session was demanding, most students agreed that variety made the training more engaging than repeating the same movement for an hour. The coach pointed out that cardiovascular endurance supports every other type of physical activity, from running to weightlifting. At the cool-down, students stretched their calves and discussed how they could improve their breathing rhythm during the next session.",
+      "title": "Cardio and Core",
+      "chapterId": "musculation",
+      "questions": [
+        {
+          "options": [
+            "Leg press, bench press, cable machine",
+            "Exercise bike, rowing machine, treadmill",
+            "Dumbbells, barbell, kettlebell",
+            "Foam roller, resistance band, bench"
+          ],
+          "question": "Which three cardio machines appear in the circuit?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "Bicep curl",
+            "Plank",
+            "Leg extension",
+            "Pull-up"
+          ],
+          "question": "What core exercise did students perform between stations?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "It replaces strength training",
+            "It supports other physical activities",
+            "It is only useful for exams",
+            "It prevents students from sweating"
+          ],
+          "question": "According to the coach, why is cardiovascular endurance important?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "Their holiday plans",
+            "How to improve their breathing rhythm",
+            "The price of gym membership",
+            "Which teacher they prefer"
+          ],
+          "question": "What did students discuss during the cool-down?",
+          "correctIndex": 1
+        }
+      ],
+      "englishLevel": "B1"
+    },
+    {
+      "id": "story_13",
+      "text": "Every Terminale student received a training log at the start of the semester. The idea was simple: record each session, note the exercises performed, and track whether performance was improving over time. Antoine wrote down his sets and reps after every bench press and squat session. After six weeks, he noticed a clear pattern — his strength was increasing, but only on the days when he had slept well and completed his warm up properly. His teacher explained that this kind of self-analysis helps athletes make smarter decisions about rest, nutrition, and workload. Antoine realised that training is not just about working hard; it is about working intelligently and learning from your own data.",
+      "title": "A Personal Training Log",
+      "chapterId": "musculation",
+      "questions": [
+        {
+          "options": [
+            "Their favourite music",
+            "Exercises, sets, reps, and progress",
+            "Only their exam grades",
+            "Phone numbers of classmates"
+          ],
+          "question": "What were students asked to record in their training log?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "He never improved",
+            "Progress linked to sleep and proper warm up",
+            "He trained better without sleep",
+            "He stopped doing squats"
+          ],
+          "question": "What pattern did Antoine discover after six weeks?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "Which TV series to watch",
+            "Rest, nutrition, and workload",
+            "How to skip PE class",
+            "Which shoes to buy online"
+          ],
+          "question": "What does self-analysis help athletes decide?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "Training means lifting as heavy as possible",
+            "Smart training means learning from your own data",
+            "Logs are useless for beginners",
+            "Only coaches can analyse progress"
+          ],
+          "question": "What is the central message of the story?",
+          "correctIndex": 1
+        }
+      ],
+      "englishLevel": "B2"
+    },
+    {
+      "id": "story_14",
+      "text": "The cable machine area was always busy on Thursday afternoons. Under the coach's supervision, students practised the lat pull down to strengthen their back muscles and the machine fly to work their chest. Because the resistance could be adjusted precisely, each student could choose a load that matched their current level. The coach insisted that controlled movements were more effective than fast, uncontrolled repetitions. When Lucas rushed through his sets, his partner reminded him to focus on form rather than speed. By slowing down, Lucas felt his lats and shoulders working more deeply. The session ended with a discussion about how machines can help beginners learn movement patterns before progressing to free weights such as the barbell.",
+      "title": "The Cable Machine Workout",
+      "chapterId": "musculation",
+      "questions": [
+        {
+          "options": [
+            "Deadlift and squat",
+            "Lat pull down and machine fly",
+            "Leg curl and leg extension",
+            "Bench press and pull-up"
+          ],
+          "question": "Which two exercises are mentioned on the cable machine?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "The machines were broken",
+            "Resistance could be adjusted precisely",
+            "There were no weight plates",
+            "The coach assigned random numbers"
+          ],
+          "question": "Why could each student choose a different load?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "Lift faster to finish early",
+            "Focus on form rather than speed",
+            "Skip the warm up",
+            "Use the heaviest weight immediately"
+          ],
+          "question": "What advice did Lucas's partner give him?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "They are always easier than free weights",
+            "They help beginners learn movement patterns",
+            "They replace the need for coaching",
+            "They work only the legs"
+          ],
+          "question": "What advantage of machines did the class discuss?",
+          "correctIndex": 1
+        }
+      ],
+      "englishLevel": "B2"
+    },
+    {
+      "id": "story_15",
+      "text": "After eight weeks of steady progress, Inès hit a plateau. Her bench press weight had not increased, and she felt frustrated during every session. Instead of training harder every day, she spoke with her PE teacher, who suggested a different approach: reduce the training volume for one week, focus on mobility exercises with a foam roller, and pay more attention to nutrition and sleep. Inès was sceptical at first, but she followed the advice. When she returned to the weight room, her movements felt smoother and her confidence returned. She learned that setbacks are a normal part of long-term development, and that sometimes the best way forward is to step back, recover, and adjust your programme rather than push through exhaustion.",
+      "title": "When Training Gets Tough",
+      "chapterId": "musculation",
+      "questions": [
+        {
+          "options": [
+            "She forgot her gym clothes",
+            "She hit a plateau in her bench press",
+            "She won every competition",
+            "She never attended class"
+          ],
+          "question": "What problem did Inès experience?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "Quit the gym permanently",
+            "Reduce volume, focus on mobility, rest, and nutrition",
+            "Double the number of sessions immediately",
+            "Stop doing bench press forever"
+          ],
+          "question": "What did the teacher recommend instead of training harder every day?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "Resistance band",
+            "Foam roller",
+            "Weight plate",
+            "Exercise bike"
+          ],
+          "question": "Which recovery tool is mentioned in the story?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "They mean you should give up",
+            "They are normal and require smart adjustment",
+            "They only happen to beginners",
+            "They can be ignored safely"
+          ],
+          "question": "What lesson did Inès learn about setbacks?",
+          "correctIndex": 1
+        }
+      ],
+      "englishLevel": "B2"
+    },
+    {
+      "id": "story_16",
+      "text": "At the beginning of the year, every Terminale student completed a fitness assessment designed to measure strength, endurance, and flexibility. The results were not used to rank students against each other, but to help each person set realistic personal goals. Some students excelled at the rowing machine test, while others performed better on core stability exercises or the leg press. The PE department then created individual programmes that combined areas of strength with areas needing improvement. Students also had to write a short report in English explaining their results and describing how they planned to progress during the term. The teacher emphasised that assessment is a starting point for growth, not a final judgement of ability.",
+      "title": "The Fitness Assessment",
+      "chapterId": "musculation",
+      "questions": [
+        {
+          "options": [
+            "Height, age, and shoe size",
+            "Strength, endurance, and flexibility",
+            "Memory, spelling, and grammar",
+            "Speed, luck, and confidence only"
+          ],
+          "question": "What three qualities did the fitness assessment measure?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "To publicly rank every student",
+            "To help each student set personal goals",
+            "To exclude students from the gym",
+            "To replace all training sessions"
+          ],
+          "question": "How were the results used?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "A poem about holidays",
+            "A report explaining results and future plans",
+            "A letter to a famous athlete",
+            "A list of French translations only"
+          ],
+          "question": "What written task did students complete in English?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "A final judgement of ability",
+            "A starting point for growth",
+            "An unnecessary formality",
+            "A punishment for weak students"
+          ],
+          "question": "What did the teacher say assessment represents?",
+          "correctIndex": 1
+        }
+      ],
+      "englishLevel": "C1"
+    },
+    {
+      "id": "story_17",
+      "text": "For months, the school's fitness team prepared methodically for the regional championship. Their programme alternated between strength sessions — including squats, deadlifts, and pull-ups — and recovery days devoted to stretching, hydration, and sleep. The coach explained that peak performance depends on consistency, not last-minute cramming. Before each training block, students reviewed key vocabulary in English so they could communicate clearly about technique during team workouts. On competition day, they arrived early, completed a structured warm up, and supported one another through every event. Although they did not win first place, the team achieved several personal bests and left with a shared understanding: sustainable progress is built week by week, and language skills help athletes train and compete more effectively together.",
+      "title": "Road to the Regional Championship",
+      "chapterId": "musculation",
+      "questions": [
+        {
+          "options": [
+            "Only rest days, no training",
+            "Strength sessions alternated with recovery days",
+            "One intense session the night before the event",
+            "Random exercises with no planning"
+          ],
+          "question": "How was the team's programme structured over several months?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "Last-minute cramming",
+            "Consistency over time",
+            "Skipping warm ups",
+            "Training alone without communication"
+          ],
+          "question": "According to the coach, what does peak performance depend on?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "To pass a maths exam",
+            "To communicate clearly about technique during team workouts",
+            "To impress the judges with poetry",
+            "Because English replaces physical training"
+          ],
+          "question": "Why did students review English vocabulary before training blocks?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "Progress is impossible without winning first place",
+            "Sustainable progress and language skills support effective training",
+            "Recovery days are a sign of weakness",
+            "Teamwork is less important than individual records"
+          ],
+          "question": "What overall conclusion did the team reach?",
+          "correctIndex": 1
+        }
+      ],
+      "englishLevel": "C1"
+    },
+    {
+      "id": "badminton_story_1",
+      "text": "Sophie joined the school badminton club on Monday. Her coach taught her how to hold the racket correctly and how to serve from the right side of the court. During the warm up, students practiced footwork drills along the sideline. In her first singles match, Sophie tried a drop shot that surprised her opponent. Later, she attempted a smash but the shuttlecock landed out. Her partner in doubles encouraged her to stay calm and communicate. By the end of the session, Sophie understood that badminton requires speed, precision, and good teamwork.",
+      "title": "First Badminton Match",
+      "chapterId": "badminton",
+      "questions": [
+        {
+          "options": [
+            "How to swim",
+            "How to hold the racket and serve",
+            "How to ride a bike",
+            "How to score a try"
+          ],
+          "question": "What did Sophie learn at the start?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "Doubles only",
+            "Singles",
+            "Mixed relay",
+            "No match"
+          ],
+          "question": "What type of match did Sophie play first?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "Smash",
+            "Drop shot",
+            "Serve into the net",
+            "A pass"
+          ],
+          "question": "Which shot surprised her opponent?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "Only strength",
+            "Speed, precision, and teamwork",
+            "Only luck",
+            "No communication"
+          ],
+          "question": "What skills does badminton require according to the story?",
+          "correctIndex": 1
+        }
+      ],
+      "englishLevel": "B1"
+    },
+    {
+      "id": "basket_story_1",
+      "text": "The Seconde class arrived at the basketball court for their first English PE session. The coach divided students into two teams and explained the rules of offence and defence. Players practiced dribbling without looking at the ball, then passed to teammates moving toward the hoop. When a shot missed, the tallest student grabbed the rebound and passed quickly to a teammate for a lay-up. One player committed a foul by pushing an opponent, so the other team received free throws. Everyone agreed that communication and quick decisions are essential in basketball.",
+      "title": "Basketball Practice",
+      "chapterId": "basket",
+      "questions": [
+        {
+          "options": [
+            "Dribbling and passing",
+            "Swimming strokes",
+            "Serving",
+            "Pitching"
+          ],
+          "question": "What did players practice first?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "The game stopped forever",
+            "A player grabbed the rebound",
+            "They switched to rugby",
+            "Nobody moved"
+          ],
+          "question": "What happened after a missed shot?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "A player committed a foul",
+            "They scored a touchdown",
+            "The ball was lost",
+            "It was raining"
+          ],
+          "question": "Why did the other team get free throws?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "Silence",
+            "Communication and quick decisions",
+            "Running slowly",
+            "Ignoring teammates"
+          ],
+          "question": "What is essential in basketball according to the story?",
+          "correctIndex": 1
+        }
+      ],
+      "englishLevel": "B1"
+    },
+    {
+      "id": "touch_rugby_story_1",
+      "text": "On Friday, three classes met on the rugby pitch for a touch rugby tournament. Each team had six players and had to pass the ball backward before scoring a try. Defenders could stop attackers only with a two-hand touch — no tackling allowed. One team used a clever offload to keep the attack alive after a touch. Another player beat a defender with a sharp sidestep and nearly reached the try line. The winning team celebrated but reminded everyone that respect and fair play matter more than the final score.",
+      "title": "Touch Rugby Tournament",
+      "chapterId": "touch_rugby",
+      "questions": [
+        {
+          "options": [
+            "Full tackle",
+            "Two-hand touch only",
+            "By shouting",
+            "They could not stop them"
+          ],
+          "question": "How could defenders stop attackers?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "Forward only",
+            "Backward",
+            "Upward",
+            "Any direction"
+          ],
+          "question": "In which direction must the ball be passed?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "A sidestep",
+            "A smash",
+            "A home run",
+            "A drop shot"
+          ],
+          "question": "What skill helped one player beat a defender?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "Money",
+            "Respect and fair play",
+            "Homework",
+            "The weather"
+          ],
+          "question": "What mattered more than the final score?",
+          "correctIndex": 1
+        }
+      ],
+      "englishLevel": "B1"
+    },
+    {
+      "id": "flag_football_story_1",
+      "text": "The Première class tried flag football for the first time on the school field. Each player wore a flag belt around the waist. The quarterback called the plays and handed the ball to a runner or threw a pass downfield. To score a touchdown, a player had to enter the end zone with the ball. Defenders focused on pulling flags instead of tackling. One team used a blitz to pressure the quarterback, forcing a quick decision. After the game, the coach explained that flag football teaches strategy, speed, and teamwork without the risks of full contact.",
+      "title": "Flag Football Friday",
+      "chapterId": "flag_football",
+      "questions": [
+        {
+          "options": [
+            "A scarf",
+            "A flag belt",
+            "A backpack",
+            "A helmet only"
+          ],
+          "question": "What did players wear around the waist?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "The catcher",
+            "The quarterback",
+            "The referee",
+            "The pitcher"
+          ],
+          "question": "Who calls the plays and throws passes?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "By pulling your own flag",
+            "By reaching the end zone with the ball",
+            "By hitting a target",
+            "By scoring a try"
+          ],
+          "question": "How do you score in flag football?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "Only individual skill",
+            "Strategy, speed, and teamwork",
+            "How to tackle hard",
+            "Nothing useful"
+          ],
+          "question": "What does flag football teach according to the coach?",
+          "correctIndex": 1
+        }
+      ],
+      "englishLevel": "B1"
+    },
+    {
+      "id": "baseball_story_1",
+      "text": "The Terminale students visited a local baseball field for an introduction to the sport. The coach showed them home plate, the three bases, and the outfield. The pitcher demonstrated how to throw different types of pitches while the catcher signaled behind the plate. Students took turns as batters, trying to hit the ball and run to first base. One student hit a powerful shot into the outfield and reached second base before the fielders returned the ball. The coach explained that baseball requires patience, hand-eye coordination, and clear communication between pitcher and catcher.",
+      "title": "Baseball Basics",
+      "chapterId": "baseball",
+      "questions": [
+        {
+          "options": [
+            "A basketball hoop",
+            "Home plate, bases, and outfield",
+            "A badminton net",
+            "A laser target"
+          ],
+          "question": "What did the coach show the students first?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "The batter",
+            "The catcher",
+            "The quarterback",
+            "The referee only"
+          ],
+          "question": "Who signals to the pitcher behind the plate?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "To second base",
+            "Out of the stadium",
+            "Back to home without running",
+            "To the end zone"
+          ],
+          "question": "How far did one student run after a powerful hit?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "Only running fast",
+            "Patience, hand-eye coordination, and communication",
+            "Only shouting",
+            "No teamwork"
+          ],
+          "question": "What skills does baseball require?",
+          "correctIndex": 1
+        }
+      ],
+      "englishLevel": "B1"
+    },
+    {
+      "id": "laser_run_story_1",
+      "text": "The school organised a laser run challenge as part of the modern pentathlon unit. Athletes had to complete an obstacle course, then enter the transition zone to pick up the laser pistol and shoot at five targets. Every missed shot added a penalty loop to their run. Students learned to control their breathing before shooting — running fast makes aiming much harder. The fastest athlete was not always the winner because accuracy mattered as much as speed. The PE teacher explained that laser run combines endurance, focus, and the ability to perform under pressure.",
+      "title": "Laser Run Challenge",
+      "chapterId": "laser_run",
+      "questions": [
+        {
+          "options": [
+            "Eat lunch",
+            "Pick up the laser pistol and shoot",
+            "Sleep",
+            "Change sports entirely"
+          ],
+          "question": "What do athletes do in the transition zone?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "The athlete is disqualified",
+            "A penalty loop is added",
+            "The race stops",
+            "Nothing"
+          ],
+          "question": "What happens when a shot misses the target?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "The pistol is too heavy",
+            "It makes aiming harder",
+            "Targets disappear",
+            "Rules forbid running"
+          ],
+          "question": "Why is running fast before shooting difficult?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "Only swimming",
+            "Endurance, focus, and performing under pressure",
+            "Only fencing",
+            "Luck and chance"
+          ],
+          "question": "What does laser run combine?",
+          "correctIndex": 1
+        }
+      ],
+      "englishLevel": "B1"
+    },
+    {
+      "id": "badminton_story_2",
+      "text": "During doubles practice, Coach Martin insisted that partners must talk constantly on court. Before each rally, the server called the type of serve while the partner covered the back of the court. When the shuttlecock flew high, one player shouted \"Yours!\" so there was no confusion. Students learned that footwork drills are useless if teammates do not communicate. After several sessions, the pairs who spoke clearly made fewer mistakes and won more points. Martin reminded the class that badminton is not only about individual skill — coordination between partners is essential at every level.",
+      "title": "Doubles Communication",
+      "chapterId": "badminton",
+      "questions": [
+        {
+          "options": [
+            "Stay silent",
+            "Talk constantly on court",
+            "Change rackets every point",
+            "Serve only to the left"
+          ],
+          "question": "What did the coach insist partners must do?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "To distract opponents",
+            "To avoid confusion about who hits the shuttlecock",
+            "To stop the match",
+            "To request a new shuttlecock"
+          ],
+          "question": "Why did one player shout \"Yours!\"?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "Those who never practiced footwork",
+            "Those who communicated clearly",
+            "Those who avoided the net",
+            "Those who refused to serve"
+          ],
+          "question": "Which pairs performed better over time?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "Individual skill only",
+            "Coordination between partners",
+            "Running off the court",
+            "Using the heaviest racket"
+          ],
+          "question": "What is essential in doubles according to the coach?",
+          "correctIndex": 1
+        }
+      ],
+      "englishLevel": "B1"
+    },
+    {
+      "id": "badminton_story_3",
+      "text": "Two weeks before the inter-school badminton tournament, the Première team followed a structured training plan. Mornings focused on explosive footwork along the sideline and reaction drills at the net. Afternoons were reserved for match simulations in singles and doubles. The coach analysed video recordings to show students when a drop shot was more effective than a smash. Nutrition and sleep were discussed as seriously as technique because fatigue leads to unforced errors. Although the pressure increased, students felt prepared rather than overwhelmed. They understood that tournament success depends on consistent preparation, not on luck during a single rally.",
+      "title": "Preparing for the Tournament",
+      "chapterId": "badminton",
+      "questions": [
+        {
+          "options": [
+            "Only serving practice",
+            "Explosive footwork and net reaction drills",
+            "Swimming and cycling",
+            "Writing essays about badminton"
+          ],
+          "question": "What did morning sessions emphasise?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "To punish students",
+            "To compare drop shots and smashes strategically",
+            "To replace all training sessions",
+            "To select the school team by appearance"
+          ],
+          "question": "How did the coach use video recordings?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "Fatigue leads to unforced errors",
+            "Students asked about holidays",
+            "The tournament was cancelled",
+            "Rules forbid eating before sport"
+          ],
+          "question": "Why were nutrition and sleep discussed?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "Luck during one rally",
+            "Consistent preparation",
+            "Avoiding all smashes",
+            "Playing without a warm up"
+          ],
+          "question": "What does tournament success depend on according to the story?",
+          "correctIndex": 1
+        }
+      ],
+      "englishLevel": "B2"
+    },
+    {
+      "id": "badminton_story_4",
+      "text": "In an advanced tactics session, the Terminale students learned to observe opponents carefully before choosing a shot. If a player stood too close to the net, a high clear to the back of the court could create space. If the opponent's footwork looked slow after a long rally, a fast smash down the line became a realistic option. The coach explained that elite players do not simply react — they anticipate patterns and adapt their strategy point by point. Students practiced disguising their shots so the shuttlecock's direction was harder to predict. By the end of the lesson, several athletes remarked that badminton felt less like a reflex sport and more like a mental chess game played at high speed.",
+      "title": "Reading the Opponent",
+      "chapterId": "badminton",
+      "questions": [
+        {
+          "options": [
+            "The colour of the court",
+            "Opponents' position and movement patterns",
+            "The referee's shoes",
+            "The scoreboard only"
+          ],
+          "question": "What should players observe before choosing a shot?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "When the opponent stands too close to the net",
+            "When the shuttlecock is broken",
+            "When the net is lowered",
+            "Never during a match"
+          ],
+          "question": "When is a high clear to the back useful?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "They never sweat",
+            "They anticipate patterns and adapt strategy",
+            "They refuse to play doubles",
+            "They ignore footwork completely"
+          ],
+          "question": "How do elite players differ from beginners?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "Badminton is like chess at high speed",
+            "Badminton is identical to rugby",
+            "Badminton requires no thinking",
+            "Badminton is only about luck"
+          ],
+          "question": "What comparison did students make at the end of the lesson?",
+          "correctIndex": 0
+        }
+      ],
+      "englishLevel": "B2"
+    },
+    {
+      "id": "badminton_story_5",
+      "text": "When the regional badminton final ended, the scoreboard showed a narrow defeat for the school team. In the changing room, disappointment was visible, yet the coach reframed the result as evidence of substantial progress. Over the season, average rally length had increased, unforced errors had decreased, and doubles pairs communicated with far greater precision. Several athletes noted that managing emotions under pressure was the skill they had improved most. The captain suggested keeping a reflective journal in English to analyse matches objectively rather than emotionally. The PE department agreed: competitive experience, combined with structured self-review, develops not only sporting competence but also the resilience required for high-level performance in any discipline.",
+      "title": "After the Final Point",
+      "chapterId": "badminton",
+      "questions": [
+        {
+          "options": [
+            "As proof the team should quit",
+            "As evidence of substantial progress",
+            "As a reason to cancel training",
+            "As an unfair referee decision only"
+          ],
+          "question": "How did the coach interpret the defeat?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "Managing emotions under pressure",
+            "Memorising French vocabulary",
+            "Avoiding all smashes",
+            "Changing sports entirely"
+          ],
+          "question": "Which skill did several athletes say they improved most?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "A reflective journal in English",
+            "A collection of broken rackets",
+            "Only video games",
+            "No written records"
+          ],
+          "question": "What did the captain recommend keeping?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "Resilience and structured self-review",
+            "Immediate victory every time",
+            "Less need for communication",
+            "Avoidance of all pressure"
+          ],
+          "question": "What broader outcome does the department associate with competitive experience?",
+          "correctIndex": 0
+        }
+      ],
+      "englishLevel": "C1"
+    },
+    {
+      "id": "basket_story_2",
+      "text": "Coach Rivera introduced the pick and roll, one of basketball's most common offensive plays. One player set a screen near the defender while the ball handler dribbled toward the hoop. After the screen, the screener rolled toward the basket, ready to receive a pass for a lay-up. Students struggled at first because timing was difficult — arrive too early or too late and the defence recovers easily. With repetition, the Première class understood that basketball offence depends on movement without the ball as much as on individual shooting skill. Rivera reminded them that every successful play begins with clear verbal signals on court.",
+      "title": "Learning the Pick and Roll",
+      "chapterId": "basket",
+      "questions": [
+        {
+          "options": [
+            "A defensive foul only",
+            "A screen followed by a cut toward the basket",
+            "A type of free throw",
+            "A way to stop the game"
+          ],
+          "question": "What is a pick and roll?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "The hoop was too high",
+            "Timing the screen and roll was difficult",
+            "They were not allowed to dribble",
+            "The ball was too heavy"
+          ],
+          "question": "Why did students struggle initially?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "Movement without the ball and shooting skill",
+            "Only shouting at referees",
+            "Standing still with the ball",
+            "Avoiding all passes"
+          ],
+          "question": "What does offence depend on according to the coach?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "Clear verbal signals",
+            "Closing your eyes",
+            "Running off the court",
+            "Ignoring teammates"
+          ],
+          "question": "What begins every successful play?",
+          "correctIndex": 0
+        }
+      ],
+      "englishLevel": "B1"
+    },
+    {
+      "id": "basket_story_3",
+      "text": "During a unit on defence, the Terminale team studied how to apply pressure without committing unnecessary fouls. Players learned to slide their feet laterally, keep their hands active, and force opponents toward the sideline where passing options are limited. The coach explained that good defence is collective: when one player helps after a dribble penetration, others must rotate to cover open shooters. In scrimmages, teams that communicated defensive switches conceded far fewer lay-ups. Students realised that defence requires concentration for the entire possession, not only when the ball is near the hoop. By the end of the week, even the strongest offensive players respected how much strategy defence demands.",
+      "title": "Defensive Pressure",
+      "chapterId": "basket",
+      "questions": [
+        {
+          "options": [
+            "Slide laterally and stay balanced",
+            "Jump constantly without moving",
+            "Turn their back to the ball",
+            "Leave the court"
+          ],
+          "question": "What should defenders do with their feet?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "Passing options become limited",
+            "It guarantees a foul",
+            "It stops the clock permanently",
+            "It ends the game immediately"
+          ],
+          "question": "Why force opponents toward the sideline?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "Others must rotate to cover shooters",
+            "Everyone stops playing",
+            "The offence always scores",
+            "The referee ends the match"
+          ],
+          "question": "What happens when one player helps after penetration?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "It requires concentration for the entire possession",
+            "It matters only near the hoop",
+            "It is easier than offence always",
+            "It needs no communication"
+          ],
+          "question": "What did students realise about defence?",
+          "correctIndex": 0
+        }
+      ],
+      "englishLevel": "B2"
+    },
+    {
+      "id": "basket_story_4",
+      "text": "Trailing by twelve points entering the fourth quarter, the school team appeared defeated. However, the coach called a timeout and reorganised the rotation, prioritising fresh legs and full-court pressure on the ball handler. Defensive intensity increased, forcing turnovers that led to fast-break lay-ups. On offence, players passed up contested long shots in favour of higher-percentage attempts near the hoop. The crowd's energy grew as the gap narrowed to two points with thirty seconds remaining. Although the final buzzer-beater missed, the team left the court proud of their tactical adjustment. The lesson was clear: momentum can shift when athletes combine physical effort with disciplined decision-making under pressure.",
+      "title": "The Fourth Quarter Comeback",
+      "chapterId": "basket",
+      "questions": [
+        {
+          "options": [
+            "Players stopped defending",
+            "Fresh legs and full-court pressure were prioritised",
+            "The team forfeited the game",
+            "Only three players remained on court"
+          ],
+          "question": "What changed after the timeout?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "They led to fast-break lay-ups",
+            "They ended the game early",
+            "They caused more fouls only",
+            "They reduced playing time"
+          ],
+          "question": "How did turnovers help the team?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "Higher-percentage attempts near the hoop",
+            "Only long contested shots",
+            "No shots at all",
+            "Shooting without looking"
+          ],
+          "question": "What shooting approach did players favour?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "Momentum can shift with effort and disciplined decisions",
+            "Comebacks are impossible in basketball",
+            "Timeouts are useless",
+            "Only the first quarter matters"
+          ],
+          "question": "What was the main lesson of the match?",
+          "correctIndex": 0
+        }
+      ],
+      "englishLevel": "B2"
+    },
+    {
+      "id": "basket_story_5",
+      "text": "Before the departmental championship, the basketball captain addressed the team in English, as required by the section euro programme. She argued that their greatest strength was not height or individual scoring records but the trust they had built through months of shared training. She described how accepting constructive criticism after losses had transformed defensive communication and reduced selfish play. The coach supplemented her speech with data: assist-to-turnover ratio, rebounding differential, and free-throw percentage under pressure. Together, they presented a compelling case that sustainable team performance emerges from culture rather than from momentary talent. The athletes entered the arena understanding that leadership, analytics, and emotional maturity are inseparable components of elite sport.",
+      "title": "Captain's Speech",
+      "chapterId": "basket",
+      "questions": [
+        {
+          "options": [
+            "Trust built through shared training",
+            "Only individual scoring records",
+            "Avoiding all criticism",
+            "Tallest players on court"
+          ],
+          "question": "What did the captain identify as the team's greatest strength?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "Defensive communication and reduced selfish play",
+            "Only the music played during warm up",
+            "The price of tickets",
+            "Homework grades in maths"
+          ],
+          "question": "What had accepting criticism improved?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "Assist-to-turnover ratio and rebounding differential",
+            "Students' shoe sizes",
+            "Weather forecasts",
+            "Exam timetables"
+          ],
+          "question": "Which data did the coach mention?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "Leadership, analytics, and emotional maturity",
+            "Luck, silence, and isolation",
+            "Only physical height",
+            "Avoiding all team culture"
+          ],
+          "question": "What components of elite sport are described as inseparable?",
+          "correctIndex": 0
+        }
+      ],
+      "englishLevel": "C1"
+    },
+    {
+      "id": "touch_rugby_story_2",
+      "text": "Coach Laurent taught the Seconde class that support lines win touch rugby matches. After each touch, attackers must reset quickly and offer passing options on both sides of the ball carrier. Students who stood flat and waited were easily marked, while those who ran diagonally into space created opportunities for offloads. The coach used cones to show ideal spacing between teammates. During small-sided games, teams that maintained width scored more tries because defenders could not cover every angle. Laurent concluded that touch rugby rewards intelligent movement as much as speed.",
+      "title": "Support Lines",
+      "chapterId": "touch_rugby",
+      "questions": [
+        {
+          "options": [
+            "Reset and offer passing options",
+            "Stop completely and argue",
+            "Pass forward immediately",
+            "Leave the pitch"
+          ],
+          "question": "What must attackers do after each touch?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "Running diagonally into space",
+            "Standing flat and waiting",
+            "Hiding behind the referee",
+            "Ignoring the ball carrier"
+          ],
+          "question": "What helped create offload opportunities?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "Defenders could not cover every angle",
+            "The ball became heavier",
+            "Rules changed every minute",
+            "The pitch became shorter"
+          ],
+          "question": "Why did teams maintaining width score more tries?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "Intelligent movement and speed",
+            "Only individual strength",
+            "Silence on the pitch",
+            "Avoiding all passes"
+          ],
+          "question": "What does touch rugby reward according to the coach?",
+          "correctIndex": 0
+        }
+      ],
+      "englishLevel": "B1"
+    },
+    {
+      "id": "touch_rugby_story_3",
+      "text": "In a technical session dedicated to deception, players practiced the dummy pass to commit defenders before accelerating through the gap. The coach insisted that body language must convince opponents — shoulders, eyes, and hips should all suggest a pass that never happens. Première students paired up and filmed short sequences to review their timing. Those who telegraphed the dummy too early were easily touched; those who sold the fake convincingly created space for teammates behind them. The session concluded with a discussion about decision-making: when is deception worth the risk, and when is a simple pass safer? Students agreed that reading the defence is a skill developed through deliberate practice, not instinct alone.",
+      "title": "The Dummy Pass Drill",
+      "chapterId": "touch_rugby",
+      "questions": [
+        {
+          "options": [
+            "To commit defenders and create space",
+            "To stop the game permanently",
+            "To score without running",
+            "To replace the try line"
+          ],
+          "question": "What is the purpose of a dummy pass?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "Convince opponents a pass is coming",
+            "Hide the ball from teammates",
+            "Signal the referee only",
+            "Slow the attack deliberately"
+          ],
+          "question": "What must body language achieve?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "They telegraphed the dummy too early",
+            "They never touched the ball",
+            "They refused to run",
+            "The pitch was indoors"
+          ],
+          "question": "Why did some students fail the drill?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "Through deliberate practice",
+            "Only by watching television",
+            "Without any training",
+            "By avoiding all deception"
+          ],
+          "question": "How is reading the defence developed?",
+          "correctIndex": 0
+        }
+      ],
+      "englishLevel": "B2"
+    },
+    {
+      "id": "touch_rugby_story_4",
+      "text": "Touch rugby limits each possession to six touches before the ball is turned over, which forces teams to plan attacks carefully. The Terminale squad analysed how they wasted touches by running sideways without gaining ground. Their coach introduced a simple rule: every touch should either advance the ball toward the try line or fix defenders to create an overlap. In tournament preparation, they tracked average touches per try and noticed significant improvement when players communicated the touch count aloud. Under fatigue, discipline often collapsed — players took unnecessary risks instead of resetting shape. The team learned that tactical patience under pressure separates organised sides from chaotic ones.",
+      "title": "Managing the Six-Touch Rule",
+      "chapterId": "touch_rugby",
+      "questions": [
+        {
+          "options": [
+            "The ball is turned over",
+            "The team automatically scores",
+            "The game ends",
+            "Defenders leave the pitch"
+          ],
+          "question": "What happens after six touches?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "Advance the ball or fix defenders",
+            "Move sideways without purpose",
+            "Delay the game indefinitely",
+            "Ignore the try line"
+          ],
+          "question": "What should every touch achieve?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "Communicating the touch count aloud",
+            "Avoiding all passing",
+            "Running without a plan",
+            "Removing the touch limit"
+          ],
+          "question": "What helped teams improve their attack?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "Tactical patience under pressure",
+            "Only physical size",
+            "Ignoring fatigue completely",
+            "Never resetting shape"
+          ],
+          "question": "What separates organised sides from chaotic ones?",
+          "correctIndex": 0
+        }
+      ],
+      "englishLevel": "B2"
+    },
+    {
+      "id": "touch_rugby_story_5",
+      "text": "During a closely contested semi-final, a touch rugby player admitted voluntarily that he had been touched before scoring what would have been the winning try. The referee had not seen the contact, yet the athlete raised his hand immediately, costing his team the advantage. Afterwards, the PE teacher used the incident as a case study in sports ethics, asking students to write in English whether competitive ambition should ever override honesty. Opinions differed, but most concluded that long-term integrity preserves trust within a squad and respect from opponents. The coach noted that elite environments increasingly emphasise values-based education alongside performance metrics. The episode reinforced that touch rugby, though non-contact, demands the same moral courage expected in any high-level sporting context.",
+      "title": "Fair Play Under Pressure",
+      "chapterId": "touch_rugby",
+      "questions": [
+        {
+          "options": [
+            "He had been touched before scoring",
+            "He wanted to change teams",
+            "He did not understand the rules",
+            "He had never trained"
+          ],
+          "question": "What did the player admit voluntarily?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "Whether ambition should override honesty",
+            "Their favourite rugby player only",
+            "French grammar rules",
+            "The history of the school"
+          ],
+          "question": "What did the PE teacher ask students to write about?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "It preserves trust and respect long term",
+            "It is irrelevant in sport",
+            "It only matters in exams",
+            "It reduces all performance"
+          ],
+          "question": "What did most students conclude about integrity?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "Values-based education alongside performance",
+            "Only winning at any cost",
+            "Avoiding all ethics discussions",
+            "Replacing sport with theory"
+          ],
+          "question": "What does the coach say elite environments emphasise?",
+          "correctIndex": 0
+        }
+      ],
+      "englishLevel": "C1"
+    },
+    {
+      "id": "flag_football_story_2",
+      "text": "Before students could catch passes consistently, they had to learn running routes — predetermined paths across the field. The coach drew patterns on a whiteboard: slant, out, and go routes each created different spacing against defenders. Receivers practiced sharp cuts and timed their sprints so the quarterback could release the ball at the right moment. When routes were sloppy, passes fell incomplete even though the throw was accurate. By the third session, the Première class understood that flag football offence is choreographed movement rather than random running. Communication before the snap helped everyone know who would cut where.",
+      "title": "Running Routes",
+      "chapterId": "flag_football",
+      "questions": [
+        {
+          "options": [
+            "Predetermined paths across the field",
+            "Random sprints without plan",
+            "Only defensive movements",
+            "Ways to pull flags on teammates"
+          ],
+          "question": "What are running routes?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "Timing and spacing were wrong even if the throw was accurate",
+            "The ball was deflated",
+            "Wind always stopped play",
+            "Receivers were not allowed to catch"
+          ],
+          "question": "Why did passes fall incomplete when routes were sloppy?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "Choreographed movement",
+            "Pure luck",
+            "Swimming laps",
+            "Only kicking the ball"
+          ],
+          "question": "What is flag football offence compared to?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "Before the snap to clarify cuts",
+            "Only after the game ended",
+            "Never during practice",
+            "Only when eating lunch"
+          ],
+          "question": "When did communication help the team?",
+          "correctIndex": 0
+        }
+      ],
+      "englishLevel": "B1"
+    },
+    {
+      "id": "flag_football_story_3",
+      "text": "When defenders blitz, the quarterback has only seconds to decide whether to release the ball quickly, hand off to a runner, or scramble. The Terminale class studied film of previous games and identified patterns — which defender rushed most aggressively and from which side. They adjusted protection schemes so one player blocked the blitz path while receivers ran shorter, faster routes. The coach emphasised that panic throws often lead to interceptions or lost yardage. In practice, quarterbacks counted aloud in English to simulate pressure: \"One Mississippi, two Mississippi — throw!\" Students learned that composure and preparation reduce mistakes when the defence attacks suddenly.",
+      "title": "Reading the Blitz",
+      "chapterId": "flag_football",
+      "questions": [
+        {
+          "options": [
+            "Throw quickly, hand off, or scramble",
+            "Leave the field immediately",
+            "Always run backward only",
+            "Stop the play without reason"
+          ],
+          "question": "What must a quarterback decide during a blitz?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "To identify blitz patterns and adjust protection",
+            "To avoid all training sessions",
+            "To choose team uniforms",
+            "To cancel the next game"
+          ],
+          "question": "How did the team use film study?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "Interceptions or lost yardage",
+            "Automatic touchdowns",
+            "Extra players on the field",
+            "No change in possession"
+          ],
+          "question": "What often results from panic throws?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "Composure and preparation",
+            "Closing your eyes before throwing",
+            "Ignoring the defence",
+            "Never practicing blitz situations"
+          ],
+          "question": "What reduces mistakes under pressure?",
+          "correctIndex": 0
+        }
+      ],
+      "englishLevel": "B2"
+    },
+    {
+      "id": "flag_football_story_4",
+      "text": "Scoring inside the red zone — the area near the end zone — requires tighter decisions because the field is compressed. The coach taught students that long passes become riskier and quick handoffs or short catches often produce better results. One team practiced a series of plays designed to spread defenders horizontally before attacking vertically on third down. Defenders responded by pulling flags earlier, so attackers had to protect the ball with two hands and lower their centre of gravity. Students analysed which plays succeeded most often and recorded the results in English. The data showed that patience and precision outweighed heroic deep throws when space was limited.",
+      "title": "Red Zone Tactics",
+      "chapterId": "flag_football",
+      "questions": [
+        {
+          "options": [
+            "The field is compressed and decisions must be tighter",
+            "Players cannot run at all",
+            "Flags are removed from the game",
+            "The end zone disappears"
+          ],
+          "question": "Why is the red zone challenging?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "Quick handoffs or short catches",
+            "Only the longest possible passes",
+            "Stopping play entirely",
+            "Running off the field"
+          ],
+          "question": "Which options often work better near the end zone?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "Protected the ball with two hands",
+            "Threw the ball away always",
+            "Removed their own flags",
+            "Ignored all coaching advice"
+          ],
+          "question": "What did attackers do when defenders pulled flags earlier?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "Patience and precision outweighed deep throws",
+            "Only luck mattered",
+            "No play worked in the red zone",
+            "Defenders never adapted"
+          ],
+          "question": "What did the data show about successful plays?",
+          "correctIndex": 0
+        }
+      ],
+      "englishLevel": "B2"
+    },
+    {
+      "id": "flag_football_story_5",
+      "text": "For the section euro project, each flag football group compiled a mini-playbook written entirely in English. Every page described a formation, the responsibilities of each position, and the conditions under which the play should be used — for example, on fourth down or after a turnover. Presentations included diagrams, vocabulary definitions, and reflections on why certain strategies failed in earlier matches. The teacher evaluated not only sporting knowledge but also clarity of expression and ability to justify tactical choices with evidence. Students discovered that documenting strategy forces deeper understanding than simply repeating drills. The best playbooks combined analytical language with practical insight, demonstrating that communication skills and athletic intelligence reinforce each other in modern team sports.",
+      "title": "Building a Playbook",
+      "chapterId": "flag_football",
+      "questions": [
+        {
+          "options": [
+            "A mini-playbook written in English",
+            "Only a list of player names",
+            "A collection of music playlists",
+            "French translations without diagrams"
+          ],
+          "question": "What did each group compile for the project?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "Formation, responsibilities, and when to use the play",
+            "Only the final score of one game",
+            "Homework from other subjects",
+            "Weather reports only"
+          ],
+          "question": "What information did each page include?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "Clarity of expression and justification with evidence",
+            "Only running speed",
+            "Shoe brand preferences",
+            "Attendance in maths class"
+          ],
+          "question": "What did the teacher evaluate besides sporting knowledge?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "Deeper understanding than repeating drills alone",
+            "Less interest in the sport",
+            "Avoidance of all teamwork",
+            "No need for vocabulary"
+          ],
+          "question": "What did documenting strategy force students to develop?",
+          "correctIndex": 0
+        }
+      ],
+      "englishLevel": "C1"
+    },
+    {
+      "id": "baseball_story_2",
+      "text": "After learning to bat, the Seconde class moved to fielding drills in the outfield and infield. The coach demonstrated how to position the glove, keep eyes on the ball, and throw to the correct base with momentum from the legs. Students practiced fielding ground balls without letting the ball bounce off their gloves. In relay exercises, they learned to call \"Mine!\" or \"Yours!\" to avoid collisions. Mistakes were common at first — overthrows and dropped catches — but improvement was visible within two lessons. The coach reminded everyone that baseball defence requires concentration on every pitch, even when the ball seems far from your position.",
+      "title": "Fielding Fundamentals",
+      "chapterId": "baseball",
+      "questions": [
+        {
+          "options": [
+            "Glove position, eye tracking, and throwing with leg momentum",
+            "Only hitting home runs",
+            "Running without a ball",
+            "Ignoring teammates completely"
+          ],
+          "question": "What did fielding drills emphasise?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "To avoid collisions during relays",
+            "To distract the batter",
+            "To stop the inning early",
+            "To change the rules"
+          ],
+          "question": "Why did players call \"Mine!\" or \"Yours!\"?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "Overthrows and dropped catches",
+            "Perfect fielding every time",
+            "No errors at all",
+            "Players forgot how to run"
+          ],
+          "question": "What mistakes were common at first?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "On every pitch",
+            "Only when batting",
+            "Never in the outfield",
+            "Only during rain"
+          ],
+          "question": "When does baseball defence require concentration?",
+          "correctIndex": 0
+        }
+      ],
+      "englishLevel": "B1"
+    },
+    {
+      "id": "baseball_story_3",
+      "text": "The relationship between pitcher and catcher is central to baseball strategy. Using finger signals behind the plate, the catcher suggested pitch type and location while the pitcher decided whether to accept or shake off the call. Students learned vocabulary for fastball, change-up, and outside corner. When signals were unclear, batters gained an advantage; when they were precise, the defence controlled the rhythm of the inning. The Première class role-played scenarios in English, explaining why a change-up might fool a batter expecting speed. The session demonstrated that baseball is a dialogue between two players who must trust each other completely under public scrutiny.",
+      "title": "Pitcher and Catcher Signals",
+      "chapterId": "baseball",
+      "questions": [
+        {
+          "options": [
+            "Finger signals behind the plate",
+            "Shouting loudly at the batter",
+            "Writing notes on the field",
+            "Sending text messages"
+          ],
+          "question": "How does the catcher suggest pitch type?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "Batters gain an advantage",
+            "The game stops forever",
+            "Automatic home runs occur",
+            "Fielders leave the diamond"
+          ],
+          "question": "What can happen when signals are unclear?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "It fools batters expecting speed",
+            "It is always the fastest pitch",
+            "It replaces the need for a catcher",
+            "It ends the inning immediately"
+          ],
+          "question": "Why might a change-up be effective?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "Complete trust under scrutiny",
+            "No communication at all",
+            "Only individual performance",
+            "Avoiding all strategy"
+          ],
+          "question": "What does the pitcher-catcher relationship require?",
+          "correctIndex": 0
+        }
+      ],
+      "englishLevel": "B2"
+    },
+    {
+      "id": "baseball_story_4",
+      "text": "Smart base running can win games without a single home run. The Terminale students studied when to advance from first to third on a single hit and when to hold position to avoid an out. Coaches taught them to watch the outfielder's body position and the strength of the throw rather than running automatically. On a shallow fly ball, leaving the base too early leads to a double play; on a deep hit, hesitation costs a scoring opportunity. Students timed their sprints and practiced sliding safely into bases. They concluded that base running combines observation, risk assessment, and explosive acceleration — skills transferable to many invasion sports.",
+      "title": "Base Running Decisions",
+      "chapterId": "baseball",
+      "questions": [
+        {
+          "options": [
+            "Win games without home runs",
+            "Stop the game permanently",
+            "Replace all fielding practice",
+            "Eliminate the need for pitching"
+          ],
+          "question": "What can smart base running achieve?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "Outfielder position and throw strength",
+            "Only the colour of their uniform",
+            "The crowd's favourite song",
+            "Homework deadlines"
+          ],
+          "question": "What should runners observe before advancing?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "A double play becomes likely",
+            "They automatically score",
+            "The inning never ends",
+            "The pitcher is replaced"
+          ],
+          "question": "What happens if a runner leaves too early on a shallow fly ball?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "Observation, risk assessment, and acceleration",
+            "Only luck and silence",
+            "Avoiding all sprints",
+            "Ignoring outfielders completely"
+          ],
+          "question": "Which skills does base running combine?",
+          "correctIndex": 0
+        }
+      ],
+      "englishLevel": "B2"
+    },
+    {
+      "id": "baseball_story_5",
+      "text": "As part of an interdisciplinary assignment, Terminale students analysed baseball statistics to evaluate player contribution beyond batting average alone. They examined on-base percentage, slugging percentage, and defensive assists, presenting findings in English to the class. One group argued that a player with modest hitting but exceptional base running provided greater overall value than raw numbers suggested. Another debated whether small-sample data from school matches could support confident conclusions. The PE teacher welcomed the discussion, noting that modern sport increasingly relies on evidence-based reasoning rather than intuition alone. Students left the project appreciating that statistical literacy enhances both athletic performance and academic credibility in the section euro programme.",
+      "title": "The Statistics Project",
+      "chapterId": "baseball",
+      "questions": [
+        {
+          "options": [
+            "On-base percentage, slugging, and defensive assists",
+            "Only shoe sizes",
+            "Exam grades in history",
+            "Cafeteria menus"
+          ],
+          "question": "What did students analyse beyond batting average?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "Exceptional base running could provide greater overall value",
+            "They should never play again",
+            "Statistics are useless in baseball",
+            "Only home runs matter always"
+          ],
+          "question": "What did one group argue about a modest hitter?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "Whether small-sample school data supports confident conclusions",
+            "Whether baseball exists in France",
+            "Whether English is necessary",
+            "Whether gloves are required"
+          ],
+          "question": "What limitation did students debate?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "Evidence-based reasoning",
+            "Intuition alone without data",
+            "Avoiding all analysis",
+            "Replacing sport with theory only"
+          ],
+          "question": "What does modern sport increasingly rely on?",
+          "correctIndex": 0
+        }
+      ],
+      "englishLevel": "C1"
+    },
+    {
+      "id": "laser_run_story_2",
+      "text": "Coach Dupont noticed that many students arrived at the shooting stage breathing too heavily to aim steadily. She introduced a simple routine: two slow exhalations before picking up the laser pistol, then shoulders relaxed and eyes fixed on the centre target. Runners practised shorter sprints followed immediately by five shots to simulate competition fatigue. Those who controlled their breathing hit more targets and avoided penalty loops. The class recorded results in a table and compared improvement over three weeks. Dupont explained that laser run rewards athletes who can switch rapidly from high-intensity running to calm precision.",
+      "title": "Breathing Between Stages",
+      "chapterId": "laser_run",
+      "questions": [
+        {
+          "options": [
+            "Students breathed too heavily to aim steadily",
+            "Students refused to run",
+            "Targets were missing",
+            "Pistols were too light"
+          ],
+          "question": "What problem did the coach notice at the shooting stage?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "Two slow exhalations before shooting",
+            "Running without stopping for an hour",
+            "Shooting while sprinting always",
+            "Closing eyes before every shot"
+          ],
+          "question": "What routine did she introduce?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "More targets hit and fewer penalty loops",
+            "Automatic disqualification",
+            "Slower running only",
+            "No improvement at all"
+          ],
+          "question": "What happened when breathing was controlled?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "Switching from intense running to calm precision",
+            "Only the fastest runners regardless of shooting",
+            "Avoiding all obstacles",
+            "Never entering the transition zone"
+          ],
+          "question": "What does laser run reward?",
+          "correctIndex": 0
+        }
+      ],
+      "englishLevel": "B1"
+    },
+    {
+      "id": "laser_run_story_3",
+      "text": "The obstacle section of the laser run course demanded more than raw speed. Students learned to attack each barrier with a plan: stable foot placement on the balance beam, controlled momentum over the hurdles, and efficient paths through the slalom cones. The coach filmed runs and highlighted where seconds were lost through awkward turns rather than lack of fitness. Première athletes paired up to give feedback in English using phrases such as \"You leaned too far left\" or \"Shorten your stride before the beam.\" Gradually, the group understood that modern pentathlon-style events punish wasted movement as severely as missed shots.",
+      "title": "Obstacle Strategy",
+      "chapterId": "laser_run",
+      "questions": [
+        {
+          "options": [
+            "Planned technique at each barrier",
+            "Only jumping as high as possible",
+            "Stopping after every obstacle",
+            "Removing all cones"
+          ],
+          "question": "What did the obstacle section demand besides speed?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "Awkward turns rather than lack of fitness",
+            "Talking to spectators only",
+            "Using the wrong school uniform",
+            "Writing notes during the run"
+          ],
+          "question": "Where were seconds often lost?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "In English with specific movement phrases",
+            "Only by shouting numbers",
+            "Without watching the run",
+            "By ignoring all mistakes"
+          ],
+          "question": "How did athletes give feedback?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "Wasted movement and missed shots",
+            "Only slow speaking",
+            "Team uniforms",
+            "Using laser pistols correctly"
+          ],
+          "question": "What do pentathlon-style events punish severely?",
+          "correctIndex": 0
+        }
+      ],
+      "englishLevel": "B2"
+    },
+    {
+      "id": "laser_run_story_4",
+      "text": "After a school time trial, the Terminale squad reviewed why penalty loops had decided the final ranking. Two athletes missed three targets each and added thirty seconds to their overall time despite leading after the run. The coach introduced a training rule: if more than one shot is missed in practice, the athlete repeats the shooting stage until five consecutive hits are achieved. Some complained that the drill was repetitive, yet results at the next competition improved noticeably. Discussion turned to mental routines — visualising the target, consistent trigger pressure, and accepting that perfection under fatigue is a trained skill, not a coincidence.",
+      "title": "Penalty Loop Discipline",
+      "chapterId": "laser_run",
+      "questions": [
+        {
+          "options": [
+            "Missed shots added significant time despite fast running",
+            "Runners were disqualified for talking",
+            "Obstacles were removed",
+            "Targets moved during shooting"
+          ],
+          "question": "Why did penalty loops decide the ranking?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "Repeat shooting until five consecutive hits after multiple misses",
+            "Never practice shooting again",
+            "Run without any targets",
+            "Skip all penalty loops in competition"
+          ],
+          "question": "What training rule did the coach introduce?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "Some complained it was repetitive",
+            "Everyone refused to participate",
+            "The coach cancelled laser run",
+            "Students never missed shots again immediately"
+          ],
+          "question": "How did athletes respond to the drill at first?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "A trained skill, not a coincidence",
+            "Pure luck only",
+            "Impossible for all athletes",
+            "Unrelated to mental routines"
+          ],
+          "question": "What is perfection under fatigue described as?",
+          "correctIndex": 0
+        }
+      ],
+      "englishLevel": "B2"
+    },
+    {
+      "id": "laser_run_story_5",
+      "text": "To conclude the modern pentathlon unit, students wrote reflective essays in English on the mindset required for combined events such as laser run. They compared the cognitive shift from explosive running to precise shooting with transitions between academic tasks that demand different types of focus. Several athletes cited research on arousal regulation — how heart rate influences fine motor control — and proposed personalised pre-shooting routines backed by their training data. The PE department displayed the best essays alongside performance charts, illustrating that section euro students can integrate scientific vocabulary, self-analysis, and sporting experience into coherent argumentation. The teacher concluded that laser run is an ideal metaphor for balancing speed, accuracy, and adaptability in both sport and study.",
+      "title": "The Combined Event Mindset",
+      "chapterId": "laser_run",
+      "questions": [
+        {
+          "options": [
+            "The mindset required for combined events",
+            "Only their favourite meals",
+            "French literature exclusively",
+            "The history of the school building"
+          ],
+          "question": "What did students write reflective essays about?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "From explosive running to precise shooting",
+            "From sleeping to eating",
+            "From maths to art only",
+            "From silence to shouting"
+          ],
+          "question": "What cognitive shift did they compare to academic work?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "Arousal regulation and heart rate influence on motor control",
+            "Only muscle fibre types without application",
+            "Weather patterns in winter",
+            "Exam regulations in maths"
+          ],
+          "question": "What concept did several athletes cite from research?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "Balancing speed, accuracy, and adaptability in sport and study",
+            "Avoiding all physical effort",
+            "Replacing PE with essays only",
+            "Luck as the only factor in success"
+          ],
+          "question": "What metaphor did the teacher offer for laser run?",
+          "correctIndex": 0
+        }
+      ],
+      "englishLevel": "C1"
+    },
+    {
+      "id": "story_18",
+      "text": "A new member met the gym coach for the first time. \"What are your goals?\" the coach asked. \"Do you want to gain muscle?\" The member replied, \"My first goal is to lose weight. I would like to melt my belly fat.\" The coach answered, \"Okay, I got it, but the human body doesn't work that way — you can't get lean in one area only.\" The coach then asked how many times a week she could come to train. She said she could come three times a week and use each piece of equipment: the treadmill, the rowing machine, the elliptical, the bicycle, and maybe some weight machines. She also asked on which floor they were located. The coach explained that the weight machines were on the 3rd floor, and suggested warming up beforehand in the cardio training area on the 2nd floor. When she asked which training method was best for weight loss and endurance, the coach advised her to warm up properly on any cardio machine and increase training time every day, adjusting the difficulty gradually. He promised to give her a workout programme showing how many sets and reps to do. Finally, she asked how to manage muscle recovery. The coach insisted that staying hydrated before, during, and especially after exercise was essential, along with watching her diet — avoiding sweets and eating plenty of protein such as eggs, turkey, chicken, and fish.",
+      "title": "What Are Your Goals?",
+      "chapterId": "musculation",
+      "questions": [
+        {
+          "options": [
+            "To lose weight and reduce belly fat",
+            "To gain muscle mass only",
+            "To compete in powerlifting",
+            "To stop exercising completely"
+          ],
+          "question": "What is the member's first goal?",
+          "correctIndex": 0
+        },
+        {
+          "options": [
+            "It is easy with crunches only",
+            "The body cannot get lean in one area only",
+            "It requires no cardio training",
+            "It happens in one week"
+          ],
+          "question": "What does the coach say about losing fat in one body area?",
+          "correctIndex": 1
+        },
+        {
+          "options": [
+            "1st floor",
+            "2nd floor",
+            "3rd floor",
+            "Outside the building"
+          ],
+          "question": "On which floor are the weight machines?",
+          "correctIndex": 2
+        },
+        {
+          "options": [
+            "Avoid all food after training",
+            "Stay hydrated and eat plenty of protein",
+            "Train every hour without rest",
+            "Drink only sugary drinks"
+          ],
+          "question": "What advice does the coach give for muscle recovery?",
+          "correctIndex": 1
+        }
+      ],
+      "englishLevel": "B1"
+    }
+  ],
+  "classes": [
+    {
+      "id": "class_seconde",
+      "name": "Seconde — Group A",
+      "level": "Seconde",
+      "roster": [
+        {
+          "id": "roster_1781882635970_cvtrt",
+          "lastName": "L",
+          "firstName": "Lina"
+        }
+      ],
+      "assignedListIds": [
+        "list_equipment",
+        "list_mix_1",
+        "list_image_match",
+        "badminton_basics",
+        "badminton_image_match",
+        "basket_basics",
+        "basket_image_match",
+        "touch_rugby_basics",
+        "touch_rugby_image_match",
+        "flag_football_basics",
+        "flag_football_image_match",
+        "baseball_basics",
+        "baseball_image_match",
+        "laser_run_basics",
+        "laser_run_image_match",
+        "badminton_referee_gestures"
+      ],
+      "assignedStoryIds": [
+        "story_1",
+        "story_2",
+        "story_3",
+        "badminton_story_1",
+        "basket_story_1",
+        "touch_rugby_story_1",
+        "flag_football_story_1",
+        "baseball_story_1",
+        "laser_run_story_1",
+        "story_11",
+        "story_12",
+        "badminton_story_2",
+        "basket_story_2",
+        "touch_rugby_story_2",
+        "flag_football_story_2",
+        "baseball_story_2",
+        "laser_run_story_2",
+        "badminton_story_3",
+        "badminton_story_4",
+        "badminton_story_5",
+        "basket_story_3",
+        "basket_story_4",
+        "basket_story_5",
+        "touch_rugby_story_3",
+        "touch_rugby_story_4",
+        "touch_rugby_story_5",
+        "flag_football_story_3",
+        "flag_football_story_4",
+        "flag_football_story_5",
+        "baseball_story_3",
+        "baseball_story_4",
+        "baseball_story_5",
+        "laser_run_story_3",
+        "laser_run_story_4",
+        "laser_run_story_5",
+        "story_18"
+      ],
+      "assignedActivities": [
+        "image_match",
+        "translation",
+        "definition",
+        "qcm",
+        "spelling",
+        "muscle_region"
+      ],
+      "assignedChapterIds": [
+        "musculation",
+        "badminton",
+        "basket",
+        "touch_rugby",
+        "flag_football",
+        "baseball",
+        "laser_run"
+      ]
+    },
+    {
+      "id": "class_premiere",
+      "name": "Première — Group B",
+      "level": "Première",
+      "roster": [
+        {
+          "id": "roster_1788789613588_wlad9",
+          "firstName": "MATHIEU",
+          "lastName": "Aaron"
+        },
+        {
+          "id": "roster_1788789613588_hvfel",
+          "firstName": "BOURASS",
+          "lastName": "Adam"
+        },
+        {
+          "id": "roster_1788789613588_14y3m",
+          "firstName": "BARLEMONT",
+          "lastName": "Baptiste"
+        },
+        {
+          "id": "roster_1788789613588_e2470",
+          "firstName": "LOISEL",
+          "lastName": "Clément"
+        },
+        {
+          "id": "roster_1788789613588_rhdcc",
+          "firstName": "GOND-GOMES",
+          "lastName": "Ehma"
+        },
+        {
+          "id": "roster_1788789613588_m1omk",
+          "firstName": "BOUGOIN",
+          "lastName": "Faustine"
+        },
+        {
+          "id": "roster_1788789613588_oc5b0",
+          "firstName": "ARESSY",
+          "lastName": "François"
+        },
+        {
+          "id": "roster_1788789613588_c3iki",
+          "firstName": "MAKSYMIUK",
+          "lastName": "Hugo"
+        },
+        {
+          "id": "roster_1788789613588_39zso",
+          "firstName": "KONESALINGAM",
+          "lastName": "Kavishan"
+        },
+        {
+          "id": "roster_1788789613588_qouxq",
+          "firstName": "CHAUVEL",
+          "lastName": "Nina"
+        },
+        {
+          "id": "roster_1788789613588_ckg84",
+          "firstName": "CORSANGE SCOQUART",
+          "lastName": "Romane"
+        },
+        {
+          "id": "roster_1788789613588_n64zt",
+          "firstName": "AUBERT",
+          "lastName": "Thomas"
+        }
+      ],
+      "assignedListIds": [
+        "list_equipment",
+        "list_exercises",
+        "list_mix_1",
+        "list_mix_2",
+        "list_image_match",
+        "badminton_basics",
+        "badminton_image_match",
+        "basket_basics",
+        "basket_image_match",
+        "touch_rugby_basics",
+        "touch_rugby_image_match",
+        "flag_football_basics",
+        "flag_football_image_match",
+        "baseball_basics",
+        "baseball_image_match",
+        "laser_run_basics",
+        "laser_run_image_match",
+        "badminton_referee_gestures"
+      ],
+      "assignedStoryIds": [
+        "story_1",
+        "story_2",
+        "story_3",
+        "story_4",
+        "story_5",
+        "story_11",
+        "story_12",
+        "badminton_story_1",
+        "basket_story_1",
+        "touch_rugby_story_1",
+        "flag_football_story_1",
+        "baseball_story_1",
+        "laser_run_story_1",
+        "story_13",
+        "story_14",
+        "story_15",
+        "badminton_story_2",
+        "badminton_story_3",
+        "badminton_story_4",
+        "basket_story_2",
+        "basket_story_3",
+        "basket_story_4",
+        "touch_rugby_story_2",
+        "touch_rugby_story_3",
+        "touch_rugby_story_4",
+        "flag_football_story_2",
+        "flag_football_story_3",
+        "flag_football_story_4",
+        "baseball_story_2",
+        "baseball_story_3",
+        "baseball_story_4",
+        "laser_run_story_2",
+        "laser_run_story_3",
+        "laser_run_story_4",
+        "badminton_story_5",
+        "basket_story_5",
+        "touch_rugby_story_5",
+        "flag_football_story_5",
+        "baseball_story_5",
+        "laser_run_story_5",
+        "story_18"
+      ],
+      "assignedActivities": [
+        "image_match",
+        "translation",
+        "definition",
+        "qcm",
+        "spelling",
+        "muscle_region"
+      ],
+      "assignedChapterIds": [
+        "musculation",
+        "badminton",
+        "basket",
+        "touch_rugby",
+        "flag_football",
+        "baseball",
+        "laser_run"
+      ]
+    },
+    {
+      "id": "class_terminale",
+      "name": "Terminale — Group C",
+      "level": "Terminale",
+      "roster": [
+        {
+          "id": "roster_1781977450783_mfdm9",
+          "lastName": "L",
+          "firstName": "Mathis"
+        }
+      ],
+      "assignedListIds": [
+        "list_equipment",
+        "list_exercises",
+        "list_body",
+        "list_mix_1",
+        "list_mix_2",
+        "list_mix_3",
+        "list_mix_4",
+        "list_image_match",
+        "badminton_basics",
+        "badminton_image_match",
+        "basket_basics",
+        "basket_image_match",
+        "touch_rugby_basics",
+        "touch_rugby_image_match",
+        "flag_football_basics",
+        "flag_football_image_match",
+        "baseball_basics",
+        "baseball_image_match",
+        "laser_run_basics",
+        "laser_run_image_match",
+        "badminton_referee_gestures"
+      ],
+      "assignedStoryIds": [
+        "story_1",
+        "story_2",
+        "story_3",
+        "story_4",
+        "story_5",
+        "story_6",
+        "story_7",
+        "story_8",
+        "story_9",
+        "story_10",
+        "story_11",
+        "story_12",
+        "story_13",
+        "story_14",
+        "story_15",
+        "story_16",
+        "story_17",
+        "badminton_story_1",
+        "basket_story_1",
+        "touch_rugby_story_1",
+        "flag_football_story_1",
+        "baseball_story_1",
+        "laser_run_story_1",
+        "badminton_story_2",
+        "badminton_story_3",
+        "badminton_story_4",
+        "badminton_story_5",
+        "basket_story_2",
+        "basket_story_3",
+        "basket_story_4",
+        "basket_story_5",
+        "touch_rugby_story_2",
+        "touch_rugby_story_3",
+        "touch_rugby_story_4",
+        "touch_rugby_story_5",
+        "flag_football_story_2",
+        "flag_football_story_3",
+        "flag_football_story_4",
+        "flag_football_story_5",
+        "baseball_story_2",
+        "baseball_story_3",
+        "baseball_story_4",
+        "baseball_story_5",
+        "laser_run_story_2",
+        "laser_run_story_3",
+        "laser_run_story_4",
+        "laser_run_story_5",
+        "story_18"
+      ],
+      "assignedActivities": [
+        "image_match",
+        "translation",
+        "definition",
+        "qcm",
+        "spelling",
+        "muscle_region"
+      ],
+      "assignedChapterIds": [
+        "musculation",
+        "badminton",
+        "basket",
+        "touch_rugby",
+        "flag_football",
+        "baseball",
+        "laser_run"
+      ]
+    }
+  ],
   "students": [],
   "activityResults": []
 }
