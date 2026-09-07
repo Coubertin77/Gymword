@@ -1680,3 +1680,14 @@ body {
     height: 360px;
   }
 }
+
+.publish-banner {
+  margin-bottom: 1.25rem;
+  border: 2px solid rgba(108, 60, 224, 0.35);
+  background: linear-gradient(135deg, #f7f2ff, #ffffff);
+}
+
+.publish-banner .btn-primary {
+  font-size: 1.05rem;
+  padding: 0.85rem 1.25rem;
+}

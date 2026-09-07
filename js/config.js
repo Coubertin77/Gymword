@@ -27,7 +27,7 @@ export const CONFIG = {
 };
 
 /** Bump when publishing — shown on home screen to confirm the latest version loaded. */
-export const APP_VERSION = '2.5.5';
+export const APP_VERSION = '2.5.6';
 
 /** Public GitHub Pages URL — used for the classroom QR code. */
 export const APP_URL = 'https://coubertin77.github.io/Gymword/';

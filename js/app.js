@@ -1,4 +1,4 @@
-import { CONFIG, ACTIVITY_LABELS, getWordImage, CHAPTERS, getChapterById, getActivitiesForChapter, APP_VERSION, APP_URL, APP_QR_IMAGE } from './config.js?v=2.5.5';
+import { CONFIG, ACTIVITY_LABELS, getWordImage, CHAPTERS, getChapterById, getActivitiesForChapter, APP_VERSION, APP_URL, APP_QR_IMAGE } from './config.js?v=2.5.6';
 import {
   initStorage, loadData, getClasses, getClassById, getWordsForClass, getStories, getStoryById,
   getStoriesForClass, getChaptersForClass,
@@ -628,9 +628,18 @@ function renderTeacherDashboard() {
           <h1 class="page-title">Teacher Dashboard 👩‍🏫</h1>
           <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap">
             ${cloudStatusHtml(sync, { compact: true })}
-            <button class="btn btn-primary btn-sm" id="publish-cloud" title="Send this device's vocabulary and videos to the cloud">☁️ Publish</button>
-            <button class="btn btn-ghost btn-sm" id="refresh-cloud" title="Reload latest data from cloud">🔄 Refresh</button>
             <button class="btn btn-ghost btn-sm" id="logout">Logout</button>
+          </div>
+        </div>
+        <div class="card publish-banner">
+          <p class="section-title">☁️ Share with students' phones</p>
+          <p class="card-desc">
+            Your vocabulary and videos stay on this computer until you publish them.
+            Click the button below, then reload the app on the phone.
+          </p>
+          <div class="btn-group">
+            <button type="button" class="btn btn-primary" id="publish-cloud">☁️ Publish my data to the cloud</button>
+            <button type="button" class="btn btn-ghost btn-sm" id="refresh-cloud">🔄 Refresh from cloud</button>
           </div>
         </div>
         <div class="tabs">
@@ -648,11 +657,17 @@ function renderTeacherDashboard() {
     app.querySelector('#logout').onclick = () => { clearSession(); navigate('home'); };
     app.querySelector('#publish-cloud')?.addEventListener('click', async () => {
       const btn = app.querySelector('#publish-cloud');
-      if (btn) btn.disabled = true;
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = '☁️ Publishing…';
+      }
       const result = await publishLocalToCloud();
-      if (btn) btn.disabled = false;
+      if (btn) {
+        btn.disabled = false;
+        btn.textContent = '☁️ Publish my data to the cloud';
+      }
       if (result.ok) {
-        toast('Données publiées — le téléphone pourra les voir après rechargement', 'success');
+        toast('Données publiées — rechargez la page sur le téléphone', 'success');
         render();
       } else {
         toast(result.reason || 'Publication impossible (réseau / hors ligne)', 'error');
