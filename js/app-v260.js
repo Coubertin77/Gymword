@@ -1,4 +1,4 @@
-import { CONFIG, ACTIVITY_LABELS, getWordImage, CHAPTERS, getChapterById, getActivitiesForChapter, APP_VERSION, APP_URL, APP_QR_IMAGE } from './config.js?v=2.5.8b';
+import { CONFIG, ACTIVITY_LABELS, getWordImage, CHAPTERS, getChapterById, getActivitiesForChapter, APP_VERSION, APP_URL, APP_QR_IMAGE } from './config-v260.js';
 import {
   initStorage, loadData, getClasses, getClassById, getWordsForClass, getStories, getStoryById,
   getStoriesForClass, getChaptersForClass,
@@ -8,7 +8,7 @@ import {
   getChapterVideoBanks, saveChapterVideoBank, getVideosForChapter,
   getSession, setSession, clearSession, addActivityResult,
   getSyncStatus, reloadFromCloud, flushStorage,
-} from './storage.js';
+} from './storage-v260.js';
 import {
   getLevel, countWordsByStatus, recordWordAttempt, awardPoints,
   recordActivityScore, recordStoryScore, checkBadges, getLeaderboard, getVocabularyProgress, getActivityProgress,
@@ -19,7 +19,7 @@ import { parseStudentLines, readCsvFile } from './roster-import.js';
 import { toast, escapeHtml, uid } from './utils.js';
 import { parseYoutubeVideoId, youtubeEmbedUrl } from './chapter-videos.js';
 import { isCloudConfigured } from './supabase-config.js';
-import { pushCloudData } from './cloud.js';
+import { pushCloudData } from './cloud-v260.js';
 
 const MUSCLE_ANATOMY_IMAGE = `images/anatomy-muscles-en.png?v=${APP_VERSION}`;
 

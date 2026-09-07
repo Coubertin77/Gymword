@@ -7,7 +7,7 @@ import { migrateStudentToChapters } from './chapter-progress.js';
 import { CHAPTERS } from './config.js';
 import { shuffle } from './gamification.js';
 import { isCloudConfigured } from './supabase-config.js';
-import { fetchCloudData, pushCloudData } from './cloud.js';
+import { fetchCloudData, pushCloudData, fetchSharedClassroomFile } from './cloud.js';
 
 let cache = null;
 let initialized = false;
@@ -256,6 +256,22 @@ export async function initStorage() {
   }
   initialized = true;
   writeLocalCache();
+
+  // Shared file on GitHub Pages (works even when Supabase is blocked at school).
+  try {
+    const shared = await withTimeout(fetchSharedClassroomFile(), 8000);
+    const hasShared = shared && (
+      shared.wordLists?.length
+      || shared.chapterVideoBanks?.some(b => b.videos?.length)
+      || shared.quizBanks?.some(b => b.questions?.length)
+    );
+    if (hasShared) {
+      cache = migrateData(pickRicherDataset(cache, shared));
+      writeLocalCache();
+    }
+  } catch (err) {
+    console.warn('GymWord shared file load skipped:', err);
+  }
 
   if (!cloudEnabled) return cache;
 

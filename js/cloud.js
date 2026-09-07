@@ -1,63 +1,60 @@
 import { SUPABASE_URL, SUPABASE_ANON_KEY, isCloudConfigured } from './supabase-config.js';
 
-let client = null;
-let createClientFn = null;
+/** Direct REST calls — no external CDN (works better on school Wi‑Fi). */
 
-async function loadSupabase() {
-  if (createClientFn) return createClientFn;
-  const cdns = [
-    'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.49.1/+esm',
-    'https://esm.sh/@supabase/supabase-js@2.49.1',
-  ];
-  let lastErr = null;
-  for (const url of cdns) {
-    try {
-      const mod = await import(url);
-      createClientFn = mod.createClient;
-      return createClientFn;
-    } catch (err) {
-      lastErr = err;
-      console.warn('GymWord Supabase CDN failed:', url, err);
-    }
-  }
-  throw lastErr || new Error('Impossible de charger la bibliothèque Supabase (reseau bloque)');
-}
-
-export async function getSupabase() {
-  if (!isCloudConfigured()) return null;
-  if (!client) {
-    const createClient = await loadSupabase();
-    client = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-  }
-  return client;
+function supabaseHeaders(extra = {}) {
+  return {
+    apikey: SUPABASE_ANON_KEY,
+    Authorization: `Bearer ${SUPABASE_ANON_KEY}`,
+    'Content-Type': 'application/json',
+    ...extra,
+  };
 }
 
 export async function fetchCloudData() {
-  const supabase = await getSupabase();
-  if (!supabase) return null;
+  if (!isCloudConfigured()) return null;
 
-  const { data, error } = await supabase
-    .from('gymword_data')
-    .select('payload')
-    .eq('id', 'main')
-    .maybeSingle();
-
-  if (error) throw error;
-  return data?.payload || null;
+  const url = `${SUPABASE_URL}/rest/v1/gymword_data?id=eq.main&select=payload`;
+  const res = await fetch(url, { headers: supabaseHeaders() });
+  if (!res.ok) {
+    throw new Error(`Cloud lecture impossible (${res.status})`);
+  }
+  const rows = await res.json();
+  return rows?.[0]?.payload || null;
 }
 
 export async function pushCloudData(payload) {
-  const supabase = await getSupabase();
-  if (!supabase) return { ok: false, reason: 'not_configured' };
+  if (!isCloudConfigured()) return { ok: false, reason: 'not_configured' };
 
-  const { error } = await supabase
-    .from('gymword_data')
-    .upsert({
+  const url = `${SUPABASE_URL}/rest/v1/gymword_data?on_conflict=id`;
+  const res = await fetch(url, {
+    method: 'POST',
+    headers: supabaseHeaders({
+      Prefer: 'resolution=merge-duplicates,return=minimal',
+    }),
+    body: JSON.stringify({
       id: 'main',
       payload,
       updated_at: new Date().toISOString(),
-    });
+    }),
+  });
 
-  if (error) throw error;
+  if (!res.ok) {
+    const text = await res.text().catch(() => '');
+    throw new Error(`Cloud ecriture impossible (${res.status}) ${text}`.trim());
+  }
   return { ok: true };
+}
+
+/** Shared file on GitHub Pages — works when Supabase is blocked at school. */
+export async function fetchSharedClassroomFile() {
+  try {
+    const res = await fetch(`data/shared-classroom.json?t=${Date.now()}`, { cache: 'no-store' });
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (!data || typeof data !== 'object') return null;
+    return data;
+  } catch {
+    return null;
+  }
 }

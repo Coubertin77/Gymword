@@ -47,6 +47,35 @@ async function safePublishToCloud() {
   }
 }
 
+function downloadSharedClassroomFile() {
+  try {
+    const data = loadData();
+    const shared = {
+      exportedAt: new Date().toISOString(),
+      wordLists: data.wordLists || [],
+      chapterVideoBanks: data.chapterVideoBanks || [],
+      quizBanks: data.quizBanks || [],
+      stories: data.stories || [],
+      classes: (data.classes || []).map(c => ({
+        ...c,
+        // Keep class structure / assignments for phones; roster optional
+      })),
+      students: [],
+      activityResults: [],
+    };
+    const blob = new Blob([JSON.stringify(shared, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'shared-classroom.json';
+    a.click();
+    URL.revokeObjectURL(url);
+    toast('Fichier shared-classroom.json telecharge — remplacez data/shared-classroom.json puis commit + push', 'success');
+  } catch {
+    toast('Impossible de creer le fichier partage', 'error');
+  }
+}
+
 function downloadLocalBackup() {
   try {
     const data = loadData();
@@ -677,11 +706,15 @@ function renderTeacherDashboard() {
         <div class="card publish-banner">
           <p class="section-title">Share with phones</p>
           <p class="card-desc">
-            Publish vocabulary and videos from this computer so students can see them on their phones.
+            1) Try <strong>Publish to cloud</strong> (needs internet / 4G).<br>
+            2) If it fails: click <strong>Download shared file</strong>, replace
+            <code>data/shared-classroom.json</code> in the project, then commit + push.
+            Students reload the app to see your vocabulary and videos.
           </p>
           <div class="btn-group">
-            <button type="button" class="btn btn-primary" id="publish-cloud">Publish my data to the cloud</button>
-            <button type="button" class="btn btn-secondary btn-sm" id="backup-local">Download backup</button>
+            <button type="button" class="btn btn-primary" id="publish-cloud">Publish to cloud</button>
+            <button type="button" class="btn btn-secondary" id="download-shared">Download shared file</button>
+            <button type="button" class="btn btn-ghost btn-sm" id="backup-local">Download full backup</button>
             <button type="button" class="btn btn-ghost btn-sm" id="refresh-cloud">Refresh from cloud</button>
           </div>
         </div>
@@ -717,17 +750,18 @@ function renderTeacherDashboard() {
         } finally {
           if (btn) {
             btn.disabled = false;
-            btn.textContent = 'Publish my data to the cloud';
+            btn.textContent = 'Publish to cloud';
           }
         }
       });
+      app.querySelector('#download-shared')?.addEventListener('click', () => downloadSharedClassroomFile());
       app.querySelector('#refresh-cloud')?.addEventListener('click', async () => {
         try {
           const ok = await reloadFromCloud();
-          toast(ok ? 'Donnees mises a jour depuis le cloud' : 'Synchronisation indisponible — vos donnees locales sont conservees', ok ? 'success' : 'info');
+          toast(ok ? 'Donnees mises a jour depuis le cloud' : 'Synchronisation indisponible — utilisez Download shared file', ok ? 'success' : 'info');
           if (ok) render();
         } catch {
-          toast('Reseau bloque — vos donnees locales sont conservees', 'info');
+          toast('Reseau bloque — utilisez Download shared file puis commit + push', 'info');
         }
       });
       app.querySelector('#backup-local')?.addEventListener('click', () => downloadLocalBackup());
