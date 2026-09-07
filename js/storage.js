@@ -28,6 +28,23 @@ function withTimeout(promise, ms = CLOUD_TIMEOUT_MS) {
   ]);
 }
 
+function contentRichness(data) {
+  if (!data) return 0;
+  const wordCount = (data.wordLists || []).reduce((n, l) => n + (l.words?.length || 0), 0);
+  const listCount = (data.wordLists || []).length;
+  const videoCount = (data.chapterVideoBanks || []).reduce((n, b) => n + (b.videos?.length || 0), 0);
+  const quizCount = (data.quizBanks || []).reduce((n, b) => n + (b.questions?.length || 0), 0);
+  const studentCount = (data.students || []).length;
+  return wordCount * 10 + listCount * 3 + videoCount * 8 + quizCount * 2 + studentCount;
+}
+
+/** Prefer the dataset that contains more teacher content (vocab / videos), not only more students. */
+function pickRicherDataset(local, remote) {
+  if (!remote) return local;
+  if (!local) return remote;
+  return contentRichness(local) >= contentRichness(remote) ? local : remote;
+}
+
 function normalizeChapterVideoBanks(data) {
   const byChapter = new Map();
   for (const bank of data.chapterVideoBanks || []) {
@@ -248,10 +265,8 @@ export async function initStorage() {
       && (remote.classes?.length || remote.students?.length || remote.wordLists?.length);
 
     if (hasRemote) {
-      cache = migrateData(remote);
-      if (local && (local.students?.length > (remote.students?.length || 0))) {
-        cache = migrateData(local);
-      }
+      // Keep local teacher edits (vocab, videos) if they are richer than the cloud copy.
+      cache = migrateData(pickRicherDataset(local, remote));
     } else if (!local) {
       cache = getSeedData();
     }
@@ -295,6 +310,29 @@ export async function flushStorage() {
   await pushCloudData(cache);
   lastSyncAt = new Date();
   syncError = null;
+  cloudSynced = true;
+}
+
+/** Force-push the data currently on this device to the cloud (safe for teacher edits). */
+export async function publishLocalToCloud() {
+  if (!isCloudConfigured()) {
+    return { ok: false, reason: 'Cloud non configuré' };
+  }
+  cloudEnabled = true;
+  if (!cache) cache = readLocalCache() || getSeedData();
+  try {
+    clearTimeout(saveTimer);
+    await withTimeout(pushCloudData(cache), CLOUD_TIMEOUT_MS);
+    writeLocalCache();
+    lastSyncAt = new Date();
+    syncError = null;
+    cloudSynced = true;
+    return { ok: true };
+  } catch (err) {
+    syncError = err.message || 'Échec de la publication';
+    cloudSynced = false;
+    return { ok: false, reason: syncError };
+  }
 }
 
 export async function reloadFromCloud() {

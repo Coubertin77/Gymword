@@ -1,4 +1,4 @@
-import { CONFIG, ACTIVITY_LABELS, getWordImage, CHAPTERS, getChapterById, getActivitiesForChapter, APP_VERSION, APP_URL, APP_QR_IMAGE } from './config.js?v=2.5.3';
+import { CONFIG, ACTIVITY_LABELS, getWordImage, CHAPTERS, getChapterById, getActivitiesForChapter, APP_VERSION, APP_URL, APP_QR_IMAGE } from './config.js?v=2.5.5';
 import {
   initStorage, loadData, getClasses, getClassById, getWordsForClass, getStories, getStoryById,
   getStoriesForClass, getChaptersForClass,
@@ -7,7 +7,7 @@ import {
   getWordLists, saveWordList, deleteWordList, getQuizBank, saveQuizBank, updateClass,
   getChapterVideoBanks, saveChapterVideoBank, getVideosForChapter,
   getSession, setSession, clearSession, addActivityResult,
-  getSyncStatus, reloadFromCloud, flushStorage,
+  getSyncStatus, reloadFromCloud, flushStorage, publishLocalToCloud,
 } from './storage.js';
 import {
   getLevel, countWordsByStatus, recordWordAttempt, awardPoints,
@@ -122,13 +122,13 @@ function renderHome() {
         <button class="btn btn-primary btn-block" id="btn-student" style="margin-bottom:0.75rem">I'm a Student 💪</button>
         <button class="btn btn-secondary btn-block" id="btn-teacher">I'm a Teacher 👩‍🏫</button>
       </div>
-      <details class="home-qr-panel">
-        <summary>📱 Scan to open on your phone</summary>
+      <div class="card home-qr-card" style="width:100%;max-width:400px;margin-top:1rem">
+        <p class="section-title" style="margin-bottom:0.5rem">📱 Scan to open</p>
         <div class="qr-block">
           <img src="${APP_QR_IMAGE}?v=${APP_VERSION}" alt="QR code for SportWord" class="qr-image" width="220" height="220">
           <a class="qr-link" href="${APP_URL}" target="_blank" rel="noopener">${escapeHtml(APP_URL)}</a>
         </div>
-      </details>
+      </div>
       <p class="gdpr-notice" style="max-width:400px">
         This app stores your first name and learning progress. Data is used only for vocabulary revision in PE class.
       </p>
@@ -628,7 +628,8 @@ function renderTeacherDashboard() {
           <h1 class="page-title">Teacher Dashboard 👩‍🏫</h1>
           <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap">
             ${cloudStatusHtml(sync, { compact: true })}
-            <button class="btn btn-ghost btn-sm" id="refresh-cloud" title="Reload latest data">🔄 Refresh</button>
+            <button class="btn btn-primary btn-sm" id="publish-cloud" title="Send this device's vocabulary and videos to the cloud">☁️ Publish</button>
+            <button class="btn btn-ghost btn-sm" id="refresh-cloud" title="Reload latest data from cloud">🔄 Refresh</button>
             <button class="btn btn-ghost btn-sm" id="logout">Logout</button>
           </div>
         </div>
@@ -645,6 +646,18 @@ function renderTeacherDashboard() {
       </div>
     `;
     app.querySelector('#logout').onclick = () => { clearSession(); navigate('home'); };
+    app.querySelector('#publish-cloud')?.addEventListener('click', async () => {
+      const btn = app.querySelector('#publish-cloud');
+      if (btn) btn.disabled = true;
+      const result = await publishLocalToCloud();
+      if (btn) btn.disabled = false;
+      if (result.ok) {
+        toast('Données publiées — le téléphone pourra les voir après rechargement', 'success');
+        render();
+      } else {
+        toast(result.reason || 'Publication impossible (réseau / hors ligne)', 'error');
+      }
+    });
     app.querySelector('#refresh-cloud')?.addEventListener('click', async () => {
       const ok = await reloadFromCloud();
       toast(ok ? 'Données mises à jour depuis le cloud' : 'Synchronisation indisponible pour le moment', ok ? 'success' : 'info');
