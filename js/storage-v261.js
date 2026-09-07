@@ -1,0 +1,732 @@
+import { CONFIG, getWordImage } from './config.js';
+import { getSeedData, getSeedCatalog, getSeedStories } from './seed.js';
+import { getSportStoryIds } from './seed-sports.js';
+import { getSeedQuizBanks } from './chapter-rules.js';
+import { getSeedChapterVideos } from './chapter-videos.js';
+import { migrateStudentToChapters } from './chapter-progress.js';
+import { CHAPTERS } from './config.js';
+import { shuffle } from './gamification.js';
+import { isCloudConfigured } from './supabase-config.js';
+import { fetchCloudData, pushCloudData, fetchSharedClassroomFile } from './cloud-v261.js';
+
+let cache = null;
+let initialized = false;
+let cloudEnabled = false;
+let cloudSynced = false;
+let saveTimer = null;
+let lastSyncAt = null;
+let syncError = null;
+
+const CLOUD_TIMEOUT_MS = 15000;
+
+function withTimeout(promise, ms = CLOUD_TIMEOUT_MS) {
+  return Promise.race([
+    promise,
+    new Promise((_, reject) => {
+      setTimeout(() => reject(new Error('Délai de connexion dépassé')), ms);
+    }),
+  ]);
+}
+
+function contentRichness(data) {
+  if (!data) return 0;
+  const wordCount = (data.wordLists || []).reduce((n, l) => n + (l.words?.length || 0), 0);
+  const listCount = (data.wordLists || []).length;
+  const videoCount = (data.chapterVideoBanks || []).reduce((n, b) => n + (b.videos?.length || 0), 0);
+  const quizCount = (data.quizBanks || []).reduce((n, b) => n + (b.questions?.length || 0), 0);
+  const studentCount = (data.students || []).length;
+  return wordCount * 10 + listCount * 3 + videoCount * 8 + quizCount * 2 + studentCount;
+}
+
+/** Prefer the dataset that contains more teacher content (vocab / videos), not only more students. */
+function pickRicherDataset(local, remote) {
+  if (!remote) return local;
+  if (!local) return remote;
+  return contentRichness(local) >= contentRichness(remote) ? local : remote;
+}
+
+/** Always overlay shared classroom catalogs onto local data (phones keep their own progress). */
+function applySharedClassroom(local, shared) {
+  if (!shared || typeof shared !== 'object') return local;
+  const hasCatalog = shared.wordLists?.length
+    || shared.chapterVideoBanks?.some(b => b.videos?.length)
+    || shared.quizBanks?.some(b => b.questions?.length)
+    || shared.stories?.length;
+  if (!hasCatalog && !shared.exportedAt) return local;
+
+  const base = migrateData(JSON.parse(JSON.stringify(local || getSeedData())));
+
+  if (shared.wordLists?.length) {
+    const byId = new Map((base.wordLists || []).map(l => [l.id, l]));
+    for (const list of shared.wordLists) {
+      if (list?.id) byId.set(list.id, list);
+    }
+    base.wordLists = [...byId.values()];
+  }
+
+  if (shared.chapterVideoBanks?.length) {
+    const byCh = new Map((base.chapterVideoBanks || []).map(b => [b.chapterId, b]));
+    for (const bank of shared.chapterVideoBanks) {
+      if (bank?.chapterId) byCh.set(bank.chapterId, bank);
+    }
+    base.chapterVideoBanks = [...byCh.values()];
+  }
+
+  if (shared.quizBanks?.length) {
+    const byCh = new Map((base.quizBanks || []).map(b => [b.chapterId, b]));
+    for (const bank of shared.quizBanks) {
+      if (bank?.chapterId) byCh.set(bank.chapterId, bank);
+    }
+    base.quizBanks = [...byCh.values()];
+  }
+
+  if (shared.stories?.length) {
+    const byId = new Map((base.stories || []).map(s => [s.id, s]));
+    for (const story of shared.stories) {
+      if (story?.id) byId.set(story.id, story);
+    }
+    base.stories = [...byId.values()];
+  }
+
+  if (shared.classes?.length) {
+    for (const sc of shared.classes) {
+      const localCls = (base.classes || []).find(c => c.id === sc.id);
+      if (localCls) {
+        if (sc.assignedListIds) localCls.assignedListIds = [...sc.assignedListIds];
+        if (sc.assignedStoryIds) localCls.assignedStoryIds = [...sc.assignedStoryIds];
+        if (sc.assignedChapterIds) localCls.assignedChapterIds = [...sc.assignedChapterIds];
+        if (sc.assignedActivities) localCls.assignedActivities = [...sc.assignedActivities];
+      } else {
+        base.classes.push({ ...sc, roster: Array.isArray(sc.roster) ? sc.roster : [] });
+      }
+    }
+  }
+
+  base.sharedImportedAt = shared.exportedAt || new Date().toISOString();
+  return migrateData(base);
+}
+
+function normalizeChapterVideoBanks(data) {
+  const byChapter = new Map();
+  for (const bank of data.chapterVideoBanks || []) {
+    if (!bank?.chapterId) continue;
+    const existing = byChapter.get(bank.chapterId) || { chapterId: bank.chapterId, videos: [] };
+    const seen = new Set(existing.videos.map(v => v.id || v.url));
+    for (const video of bank.videos || []) {
+      const key = video.id || video.url;
+      if (!key || seen.has(key)) continue;
+      existing.videos.push(video);
+      seen.add(key);
+    }
+    byChapter.set(bank.chapterId, existing);
+  }
+  data.chapterVideoBanks = [...byChapter.values()];
+}
+
+function migrateData(data) {
+  if (!data || typeof data !== 'object') return data;
+
+  (data.classes || []).forEach(c => {
+    if (!c.roster) c.roster = [];
+  });
+  if (!data.activityResults) data.activityResults = [];
+  if (!data.wordLists) data.wordLists = [];
+  if (!data.quizBanks) data.quizBanks = [];
+  if (!data.chapterVideoBanks) data.chapterVideoBanks = [];
+
+  try {
+    const seed = getSeedCatalog();
+    const existingListIds = new Set(data.wordLists.map(l => l.id));
+    for (const list of seed.wordLists) {
+      if (!existingListIds.has(list.id)) data.wordLists.push(list);
+    }
+
+    const SYNC_LIST_IDS = ['list_image_match', 'badminton_referee_gestures'];
+    for (const listId of SYNC_LIST_IDS) {
+      const seedList = seed.wordLists.find(l => l.id === listId);
+      const existing = data.wordLists.find(l => l.id === listId);
+      if (seedList && existing) {
+        existing.name = seedList.name;
+        existing.theme = seedList.theme;
+        existing.words = seedList.words.map(w => ({ ...w }));
+      }
+    }
+
+    const seedClasses = Object.fromEntries(seed.classes.map(c => [c.id, c]));
+    for (const cls of data.classes || []) {
+      if (!cls.assignedListIds) cls.assignedListIds = [];
+      const seedCls = seedClasses[cls.id];
+      if (!seedCls) continue;
+      for (const listId of seedCls.assignedListIds) {
+        if (!cls.assignedListIds.includes(listId)) cls.assignedListIds.push(listId);
+      }
+      if (!cls.assignedStoryIds) cls.assignedStoryIds = [];
+      for (const storyId of seedCls.assignedStoryIds || []) {
+        if (!cls.assignedStoryIds.includes(storyId)) cls.assignedStoryIds.push(storyId);
+      }
+      if (!cls.assignedChapterIds) cls.assignedChapterIds = CHAPTERS.map(c => c.id);
+      for (const chapterId of seedCls.assignedChapterIds || []) {
+        if (!cls.assignedChapterIds.includes(chapterId)) cls.assignedChapterIds.push(chapterId);
+      }
+      if (!cls.assignedActivities) cls.assignedActivities = [];
+      for (const act of seedCls.assignedActivities || []) {
+        if (!cls.assignedActivities.includes(act)) cls.assignedActivities.push(act);
+      }
+    }
+
+    // Ensure all sport chapters have 5 stories assigned (migration for existing classes).
+    const allSportStoryIds = getSportStoryIds();
+    for (const cls of data.classes || []) {
+      if (!cls.assignedStoryIds) cls.assignedStoryIds = [];
+      for (const storyId of allSportStoryIds) {
+        if (!cls.assignedStoryIds.includes(storyId)) cls.assignedStoryIds.push(storyId);
+      }
+    }
+
+    if (!data.stories) data.stories = [];
+    const existingStoryIds = new Set(data.stories.map(s => s.id));
+    for (const story of getSeedStories()) {
+      if (!existingStoryIds.has(story.id)) data.stories.push(story);
+    }
+    const seedStoryMap = Object.fromEntries(getSeedStories().map(s => [s.id, s]));
+    for (const story of data.stories) {
+      if (!story.chapterId) story.chapterId = 'musculation';
+      const seedStory = seedStoryMap[story.id];
+      if (seedStory?.englishLevel) story.englishLevel = seedStory.englishLevel;
+    }
+
+    for (const seedBank of getSeedQuizBanks()) {
+      if (!data.quizBanks.some(b => b.chapterId === seedBank.chapterId)) {
+        data.quizBanks.push(JSON.parse(JSON.stringify(seedBank)));
+      }
+    }
+    for (const bank of data.quizBanks) {
+      for (let i = 0; i < (bank.questions || []).length; i++) {
+        const q = bank.questions[i];
+        if (!q.id) q.id = `q_${bank.chapterId}_${i}`;
+        if (!Array.isArray(q.options)) q.options = ['', '', '', ''];
+        while (q.options.length < 4) q.options.push('');
+        if (typeof q.correctIndex !== 'number') q.correctIndex = 0;
+      }
+    }
+
+    for (const seedVideos of getSeedChapterVideos()) {
+      const exists = data.chapterVideoBanks.some(b => b.chapterId === seedVideos.chapterId);
+      if (!exists) data.chapterVideoBanks.push(JSON.parse(JSON.stringify(seedVideos)));
+    }
+    normalizeChapterVideoBanks(data);
+    for (const bank of data.chapterVideoBanks) {
+      for (const video of bank.videos || []) {
+        if (!video.id) video.id = `vid_${bank.chapterId}_${Date.now()}`;
+      }
+    }
+  } catch (err) {
+    console.error('GymWord seed merge error:', err);
+  }
+
+  try {
+    for (const list of data.wordLists) {
+      if (!list.chapterId) list.chapterId = 'musculation';
+      for (const word of list.words || []) {
+        if (!word.english) continue;
+        // Keep custom local images (referee gestures, exercise photos, etc.)
+        if (word.imageUrl?.startsWith('images/')) continue;
+        word.imageUrl = getWordImage(word.english);
+      }
+    }
+  } catch (err) {
+    console.error('GymWord image refresh error:', err);
+  }
+
+  try {
+    for (const student of data.students || []) {
+      migrateStudentToChapters(student);
+    }
+  } catch (err) {
+    console.error('GymWord chapter migration error:', err);
+  }
+
+  return data;
+}
+
+function readLocalCache() {
+  const raw = localStorage.getItem(CONFIG.STORAGE_KEY);
+  if (!raw) return null;
+  try {
+    return migrateData(JSON.parse(raw));
+  } catch {
+    return null;
+  }
+}
+
+function writeLocalCache() {
+  if (!cache) return;
+  try {
+    localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(cache));
+  } catch (err) {
+    console.error('GymWord local save error:', err);
+  }
+}
+
+function scheduleCloudSave() {
+  if (!cloudEnabled || !cache) return;
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(async () => {
+    try {
+      await pushCloudData(cache);
+      writeLocalCache();
+      lastSyncAt = new Date();
+      syncError = null;
+    } catch (err) {
+      syncError = err.message || 'Échec de la synchronisation';
+      cloudSynced = false;
+      console.error('GymWord cloud save error:', err);
+    }
+  }, 600);
+}
+
+export function isCloudEnabled() {
+  return cloudEnabled;
+}
+
+export function getSyncStatus() {
+  return { cloudEnabled, cloudSynced, lastSyncAt, syncError };
+}
+
+export async function initStorage() {
+  if (initialized) return cache;
+
+  cloudEnabled = isCloudConfigured();
+  cloudSynced = false;
+  let local = null;
+  try {
+    local = readLocalCache();
+  } catch (err) {
+    console.error('GymWord local cache error:', err);
+  }
+
+  cache = local;
+  if (!cache) {
+    try {
+      cache = getSeedData();
+    } catch (err) {
+      console.error('GymWord seed error:', err);
+      try { localStorage.removeItem(CONFIG.STORAGE_KEY); } catch { /* ignore */ }
+      cache = getSeedData();
+    }
+  }
+  initialized = true;
+  writeLocalCache();
+
+  // Shared file on GitHub Pages (works even when Supabase is blocked at school).
+  try {
+    const shared = await withTimeout(fetchSharedClassroomFile(), 8000);
+    if (shared) {
+      cache = applySharedClassroom(cache, shared);
+      writeLocalCache();
+    }
+  } catch (err) {
+    console.warn('GymWord shared file load skipped:', err);
+  }
+
+  if (!cloudEnabled) return cache;
+
+  try {
+    const remote = await withTimeout(fetchCloudData());
+    const hasRemote = remote && Object.keys(remote).length > 0
+      && (remote.classes?.length || remote.students?.length || remote.wordLists?.length);
+
+    if (hasRemote) {
+      // Keep local teacher edits (vocab, videos) if they are richer than the cloud copy.
+      cache = migrateData(pickRicherDataset(local, remote));
+    } else if (!local) {
+      cache = getSeedData();
+    }
+
+    writeLocalCache();
+    cloudSynced = true;
+    syncError = null;
+    withTimeout(pushCloudData(cache), CLOUD_TIMEOUT_MS)
+      .then(() => { lastSyncAt = new Date(); syncError = null; })
+      .catch(err => {
+        syncError = err.message || 'Échec de la synchronisation';
+        console.error('GymWord cloud save error:', err);
+      });
+  } catch (err) {
+    console.error('GymWord cloud load error:', err);
+    cloudSynced = false;
+    syncError = err.message || 'Connexion au cloud impossible';
+    cache = local || cache || getSeedData();
+    writeLocalCache();
+  }
+
+  return cache;
+}
+
+export function loadData() {
+  if (!cache) {
+    cache = readLocalCache() || getSeedData();
+  }
+  return cache;
+}
+
+export function saveData() {
+  if (!cache) return;
+  writeLocalCache();
+  scheduleCloudSave();
+}
+
+export async function flushStorage() {
+  if (!cloudEnabled || !cache) return;
+  clearTimeout(saveTimer);
+  await pushCloudData(cache);
+  lastSyncAt = new Date();
+  syncError = null;
+  cloudSynced = true;
+}
+
+/** Force-push the data currently on this device to the cloud (safe for teacher edits). */
+export async function publishLocalToCloud() {
+  if (!isCloudConfigured()) {
+    return { ok: false, reason: 'Cloud non configuré' };
+  }
+  cloudEnabled = true;
+  if (!cache) cache = readLocalCache() || getSeedData();
+  try {
+    clearTimeout(saveTimer);
+    await withTimeout(pushCloudData(cache), CLOUD_TIMEOUT_MS);
+    writeLocalCache();
+    lastSyncAt = new Date();
+    syncError = null;
+    cloudSynced = true;
+    return { ok: true };
+  } catch (err) {
+    syncError = err.message || 'Échec de la publication';
+    cloudSynced = false;
+    return { ok: false, reason: syncError };
+  }
+}
+
+export async function reloadFromCloud() {
+  if (!cloudEnabled) return false;
+  try {
+    const remote = await fetchCloudData();
+    if (remote && Object.keys(remote).length > 0) {
+      cache = migrateData(remote);
+      writeLocalCache();
+      lastSyncAt = new Date();
+      syncError = null;
+      cloudSynced = true;
+      return true;
+    }
+  } catch (err) {
+    syncError = err.message;
+    cloudSynced = false;
+  }
+  return false;
+}
+
+export function resetData() {
+  cache = getSeedData();
+  saveData();
+  return cache;
+}
+
+export function getClasses() {
+  return loadData().classes;
+}
+
+export function getClassById(id) {
+  return loadData().classes.find(c => c.id === id);
+}
+
+export function updateClass(id, updates) {
+  const data = loadData();
+  const idx = data.classes.findIndex(c => c.id === id);
+  if (idx >= 0) {
+    data.classes[idx] = { ...data.classes[idx], ...updates };
+    saveData();
+  }
+}
+
+export function getWordLists(chapterId = null) {
+  const lists = loadData().wordLists;
+  return chapterId ? lists.filter(l => l.chapterId === chapterId) : lists;
+}
+
+export function getWordListById(id) {
+  return loadData().wordLists.find(l => l.id === id);
+}
+
+export function saveWordList(list) {
+  const data = loadData();
+  const idx = data.wordLists.findIndex(l => l.id === list.id);
+  if (idx >= 0) data.wordLists[idx] = list;
+  else data.wordLists.push(list);
+  saveData();
+}
+
+export function deleteWordList(id) {
+  const data = loadData();
+  data.wordLists = data.wordLists.filter(l => l.id !== id);
+  saveData();
+}
+
+export function getQuizBanks() {
+  return loadData().quizBanks || [];
+}
+
+export function getQuizBank(chapterId) {
+  return getQuizBanks().find(b => b.chapterId === chapterId) || null;
+}
+
+export function saveQuizBank(bank) {
+  const data = loadData();
+  if (!data.quizBanks) data.quizBanks = [];
+  const idx = data.quizBanks.findIndex(b => b.chapterId === bank.chapterId);
+  if (idx >= 0) data.quizBanks[idx] = bank;
+  else data.quizBanks.push(bank);
+  saveData();
+}
+
+export function getChapterVideoBanks() {
+  return loadData().chapterVideoBanks || [];
+}
+
+export function getVideosForChapter(chapterId) {
+  const bank = getChapterVideoBanks().find(b => b.chapterId === chapterId);
+  return bank?.videos?.filter(v => v.url?.trim()) || [];
+}
+
+export function saveChapterVideoBank(bank) {
+  const data = loadData();
+  if (!data.chapterVideoBanks) data.chapterVideoBanks = [];
+  const idx = data.chapterVideoBanks.findIndex(b => b.chapterId === bank.chapterId);
+  const entry = { chapterId: bank.chapterId, videos: bank.videos || [] };
+  if (idx >= 0) data.chapterVideoBanks[idx] = entry;
+  else data.chapterVideoBanks.push(entry);
+  saveData();
+}
+
+/** Quick Quiz — random questions from the teacher-editable bank for a chapter. */
+export function getRulesQuestionsForChapter(chapterId, count = 5) {
+  const bank = getQuizBank(chapterId);
+  const pool = bank?.questions?.length
+    ? bank.questions
+    : (getSeedQuizBanks().find(b => b.chapterId === chapterId)?.questions || []);
+  const shuffled = shuffle([...pool]);
+  return shuffled.slice(0, Math.min(count, shuffled.length)).map(q => ({
+    question: q.question,
+    options: [...q.options],
+    correctIndex: q.correctIndex,
+  }));
+}
+
+export function getStories() {
+  return loadData().stories;
+}
+
+export function getStoryById(id) {
+  return loadData().stories.find(s => s.id === id);
+}
+
+export function getStudents() {
+  return loadData().students;
+}
+
+export function getStudentById(id) {
+  const student = loadData().students.find(s => s.id === id);
+  if (!student) return null;
+  migrateStudentToChapters(student);
+  return student;
+}
+
+export function findOrCreateStudent(classId, firstName, lastName) {
+  const data = loadData();
+  const fn = firstName.trim();
+  const ln = lastName.trim();
+  let student = data.students.find(
+    s => s.classId === classId && s.firstName.toLowerCase() === fn.toLowerCase() && s.lastName.toLowerCase() === ln.toLowerCase()
+  );
+  if (!student) {
+    student = createStudentRecord({ classId, firstName: fn, lastName: ln });
+    data.students.push(student);
+    saveData();
+  }
+  return student;
+}
+
+function createStudentRecord({ classId, firstName, lastName, rosterId = null }) {
+  return {
+    id: 'student_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
+    rosterId,
+    classId,
+    firstName: firstName.trim(),
+    lastName: lastName.trim(),
+    chapterData: {},
+    gdprAccepted: false,
+    createdAt: new Date().toISOString(),
+  };
+}
+
+export function getRosterByClass(classId) {
+  const cls = getClassById(classId);
+  return cls?.roster || [];
+}
+
+export function addRosterStudent(classId, firstName, lastName) {
+  const result = addRosterStudentsBulk(classId, [{ firstName, lastName }]);
+  if (result.added === 1) {
+    return getRosterByClass(classId).find(
+      r => r.firstName.toLowerCase() === firstName.trim().toLowerCase()
+        && r.lastName.toLowerCase() === lastName.trim().toLowerCase()
+    ) || null;
+  }
+  return null;
+}
+
+export function addRosterStudentsBulk(classId, entries) {
+  const data = loadData();
+  const cls = data.classes.find(c => c.id === classId);
+  if (!cls) return { added: 0, skipped: 0, invalid: 0 };
+
+  if (!cls.roster) cls.roster = [];
+
+  let added = 0;
+  let skipped = 0;
+  let invalid = 0;
+
+  for (const entry of entries) {
+    const fn = (entry.firstName || '').trim();
+    const ln = (entry.lastName || '').trim();
+    if (!fn || !ln) {
+      invalid++;
+      continue;
+    }
+    const exists = cls.roster.some(
+      r => r.firstName.toLowerCase() === fn.toLowerCase() && r.lastName.toLowerCase() === ln.toLowerCase()
+    );
+    if (exists) {
+      skipped++;
+      continue;
+    }
+    cls.roster.push({
+      id: 'roster_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7),
+      firstName: fn,
+      lastName: ln,
+    });
+    added++;
+  }
+
+  if (added > 0) {
+    cls.roster.sort((a, b) => a.lastName.localeCompare(b.lastName, 'fr') || a.firstName.localeCompare(b.firstName, 'fr'));
+    saveData();
+  }
+
+  return { added, skipped, invalid };
+}
+
+export function removeRosterStudent(classId, rosterId) {
+  const data = loadData();
+  const cls = data.classes.find(c => c.id === classId);
+  if (!cls?.roster) return;
+  cls.roster = cls.roster.filter(r => r.id !== rosterId);
+  data.students = data.students.filter(s => s.rosterId !== rosterId);
+  saveData();
+}
+
+export function loginStudentByRoster(classId, rosterId) {
+  const data = loadData();
+  const cls = data.classes.find(c => c.id === classId);
+  const rosterEntry = cls?.roster?.find(r => r.id === rosterId);
+  if (!rosterEntry) return null;
+
+  let student = data.students.find(s => s.rosterId === rosterId);
+  if (!student) {
+    student = createStudentRecord({
+      classId,
+      rosterId,
+      firstName: rosterEntry.firstName,
+      lastName: rosterEntry.lastName,
+    });
+    data.students.push(student);
+    saveData();
+  }
+  return student;
+}
+
+export function updateStudent(student) {
+  const data = loadData();
+  const idx = data.students.findIndex(s => s.id === student.id);
+  if (idx >= 0) {
+    data.students[idx] = student;
+    saveData();
+  }
+}
+
+export function deleteStudent(id) {
+  const data = loadData();
+  data.students = data.students.filter(s => s.id !== id);
+  saveData();
+}
+
+export function getStudentsByClass(classId) {
+  return loadData().students.filter(s => s.classId === classId);
+}
+
+export function getWordsForClass(classId, chapterId) {
+  const cls = getClassById(classId);
+  if (!cls || !chapterId) return [];
+  const lists = cls.assignedListIds
+    .map(getWordListById)
+    .filter(l => l && l.chapterId === chapterId);
+  return lists.flatMap(l => l.words.map(w => ({
+    ...w,
+    listId: l.id,
+    listName: l.name,
+    listTheme: l.theme,
+    chapterId: l.chapterId,
+  })));
+}
+
+export function getStoriesForClass(classId, chapterId) {
+  const cls = getClassById(classId);
+  if (!cls || !chapterId) return [];
+  const storyIds = new Set(cls.assignedStoryIds || []);
+  return loadData().stories.filter(s => s.chapterId === chapterId && storyIds.has(s.id));
+}
+
+export function getChaptersForClass(classId) {
+  const cls = getClassById(classId);
+  if (!cls) return [];
+  const ids = cls.assignedChapterIds || CHAPTERS.map(c => c.id);
+  return CHAPTERS.filter(c => ids.includes(c.id));
+}
+
+export function getActivityResults() {
+  return loadData().activityResults || [];
+}
+
+export function addActivityResult(result) {
+  const data = loadData();
+  if (!data.activityResults) data.activityResults = [];
+  data.activityResults.push({ ...result, id: 'result_' + Date.now(), date: new Date().toISOString() });
+  saveData();
+}
+
+export function getSession() {
+  try {
+    return JSON.parse(localStorage.getItem(CONFIG.SESSION_KEY) || 'null');
+  } catch {
+    return null;
+  }
+}
+
+export function setSession(session) {
+  if (session) localStorage.setItem(CONFIG.SESSION_KEY, JSON.stringify(session));
+  else localStorage.removeItem(CONFIG.SESSION_KEY);
+}
+
+export function clearSession() {
+  setSession(null);
+}

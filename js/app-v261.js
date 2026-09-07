@@ -1,0 +1,1567 @@
+import { CONFIG, ACTIVITY_LABELS, getWordImage, CHAPTERS, getChapterById, getActivitiesForChapter, APP_VERSION, APP_URL, APP_QR_IMAGE } from './config-v261.js';
+import {
+  initStorage, loadData, getClasses, getClassById, getWordsForClass, getStories, getStoryById,
+  getStoriesForClass, getChaptersForClass,
+  loginStudentByRoster, updateStudent, getStudentById, getStudentsByClass,
+  getRosterByClass, addRosterStudent, addRosterStudentsBulk, removeRosterStudent,
+  getWordLists, saveWordList, deleteWordList, getQuizBank, saveQuizBank, updateClass,
+  getChapterVideoBanks, saveChapterVideoBank, getVideosForChapter,
+  getSession, setSession, clearSession, addActivityResult,
+  getSyncStatus, reloadFromCloud, flushStorage,
+} from './storage-v261.js';
+import {
+  getLevel, countWordsByStatus, recordWordAttempt, awardPoints,
+  recordActivityScore, recordStoryScore, checkBadges, getLeaderboard, getVocabularyProgress, getActivityProgress,
+} from './gamification.js';
+import { renderActivity, renderStoryQuiz } from './activities.js';
+import { getChapterProgress, getTotalPoints, migrateStudentToChapters } from './chapter-progress.js';
+import { parseStudentLines, readCsvFile } from './roster-import.js';
+import { toast, escapeHtml, uid } from './utils.js';
+import { parseYoutubeVideoId, youtubeEmbedUrl } from './chapter-videos.js';
+import { isCloudConfigured } from './supabase-config.js';
+import { pushCloudData } from './cloud-v261.js';
+
+const MUSCLE_ANATOMY_IMAGE = `images/anatomy-muscles-en.png?v=${APP_VERSION}`;
+
+async function safePublishToCloud() {
+  try {
+    if (!isCloudConfigured()) {
+      return { ok: false, reason: 'Cloud non configure.' };
+    }
+    const data = loadData();
+    if (!data) {
+      return { ok: false, reason: 'Aucune donnee locale a publier.' };
+    }
+    await pushCloudData(data);
+    try { await flushStorage(); } catch { /* optional */ }
+    return { ok: true };
+  } catch (err) {
+    const msg = err?.message || String(err || '');
+    const blocked = /networkerror|failed to fetch|load failed|connexion|timeout|délai|network/i.test(msg);
+    return {
+      ok: false,
+      reason: blocked
+        ? 'Reseau bloque (Wi-Fi lycee ou hors ligne). Vos donnees restent sur ce PC. Reessayez avec la 4G ou un autre reseau.'
+        : (msg || 'Publication impossible'),
+    };
+  }
+}
+
+function downloadSharedClassroomFile() {
+  try {
+    const data = loadData();
+    const shared = {
+      exportedAt: new Date().toISOString(),
+      wordLists: data.wordLists || [],
+      chapterVideoBanks: data.chapterVideoBanks || [],
+      quizBanks: data.quizBanks || [],
+      stories: data.stories || [],
+      classes: (data.classes || []).map(c => ({
+        ...c,
+        // Keep class structure / assignments for phones; roster optional
+      })),
+      students: [],
+      activityResults: [],
+    };
+    const blob = new Blob([JSON.stringify(shared, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'shared-classroom.json';
+    a.click();
+    URL.revokeObjectURL(url);
+    toast('Fichier shared-classroom.json telecharge — remplacez data/shared-classroom.json puis commit + push', 'success');
+  } catch {
+    toast('Impossible de creer le fichier partage', 'error');
+  }
+}
+
+function downloadLocalBackup() {
+  try {
+    const data = loadData();
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `sportword-backup-${new Date().toISOString().slice(0, 10)}.json`;
+    a.click();
+    URL.revokeObjectURL(url);
+    toast('Sauvegarde telechargee (vos donnees sont en securite sur ce PC)', 'success');
+  } catch {
+    toast('Impossible de creer la sauvegarde', 'error');
+  }
+}
+
+const app = document.getElementById('app');
+
+function cloudStatusHtml(sync, { compact = false } = {}) {
+  const tag = compact ? 'span' : 'p';
+  const cls = compact ? 'cloud-badge cloud-badge-sm' : 'cloud-badge';
+  const localCls = `${cls} cloud-badge-local`;
+  if (!sync.cloudEnabled) {
+    if (!compact) return '';
+    return `<span class="${localCls}" title="Supabase non configuré">💾 Local uniquement</span>`;
+  }
+  if (sync.cloudSynced && !sync.syncError) {
+    return `<${tag} class="${cls}" title="Données synchronisées en ligne">☁️ En ligne — données synchronisées</${tag}>`;
+  }
+  if (sync.syncError) {
+    return `<${tag} class="${localCls}" title="Mode hors ligne sur cet appareil">📱 Hors ligne — l'app fonctionne sur cet appareil</${tag}>`;
+  }
+  return `<${tag} class="${cls}">☁️ Connexion en cours…</${tag}>`;
+}
+
+export function navigate(view, params = {}) {
+  if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+  const routes = {
+    home: renderHome,
+    studentLogin: renderStudentLogin,
+    teacherLogin: renderTeacherLogin,
+    studentChapterSelect: renderStudentChapterSelect,
+    studentDashboard: renderStudentDashboard,
+    studentActivity: () => renderStudentActivity(params.type),
+    studentStories: renderStudentStories,
+    studentStory: () => renderStudentStory(params.storyId),
+    studentLeaderboard: renderStudentLeaderboard,
+    studentVideos: renderStudentVideos,
+    teacherDashboard: renderTeacherDashboard,
+  };
+  (routes[view] || renderHome)();
+  window.scrollTo(0, 0);
+}
+
+function requireStudentSession() {
+  const session = getSession();
+  if (!session?.studentId) { navigate('studentLogin'); return null; }
+  const student = getStudentById(session.studentId);
+  if (!student) { clearSession(); navigate('studentLogin'); return null; }
+  if (!session.chapterId) { navigate('studentChapterSelect'); return null; }
+  return student;
+}
+
+function getSessionChapterId() {
+  return getSession()?.chapterId || null;
+}
+
+function requireTeacherSession() {
+  const session = getSession();
+  if (!session?.isTeacher) { navigate('teacherLogin'); return false; }
+  return true;
+}
+
+function renderVideosSectionHtml(videos, { heading = '' } = {}) {
+  const items = (videos || [])
+    .map(v => {
+      const videoId = parseYoutubeVideoId(v.url);
+      if (!videoId) return '';
+      return `
+        <div class="video-card">
+          <p class="video-card-title">${escapeHtml(v.title || 'Video')}</p>
+          <div class="video-embed-wrap">
+            <iframe
+              src="${youtubeEmbedUrl(videoId)}"
+              title="${escapeHtml(v.title || 'YouTube video')}"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen
+              loading="lazy"
+            ></iframe>
+          </div>
+        </div>
+      `;
+    })
+    .filter(Boolean);
+  if (!items.length) return '';
+  return `
+    ${heading ? `<p class="section-title">${escapeHtml(heading)}</p>` : ''}
+    <div class="video-grid">${items.join('')}</div>
+  `;
+}
+
+function renderHome() {
+  const sync = getSyncStatus();
+  app.innerHTML = `
+    <div class="page" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100dvh">
+      <div class="home-icons" aria-hidden="true">
+        <span class="home-icon" title="English">🇬🇧</span>
+        <span class="home-icon" title="Badminton">🏸</span>
+      </div>
+      <h1 class="logo-big">SportWord Section Euro</h1>
+      <p class="logo-sub">Revise PE vocabulary in English</p>
+      <p class="app-version" aria-label="Application version">v${APP_VERSION}</p>
+      ${cloudStatusHtml(sync)}
+      <div class="card" style="width:100%;max-width:400px">
+        <button class="btn btn-primary btn-block" id="btn-student" style="margin-bottom:0.75rem">I'm a Student 💪</button>
+        <button class="btn btn-secondary btn-block" id="btn-teacher">I'm a Teacher 👩‍🏫</button>
+      </div>
+      <div class="card home-qr-card" style="width:100%;max-width:400px;margin-top:1rem">
+        <p class="section-title" style="margin-bottom:0.5rem">📱 Scan to open</p>
+        <div class="qr-block">
+          <img src="${APP_QR_IMAGE}?v=${APP_VERSION}" alt="QR code for SportWord" class="qr-image" width="220" height="220">
+          <a class="qr-link" href="${APP_URL}" target="_blank" rel="noopener">${escapeHtml(APP_URL)}</a>
+        </div>
+      </div>
+      <p class="gdpr-notice" style="max-width:400px">
+        This app stores your first name and learning progress. Data is used only for vocabulary revision in PE class.
+      </p>
+    </div>
+  `;
+  app.querySelector('#btn-student').onclick = () => navigate('studentLogin');
+  app.querySelector('#btn-teacher').onclick = () => navigate('teacherLogin');
+}
+
+function renderStudentLogin() {
+  const classes = getClasses();
+
+  function studentOptions(classId) {
+    const roster = getRosterByClass(classId);
+    if (!roster.length) {
+      return '<option value="">No students in this class yet — ask your teacher</option>';
+    }
+    return '<option value="">Select your name…</option>' + roster.map(r =>
+      `<option value="${r.id}">${escapeHtml(r.firstName)} ${escapeHtml(r.lastName)}</option>`
+    ).join('');
+  }
+
+  app.innerHTML = `
+    <div class="page">
+      <button class="nav-back" id="back">← Back</button>
+      <h1 class="page-title">Student Login</h1>
+      <div class="card">
+        <form id="login-form">
+          <div class="form-group">
+            <label>Your class</label>
+            <select id="classId" required>
+              <option value="">Select your class…</option>
+              ${classes.map(c => `<option value="${c.id}">${escapeHtml(c.name)}</option>`).join('')}
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Your name</label>
+            <select id="rosterId" required disabled>
+              <option value="">Select your class first…</option>
+            </select>
+          </div>
+          <label style="display:flex;align-items:flex-start;gap:0.5rem;font-size:0.85rem;margin-bottom:1rem;cursor:pointer">
+            <input type="checkbox" id="gdpr" required style="width:auto;margin-top:0.2rem">
+            <span>I agree that my name and progress are stored for this learning activity (GDPR).</span>
+          </label>
+          <button type="submit" class="btn btn-primary btn-block">Start training! 🚀</button>
+        </form>
+      </div>
+    </div>
+  `;
+
+  const classSelect = app.querySelector('#classId');
+  const rosterSelect = app.querySelector('#rosterId');
+
+  classSelect.onchange = () => {
+    const classId = classSelect.value;
+    if (!classId) {
+      rosterSelect.disabled = true;
+      rosterSelect.innerHTML = '<option value="">Select your class first…</option>';
+      return;
+    }
+    rosterSelect.disabled = false;
+    rosterSelect.innerHTML = studentOptions(classId);
+  };
+
+  app.querySelector('#back').onclick = () => navigate('home');
+  app.querySelector('#login-form').onsubmit = e => {
+    e.preventDefault();
+    const classId = classSelect.value;
+    const rosterId = rosterSelect.value;
+    if (!classId) return toast('Please select your class', 'error');
+    if (!rosterId) return toast('Please select your name', 'error');
+    const student = loginStudentByRoster(classId, rosterId);
+    if (!student) return toast('Student not found', 'error');
+    student.gdprAccepted = true;
+    updateStudent(student);
+    setSession({ studentId: student.id, classId });
+    toast(`Welcome, ${student.firstName}! 💪`, 'success');
+    navigate('studentChapterSelect');
+  };
+}
+
+function renderStudentChapterSelect() {
+  const session = getSession();
+  if (!session?.studentId) { navigate('studentLogin'); return; }
+  const student = getStudentById(session.studentId);
+  if (!student) { clearSession(); navigate('studentLogin'); return; }
+
+  const chapters = getChaptersForClass(student.classId);
+
+  app.innerHTML = `
+    <div class="page">
+      <button class="nav-back" id="back">← Back</button>
+      <h1 class="page-title">Choose your sport 🏆</h1>
+      <p class="page-subtitle">Hi ${escapeHtml(student.firstName)}! Pick a chapter to start.</p>
+      <div class="chapter-grid">
+        ${chapters.map(ch => `
+          <button type="button" class="card card-clickable chapter-card" data-chapter="${ch.id}" style="--chapter-color:${ch.color}">
+            <div class="chapter-icon">${ch.icon}</div>
+            <div class="card-label">${escapeHtml(ch.name)}</div>
+          </button>
+        `).join('')}
+      </div>
+    </div>
+  `;
+  app.querySelector('#back').onclick = () => { clearSession(); navigate('home'); };
+  app.querySelectorAll('.chapter-card').forEach(card => {
+    card.onclick = () => {
+      setSession({ ...session, chapterId: card.dataset.chapter });
+      navigate('studentDashboard');
+    };
+  });
+}
+
+function renderTeacherLogin() {
+  app.innerHTML = `
+    <div class="page">
+      <button class="nav-back" id="back">← Back</button>
+      <h1 class="page-title">Teacher Login</h1>
+      <div class="card">
+        <form id="teacher-form">
+          <div class="form-group">
+            <label>Password</label>
+            <input type="password" id="password" required placeholder="Enter teacher password">
+          </div>
+          <button type="submit" class="btn btn-primary btn-block">Enter dashboard</button>
+        </form>
+      </div>
+    </div>
+  `;
+  app.querySelector('#back').onclick = () => navigate('home');
+  app.querySelector('#teacher-form').onsubmit = e => {
+    e.preventDefault();
+    if (app.querySelector('#password').value === CONFIG.TEACHER_PASSWORD) {
+      setSession({ isTeacher: true });
+      navigate('teacherDashboard');
+    } else {
+      toast('Wrong password', 'error');
+    }
+  };
+}
+
+function renderStudentDashboard() {
+  const student = requireStudentSession();
+  if (!student) return;
+  const chapterId = getSessionChapterId();
+  const chapter = getChapterById(chapterId);
+  const cls = getClassById(student.classId);
+  const progress = getChapterProgress(student, chapterId);
+  const words = getWordsForClass(student.classId, chapterId);
+  const counts = countWordsByStatus(progress, words);
+  const level = getLevel(progress.points);
+  const vocabProgress = getVocabularyProgress(counts, words.length);
+  const activityTypes = getActivitiesForChapter(cls?.assignedActivities, chapterId);
+  const activityProgress = getActivityProgress(progress, activityTypes, ACTIVITY_LABELS);
+  const badges = CONFIG.BADGES.map(b => ({ ...b, earned: progress.badges.includes(b.id) }));
+
+  app.innerHTML = `
+    <div class="page">
+      <div class="page-header">
+        <div>
+          <h1 class="page-title">${chapter.icon} ${escapeHtml(chapter.name)}</h1>
+          <p class="page-subtitle">Hi, ${escapeHtml(student.firstName)}! · <span class="level-badge">⭐ Level ${level}</span></p>
+        </div>
+        <button class="btn btn-ghost btn-sm" id="logout">Logout</button>
+      </div>
+      <button type="button" class="btn btn-change-sport" id="change-chapter">
+        <span class="btn-change-sport-icon" aria-hidden="true">🔄</span>
+        Change sport
+      </button>
+      <div class="stats-bar">
+        <div class="stat-pill"><span class="icon">🏆</span> ${progress.points} pts</div>
+        <div class="stat-pill"><span class="icon">📚</span> ${escapeHtml(cls?.name || '')}</div>
+      </div>
+      <div class="word-status-grid">
+        <div class="status-box status-learned"><span class="status-count">${counts.learned}</span>Learned</div>
+        <div class="status-box status-learning"><span class="status-count">${counts.learning}</span>Learning</div>
+        <div class="status-box status-review"><span class="status-count">${counts.review}</span>To review</div>
+      </div>
+      <div class="card">
+        <p class="section-title">Vocabulary mastery</p>
+        <p class="progress-summary">${vocabProgress.learned} / ${vocabProgress.total} words mastered</p>
+        <div class="progress-track" role="progressbar" aria-valuenow="${vocabProgress.percent}" aria-valuemin="0" aria-valuemax="100">
+          <div class="progress-fill" style="width:${vocabProgress.percent}%"></div>
+        </div>
+        ${counts.review > 0 ? `<p class="progress-hint">📌 ${counts.review} word${counts.review > 1 ? 's' : ''} to review today</p>` : ''}
+      </div>
+      <div class="card">
+        <p class="section-title">My best scores</p>
+        ${activityProgress.length
+          ? `<div class="score-list">${activityProgress.map(a => `
+              <div class="score-row">
+                <span class="score-label">${a.icon} ${escapeHtml(a.title)}</span>
+                <div class="score-bar-track">
+                  <div class="score-bar-fill" style="width:${a.best ?? 0}%"></div>
+                </div>
+                <span class="score-value">${a.attempts ? `${a.best}%` : '—'}</span>
+              </div>
+            `).join('')}</div>`
+          : '<p class="progress-hint">Complete an activity to see your scores here.</p>'}
+      </div>
+      <div class="card">
+        <p class="section-title">My Badges</p>
+        <div class="badges-row">
+          ${badges.map(b => `<span class="badge ${b.earned ? '' : 'locked'}" title="${escapeHtml(b.desc)}">${b.icon} ${escapeHtml(b.name)}</span>`).join('')}
+        </div>
+      </div>
+      ${chapterId === 'musculation' ? `
+      <div class="card card-clickable anatomy-preview-card" id="go-anatomy">
+        <p class="section-title">Muscle map (English)</p>
+        <p class="card-desc">Anatomy of the Human Musculature — muscle names in English</p>
+        <img src="${MUSCLE_ANATOMY_IMAGE}" alt="Anatomy of the Human Musculature" class="anatomy-preview-img" loading="lazy">
+        <p class="progress-hint anatomy-preview-hint">Tap to view full size</p>
+      </div>
+      ` : ''}
+      <p class="section-title">Choose an activity</p>
+      <div class="card-grid" id="activity-grid"></div>
+      <p class="section-title" style="margin-top:1.5rem">More</p>
+      <div class="card-grid">
+        <div class="card card-clickable" id="go-stories">
+          <div class="card-icon">📖</div>
+          <div class="card-label">Stories & Quiz</div>
+          <div class="card-desc">Read gym stories and answer questions</div>
+        </div>
+        <div class="card card-clickable" id="go-leaderboard">
+          <div class="card-icon">🏅</div>
+          <div class="card-label">Leaderboard</div>
+          <div class="card-desc">See your class ranking</div>
+        </div>
+        <div class="card card-clickable" id="go-videos">
+          <div class="card-icon">🎬</div>
+          <div class="card-label">Videos</div>
+          <div class="card-desc">Watch lesson videos for this sport</div>
+        </div>
+      </div>
+    </div>
+  `;
+
+  app.querySelector('#logout').onclick = () => { clearSession(); navigate('home'); };
+  app.querySelector('#change-chapter').onclick = () => navigate('studentChapterSelect');
+  app.querySelector('#go-stories').onclick = () => navigate('studentStories');
+  app.querySelector('#go-leaderboard').onclick = () => navigate('studentLeaderboard');
+  app.querySelector('#go-videos').onclick = () => navigate('studentVideos');
+  const anatomyBtn = app.querySelector('#go-anatomy');
+  if (anatomyBtn) anatomyBtn.onclick = () => showMuscleAnatomyModal();
+
+  const grid = app.querySelector('#activity-grid');
+  getActivitiesForChapter(cls?.assignedActivities, chapterId).forEach(type => {
+    const info = ACTIVITY_LABELS[type];
+    if (!info) return;
+    const best = progress.activityScores[type]?.best;
+    const card = document.createElement('div');
+    card.className = 'card card-clickable';
+    const actDesc = info.chapterDescs?.[chapterId] || info.desc;
+    card.innerHTML = `
+      <div class="card-icon">${info.icon}</div>
+      <div class="card-label">${escapeHtml(info.title)}</div>
+      <div class="card-desc">${escapeHtml(actDesc)}${best ? ` · Best: ${best}%` : ''}</div>
+    `;
+    card.onclick = () => navigate('studentActivity', { type });
+    grid.appendChild(card);
+  });
+}
+
+function handleActivityComplete(student, chapterId, type, words, result) {
+  const progress = getChapterProgress(student, chapterId);
+  const pts = result.score * CONFIG.POINTS.CORRECT;
+  awardPoints(progress, pts, type);
+  recordActivityScore(progress, type, result.score, result.total);
+  words.forEach(w => recordWordAttempt(progress, w.english.toLowerCase(), true));
+  const newBadges = checkBadges(progress, {
+    activityCompleted: true,
+    perfectScore: result.perfect,
+  });
+  updateStudent(student);
+  addActivityResult({ studentId: student.id, classId: student.classId, chapterId, activityType: type, ...result, points: pts });
+  return { pts, newBadges };
+}
+
+function renderStudentActivity(type) {
+  const student = requireStudentSession();
+  if (!student) return;
+  const chapterId = getSessionChapterId();
+  const info = ACTIVITY_LABELS[type];
+  const words = getWordsForClass(student.classId, chapterId);
+
+  app.innerHTML = `
+    <div class="page">
+      <button class="nav-back" id="back">← Dashboard</button>
+      <h1 class="page-title">${info?.icon || ''} ${escapeHtml(info?.title || type)}</h1>
+      <div id="activity-area"></div>
+      <div id="result-area" class="hidden"></div>
+    </div>
+  `;
+  app.querySelector('#back').onclick = () => navigate('studentDashboard');
+  const area = app.querySelector('#activity-area');
+
+  renderActivity(type, words, area, result => {
+    const quizWords = (type === 'qcm' || type === 'muscle_region') ? [] : words.slice(0, 5);
+    const { pts, newBadges } = handleActivityComplete(student, chapterId, type, quizWords, result);
+    area.classList.add('hidden');
+    const resultArea = app.querySelector('#result-area');
+    resultArea.classList.remove('hidden');
+    resultArea.innerHTML = `
+      <div class="result-banner success">
+        <h2>Great job! 💪</h2>
+        <p>Score: ${result.score}/${result.total} · +${pts} points</p>
+        ${newBadges.length ? `<p>New badge unlocked!</p>` : ''}
+      </div>
+      <div class="btn-group">
+        <button class="btn btn-primary" id="retry">Try again</button>
+        <button class="btn btn-secondary" id="home-btn">Back to dashboard</button>
+      </div>
+    `;
+    resultArea.querySelector('#retry').onclick = () => navigate('studentActivity', { type });
+    resultArea.querySelector('#home-btn').onclick = () => navigate('studentDashboard');
+    toast(`+${pts} points!`, 'success');
+  }, chapterId);
+}
+
+function renderStudentStories() {
+  const student = requireStudentSession();
+  if (!student) return;
+  const chapterId = getSessionChapterId();
+  const chapter = getChapterById(chapterId);
+  const progress = getChapterProgress(student, chapterId);
+  const stories = getStoriesForClass(student.classId, chapterId);
+
+  app.innerHTML = `
+    <div class="page">
+      <button class="nav-back" id="back">← Dashboard</button>
+      <h1 class="page-title">📖 ${escapeHtml(chapter.name)} Stories</h1>
+      ${chapterId === 'musculation' ? '<p class="card-desc stories-level-hint">English level shown on each story: A2 → B1 → B2 → C1</p>' : ''}
+      <div class="card-grid">
+        ${stories.length ? stories.map(s => {
+          const best = progress.storyScores[s.id]?.best;
+          return `
+            <div class="card card-clickable story-card" data-id="${s.id}">
+              <div class="card-icon">📖</div>
+              <div class="card-label">${escapeHtml(s.title)}</div>
+              <div class="card-desc">${s.englishLevel ? `<span class="story-level">${escapeHtml(s.englishLevel)}</span>` : ''}${s.englishLevel ? ' · ' : ''}${(s.questions || []).length} questions${best ? ` · Best: ${best}%` : ''}</div>
+            </div>
+          `;
+        }).join('') : '<p class="empty-state">No stories for this sport yet.</p>'}
+      </div>
+    </div>
+  `;
+  app.querySelector('#back').onclick = () => navigate('studentDashboard');
+  app.querySelectorAll('.story-card').forEach(card => {
+    card.onclick = () => navigate('studentStory', { storyId: card.dataset.id });
+  });
+}
+
+function renderStudentStory(storyId) {
+  const student = requireStudentSession();
+  if (!student) return;
+  const story = getStoryById(storyId);
+  if (!story) return navigate('studentStories');
+
+  app.innerHTML = `
+    <div class="page">
+      <button class="nav-back" id="back">← Stories</button>
+      <div id="story-area"></div>
+      <div id="result-area" class="hidden"></div>
+    </div>
+  `;
+  app.querySelector('#back').onclick = () => navigate('studentStories');
+  const area = app.querySelector('#story-area');
+
+  renderStoryQuiz(story, area, result => {
+    const chapterId = getSessionChapterId();
+    const progress = getChapterProgress(student, chapterId);
+    const pts = result.score * CONFIG.POINTS.CORRECT + CONFIG.POINTS.STORY_COMPLETE;
+    awardPoints(progress, pts, 'story');
+    recordStoryScore(progress, storyId, result.score, result.total);
+    checkBadges(progress, { storyCompleted: true, perfectScore: result.perfect });
+    updateStudent(student);
+    area.classList.add('hidden');
+    const resultArea = app.querySelector('#result-area');
+    resultArea.classList.remove('hidden');
+    resultArea.innerHTML = `
+      <div class="result-banner success">
+        <h2>Story complete! 📖</h2>
+        <p>Score: ${result.score}/${result.total} · +${pts} points</p>
+      </div>
+      <button class="btn btn-primary btn-block" id="home-btn">Back to dashboard</button>
+    `;
+    resultArea.querySelector('#home-btn').onclick = () => navigate('studentDashboard');
+    toast(`+${pts} points!`, 'success');
+  });
+}
+
+function showMuscleAnatomyModal() {
+  if (document.getElementById('anatomy-modal')) return;
+
+  const overlay = document.createElement('div');
+  overlay.id = 'anatomy-modal';
+  overlay.className = 'anatomy-modal';
+  overlay.innerHTML = `
+    <div class="anatomy-modal-backdrop" data-close="1" aria-hidden="true"></div>
+    <div class="anatomy-modal-panel" role="dialog" aria-modal="true" aria-labelledby="anatomy-modal-title">
+      <button type="button" class="anatomy-modal-close" id="anatomy-modal-close" aria-label="Close">✕</button>
+      <h2 class="anatomy-modal-title" id="anatomy-modal-title">💪 Muscle Anatomy</h2>
+      <p class="card-desc">Anatomy of the Human Musculature — English labels</p>
+      <div class="anatomy-card">
+        <img
+          src="${MUSCLE_ANATOMY_IMAGE}"
+          alt="Anatomy of the Human Musculature — labelled diagram of major muscles in English"
+          class="anatomy-full-img"
+          id="anatomy-modal-img"
+        >
+        <p class="anatomy-fallback hidden" id="anatomy-fallback">
+          Image unavailable — reload with <strong>Ctrl+Shift+R</strong> or check that the image was published on GitHub.
+        </p>
+      </div>
+    </div>
+  `;
+
+  const close = () => {
+    overlay.remove();
+    document.removeEventListener('keydown', onKey);
+  };
+  const onKey = (e) => { if (e.key === 'Escape') close(); };
+
+  overlay.querySelector('#anatomy-modal-close').onclick = close;
+  overlay.querySelector('[data-close]').onclick = close;
+  overlay.querySelector('#anatomy-modal-img').onerror = () => {
+    overlay.querySelector('#anatomy-modal-img').classList.add('hidden');
+    overlay.querySelector('#anatomy-fallback').classList.remove('hidden');
+  };
+  document.addEventListener('keydown', onKey);
+  document.body.appendChild(overlay);
+}
+
+function renderStudentVideos() {
+  const student = requireStudentSession();
+  if (!student) return;
+  const chapterId = getSessionChapterId();
+  const chapter = getChapterById(chapterId);
+  const videos = getVideosForChapter(chapterId);
+  const videosHtml = renderVideosSectionHtml(videos);
+
+  app.innerHTML = `
+    <div class="page">
+      <button class="nav-back" id="back">← Dashboard</button>
+      <h1 class="page-title">🎬 ${escapeHtml(chapter.name)} Videos</h1>
+      <p class="card-desc">Lesson videos for this sport.</p>
+      ${videosHtml
+        ? `<div class="card">${videosHtml}</div>`
+        : '<p class="empty-state">No videos for this sport yet. Your teacher can add YouTube links in the teacher dashboard.</p>'}
+    </div>
+  `;
+  app.querySelector('#back').onclick = () => navigate('studentDashboard');
+}
+
+function renderStudentLeaderboard() {
+  const student = requireStudentSession();
+  if (!student) return;
+  const chapterId = getSessionChapterId();
+  const chapter = getChapterById(chapterId);
+  const board = getLeaderboard(student.classId, getStudentsByClass(student.classId), chapterId);
+
+  app.innerHTML = `
+    <div class="page">
+      <button class="nav-back" id="back">← Dashboard</button>
+      <h1 class="page-title">🏅 ${escapeHtml(chapter.name)} Leaderboard</h1>
+      <div class="card">
+        <table class="leaderboard-table">
+          <thead><tr><th>Rank</th><th>Name</th><th>Level</th><th>Points</th></tr></thead>
+          <tbody>
+            ${board.map(entry => `
+              <tr class="${entry.rank <= 3 ? 'top-' + entry.rank : ''}">
+                <td>${entry.rank <= 3 ? ['🥇','🥈','🥉'][entry.rank - 1] : entry.rank}</td>
+                <td>${escapeHtml(entry.firstName)}${entry.firstName.toLowerCase() === student.firstName.toLowerCase() ? ' (you)' : ''}</td>
+                <td>Lv.${entry.level}</td>
+                <td><strong>${entry.points}</strong></td>
+              </tr>
+            `).join('')}
+          </tbody>
+        </table>
+        ${board.length === 0 ? '<p class="empty-state">No scores yet. Be the first!</p>' : ''}
+      </div>
+    </div>
+  `;
+  app.querySelector('#back').onclick = () => navigate('studentDashboard');
+}
+
+function renderTeacherDashboard() {
+  if (!requireTeacherSession()) return;
+  let activeTab = 'classes';
+
+  function render() {
+    try {
+      const sync = getSyncStatus();
+      app.innerHTML = `
+      <div class="page">
+        <div class="page-header">
+          <h1 class="page-title">Teacher Dashboard</h1>
+          <div style="display:flex;align-items:center;gap:0.5rem;flex-wrap:wrap">
+            ${cloudStatusHtml(sync, { compact: true })}
+            <button class="btn btn-ghost btn-sm" id="logout">Logout</button>
+          </div>
+        </div>
+        <div class="card publish-banner">
+          <p class="section-title">Share with phones</p>
+          <p class="card-desc">
+            1) Try <strong>Publish to cloud</strong> (needs internet / 4G).<br>
+            2) If it fails: click <strong>Download shared file</strong>, replace
+            <code>data/shared-classroom.json</code> in the project, then commit + push.
+            Students reload the app to see your vocabulary and videos.
+          </p>
+          <div class="btn-group">
+            <button type="button" class="btn btn-primary" id="publish-cloud">Publish to cloud</button>
+            <button type="button" class="btn btn-secondary" id="download-shared">Download shared file</button>
+            <button type="button" class="btn btn-ghost btn-sm" id="backup-local">Download full backup</button>
+            <button type="button" class="btn btn-ghost btn-sm" id="refresh-cloud">Refresh from cloud</button>
+          </div>
+        </div>
+        <div class="tabs">
+          <button class="tab ${activeTab === 'classes' ? 'active' : ''}" data-tab="classes">Students</button>
+          <button class="tab ${activeTab === 'lists' ? 'active' : ''}" data-tab="lists">Word Lists</button>
+          <button class="tab ${activeTab === 'quiz' ? 'active' : ''}" data-tab="quiz">Quiz Questions</button>
+          <button class="tab ${activeTab === 'videos' ? 'active' : ''}" data-tab="videos">Videos</button>
+          <button class="tab ${activeTab === 'assign' ? 'active' : ''}" data-tab="assign">Assignments</button>
+          <button class="tab ${activeTab === 'results' ? 'active' : ''}" data-tab="results">Results</button>
+          <button class="tab ${activeTab === 'qr' ? 'active' : ''}" data-tab="qr">QR Code</button>
+        </div>
+        <div id="tab-content"></div>
+      </div>
+    `;
+      app.querySelector('#logout').onclick = () => { clearSession(); navigate('home'); };
+      app.querySelector('#publish-cloud')?.addEventListener('click', async () => {
+        const btn = app.querySelector('#publish-cloud');
+        if (btn) {
+          btn.disabled = true;
+          btn.textContent = 'Publishing…';
+        }
+        try {
+          const result = await safePublishToCloud();
+          if (result.ok) {
+            toast('Donnees publiees — rechargez la page sur le telephone', 'success');
+            render();
+          } else {
+            toast(result.reason || 'Publication impossible (reseau / hors ligne)', 'error');
+          }
+        } catch (err) {
+          toast(err?.message || 'Erreur de publication', 'error');
+        } finally {
+          if (btn) {
+            btn.disabled = false;
+            btn.textContent = 'Publish to cloud';
+          }
+        }
+      });
+      app.querySelector('#download-shared')?.addEventListener('click', () => downloadSharedClassroomFile());
+      app.querySelector('#refresh-cloud')?.addEventListener('click', async () => {
+        try {
+          const ok = await reloadFromCloud();
+          toast(ok ? 'Donnees mises a jour depuis le cloud' : 'Synchronisation indisponible — utilisez Download shared file', ok ? 'success' : 'info');
+          if (ok) render();
+        } catch {
+          toast('Reseau bloque — utilisez Download shared file puis commit + push', 'info');
+        }
+      });
+      app.querySelector('#backup-local')?.addEventListener('click', () => downloadLocalBackup());
+      app.querySelectorAll('.tab').forEach(tab => {
+        tab.onclick = () => { activeTab = tab.dataset.tab; render(); };
+      });
+      const content = app.querySelector('#tab-content');
+      if (activeTab === 'classes') renderClassesTab(content);
+      else if (activeTab === 'lists') renderListsTab(content);
+      else if (activeTab === 'quiz') renderQuizTab(content);
+      else if (activeTab === 'videos') renderVideosTab(content);
+      else if (activeTab === 'assign') renderAssignTab(content);
+      else if (activeTab === 'results') renderResultsTab(content);
+      else if (activeTab === 'qr') renderQrTab(content);
+    } catch (err) {
+      console.error(err);
+      app.innerHTML = `
+        <div class="page">
+          <button class="btn btn-ghost btn-sm" id="logout">Logout</button>
+          <h1 class="page-title">Teacher Dashboard — erreur</h1>
+          <div class="card">
+            <p class="card-desc">Une erreur affiche le tableau de bord. Vos donnees locales sont toujours la.</p>
+            <p class="card-desc" style="font-family:monospace;font-size:0.85rem;word-break:break-word">${escapeHtml(err?.message || String(err))}</p>
+            <button type="button" class="btn btn-primary" id="retry-teacher">Reessayer</button>
+            <button type="button" class="btn btn-secondary" id="go-home" style="margin-top:0.5rem">Retour accueil</button>
+          </div>
+        </div>
+      `;
+      app.querySelector('#logout')?.addEventListener('click', () => { clearSession(); navigate('home'); });
+      app.querySelector('#retry-teacher')?.addEventListener('click', () => render());
+      app.querySelector('#go-home')?.addEventListener('click', () => navigate('home'));
+    }
+  }
+  render();
+}
+
+function renderQrTab(container) {
+  container.innerHTML = `
+    <div class="card qr-print-card">
+      <h3 class="section-title">Classroom QR code</h3>
+      <p class="card-desc">Project or print this page so students can open SportWord on their phones.</p>
+      <div class="qr-block qr-block-lg">
+        <img src="${APP_QR_IMAGE}?v=${APP_VERSION}" alt="QR code for SportWord" class="qr-image qr-image-lg" width="320" height="320">
+        <p class="qr-brand">SportWord Section Euro</p>
+        <a class="qr-link" href="${APP_URL}" target="_blank" rel="noopener">${escapeHtml(APP_URL)}</a>
+      </div>
+      <div class="btn-group" style="margin-top:1rem">
+        <button type="button" class="btn btn-primary" id="print-qr">🖨️ Print QR code</button>
+        <a class="btn btn-secondary" href="${APP_QR_IMAGE}" download="sportword-qr-code.png">⬇️ Download PNG</a>
+      </div>
+    </div>
+  `;
+  container.querySelector('#print-qr').onclick = () => window.print();
+}
+
+function renderClassesTab(container) {
+  container.innerHTML = getClasses().map(cls => {
+    const roster = getRosterByClass(cls.id);
+    const progressMap = Object.fromEntries(getStudentsByClass(cls.id).map(s => [s.rosterId, s]));
+    return `
+      <div class="card" data-class-id="${cls.id}">
+        <h3 class="section-title">${escapeHtml(cls.name)} (${cls.level})</h3>
+        <p class="card-desc">${roster.length} student(s) in the list</p>
+
+        <details class="quick-add-panel" open>
+          <summary>⚡ Quick add — paste or import CSV</summary>
+          <p class="bulk-hint">
+            One student per line. Examples:<br>
+            <code>Jean,Dupont</code> · <code>Dupont;Jean</code> · <code>Jean Dupont</code><br>
+            CSV from Excel: use comma or semicolon. Header row is detected automatically.
+          </p>
+          <div class="form-group">
+            <label>Column order (CSV / separated values)</label>
+            <select class="bulk-format">
+              <option value="first-last">First name, Last name</option>
+              <option value="last-first">Last name, First name (Pronote / Excel FR)</option>
+            </select>
+          </div>
+          <textarea class="bulk-textarea bulk-text" placeholder="Jean,Dupont&#10;Marie,Martin&#10;Lucas,Bernard"></textarea>
+          <div class="btn-group">
+            <button type="button" class="btn btn-primary btn-sm bulk-add">Add all lines</button>
+            <label class="btn btn-secondary btn-sm" style="cursor:pointer">
+              📁 Import CSV file
+              <input type="file" accept=".csv,.txt,text/csv" class="csv-file hidden" style="display:none">
+            </label>
+          </div>
+        </details>
+
+        <details class="single-add-panel">
+          <summary>+ Add one student manually</summary>
+          <div class="form-row" style="margin-top:0.75rem;margin-bottom:0.75rem">
+            <div class="form-group" style="margin-bottom:0">
+              <label>First name</label>
+              <input type="text" class="add-first-name" placeholder="First name">
+            </div>
+            <div class="form-group" style="margin-bottom:0">
+              <label>Last name</label>
+              <input type="text" class="add-last-name" placeholder="Last name">
+            </div>
+          </div>
+          <button type="button" class="btn btn-secondary btn-sm add-roster-student">Add student</button>
+        </details>
+
+        ${roster.length ? `
+          <table class="data-table" style="margin-top:1rem">
+            <thead><tr><th>Name</th><th>Points</th><th>Level</th><th></th></tr></thead>
+            <tbody>
+              ${roster.map(r => {
+                const s = progressMap[r.id];
+                const pts = s ? getTotalPoints(s) : null;
+                return `
+                  <tr>
+                    <td>${escapeHtml(r.firstName)} ${escapeHtml(r.lastName)}</td>
+                    <td>${pts != null ? pts : '—'}</td>
+                    <td>${pts != null ? 'Lv.' + getLevel(pts) : '—'}</td>
+                    <td><button type="button" class="btn btn-ghost btn-sm remove-roster-student" data-roster-id="${r.id}">Remove</button></td>
+                  </tr>
+                `;
+              }).join('')}
+            </tbody>
+          </table>
+        ` : '<p class="card-desc" style="margin-top:1rem">No students yet. Use quick add above.</p>'}
+      </div>
+    `;
+  }).join('');
+
+  container.querySelectorAll('.bulk-add').forEach(btn => {
+    btn.onclick = () => {
+      const card = btn.closest('.card');
+      handleBulkAdd(card);
+    };
+  });
+
+  container.querySelectorAll('.csv-file').forEach(input => {
+    input.onchange = async () => {
+      const file = input.files?.[0];
+      if (!file) return;
+      const card = input.closest('.card');
+      try {
+        const text = await readCsvFile(file);
+        card.querySelector('.bulk-text').value = text;
+        handleBulkAdd(card);
+      } catch {
+        toast('Could not read the file', 'error');
+      }
+      input.value = '';
+    };
+  });
+
+  container.querySelectorAll('.add-roster-student').forEach(btn => {
+    btn.onclick = () => {
+      const card = btn.closest('.card');
+      const classId = card.dataset.classId;
+      const firstName = card.querySelector('.add-first-name').value;
+      const lastName = card.querySelector('.add-last-name').value;
+      const entry = addRosterStudent(classId, firstName, lastName);
+      if (!entry) {
+        toast('Enter a name, or this student is already in the list', 'error');
+        return;
+      }
+      toast(`${entry.firstName} added!`, 'success');
+      renderClassesTab(container);
+    };
+  });
+
+  container.querySelectorAll('.remove-roster-student').forEach(btn => {
+    btn.onclick = () => {
+      const card = btn.closest('.card');
+      const classId = card.dataset.classId;
+      if (confirm('Remove this student from the list? Their progress will also be deleted.')) {
+        removeRosterStudent(classId, btn.dataset.rosterId);
+        toast('Student removed', 'info');
+        renderClassesTab(container);
+      }
+    };
+  });
+}
+
+function handleBulkAdd(card) {
+  const classId = card.dataset.classId;
+  const text = card.querySelector('.bulk-text').value;
+  const columnOrder = card.querySelector('.bulk-format').value;
+
+  if (!text.trim()) {
+    toast('Paste your student list first', 'error');
+    return;
+  }
+
+  const entries = parseStudentLines(text, columnOrder);
+  if (!entries.length) {
+    toast('No valid names found. Check the format.', 'error');
+    return;
+  }
+
+  const result = addRosterStudentsBulk(classId, entries);
+  const parts = [`${result.added} added`];
+  if (result.skipped) parts.push(`${result.skipped} already in list`);
+  if (result.invalid) parts.push(`${result.invalid} invalid lines`);
+  toast(parts.join(' · '), result.added ? 'success' : 'info');
+
+  if (result.added) {
+    card.querySelector('.bulk-text').value = '';
+    renderClassesTab(document.getElementById('tab-content'));
+  }
+}
+
+function renderListsTab(container) {
+  const expandedChapters = new Set(CHAPTERS.map(c => c.id));
+  const expandedLists = new Set();
+
+  container.innerHTML = `
+    <p class="lists-tab-intro card-desc">
+      Word lists are grouped by sport/chapter. Expand a section below, or use <strong>+ New list in …</strong> to create a list for that sport.
+    </p>
+    <div id="lists-by-chapter" class="lists-by-chapter"></div>`;
+  const root = container.querySelector('#lists-by-chapter');
+
+  function renderListEditor(list, { startOpen = false } = {}) {
+    const isNew = !list.id;
+    if (startOpen && list.id) expandedLists.add(list.id);
+
+    const div = document.createElement('div');
+    div.className = 'list-editor-card';
+    div.dataset.listId = list.id || 'new';
+
+    const chapterId = list.chapterId || 'musculation';
+    const isOpen = isNew || startOpen || expandedLists.has(list.id);
+
+    div.innerHTML = `
+      <button type="button" class="list-editor-toggle ${isOpen ? 'open' : ''}">
+        <span class="list-editor-summary">
+          <strong class="list-editor-name">${escapeHtml(list.name || 'New list')}</strong>
+          <span class="list-editor-meta">${(list.words || []).length} word${(list.words?.length || 0) !== 1 ? 's' : ''}</span>
+        </span>
+        <span class="list-editor-chevron">${isOpen ? '▲' : '▼'}</span>
+      </button>
+      <div class="list-editor-body ${isOpen ? '' : 'hidden'}">
+        <div class="form-group">
+          <label>List name</label>
+          <input type="text" class="list-name" value="${escapeHtml(list.name || '')}" placeholder="e.g. Badminton — Basics">
+        </div>
+        <div class="form-group">
+          <label>Chapter / sport</label>
+          <select class="list-chapter">
+            ${CHAPTERS.map(ch => `
+              <option value="${ch.id}" ${chapterId === ch.id ? 'selected' : ''}>${ch.icon} ${escapeHtml(ch.name)}</option>
+            `).join('')}
+          </select>
+        </div>
+        <p class="section-title">Words (max 10)</p>
+        <div class="words-container"></div>
+        <button type="button" class="btn btn-secondary btn-sm add-word" style="margin-bottom:0.75rem">+ Add word</button>
+        <div class="btn-group">
+          <button type="button" class="btn btn-primary save-list">Save</button>
+          ${!isNew ? '<button type="button" class="btn btn-ghost delete-list">Delete list</button>' : ''}
+        </div>
+      </div>
+    `;
+
+    const toggleBtn = div.querySelector('.list-editor-toggle');
+    const body = div.querySelector('.list-editor-body');
+    const nameInput = div.querySelector('.list-name');
+    const metaEl = div.querySelector('.list-editor-name');
+
+    toggleBtn.onclick = () => {
+      const isHidden = body.classList.toggle('hidden');
+      toggleBtn.classList.toggle('open', !isHidden);
+      div.querySelector('.list-editor-chevron').textContent = isHidden ? '▼' : '▲';
+      if (list.id) {
+        if (isHidden) expandedLists.delete(list.id);
+        else expandedLists.add(list.id);
+      }
+    };
+
+    nameInput.oninput = () => {
+      metaEl.textContent = nameInput.value.trim() || 'New list';
+    };
+
+    const wordsContainer = div.querySelector('.words-container');
+
+    function addWordRow(word = { english: '', french: '', definition: '' }) {
+      if (wordsContainer.children.length >= 10) return toast('Maximum 10 words per list', 'error');
+      const row = document.createElement('div');
+      row.className = 'word-editor-row';
+      row.innerHTML = `
+        <input class="w-english" placeholder="English" value="${escapeHtml(word.english)}">
+        <input class="w-french" placeholder="French translation" value="${escapeHtml(word.french)}">
+        <input class="w-def" placeholder="English definition" value="${escapeHtml(word.definition)}" style="grid-column:1/-1">
+        <button type="button" class="btn btn-ghost btn-sm remove-word" style="grid-column:1/-1">Remove</button>
+      `;
+      row.querySelector('.remove-word').onclick = () => row.remove();
+      wordsContainer.appendChild(row);
+    }
+
+    (list.words || []).forEach(addWordRow);
+    if (!list.words?.length) addWordRow();
+
+    div.querySelector('.add-word').onclick = () => addWordRow();
+    div.querySelector('.save-list').onclick = () => {
+      const name = nameInput.value.trim();
+      if (!name) return toast('List name required', 'error');
+      const words = [...div.querySelectorAll('.word-editor-row')].map(row => ({
+        english: row.querySelector('.w-english').value.trim(),
+        french: row.querySelector('.w-french').value.trim(),
+        definition: row.querySelector('.w-def').value.trim(),
+        imageUrl: getWordImage(row.querySelector('.w-english').value.trim()),
+      })).filter(w => w.english);
+      if (!words.length) return toast('Add at least one word', 'error');
+      const selectedChapter = div.querySelector('.list-chapter').value;
+      saveWordList({
+        id: list.id || uid('list'),
+        name,
+        words,
+        chapterId: selectedChapter,
+        theme: list.theme || (list.id?.includes('image_match') ? 'image_match' : 'basics'),
+      });
+      toast('List saved!', 'success');
+      renderListsTab(container);
+    };
+
+    if (!isNew) {
+      div.querySelector('.delete-list').onclick = () => {
+        if (confirm('Delete this list?')) {
+          deleteWordList(list.id);
+          expandedLists.delete(list.id);
+          toast('List deleted', 'info');
+          renderListsTab(container);
+        }
+      };
+    }
+    return div;
+  }
+
+  function renderChapterBlock(ch) {
+    const lists = getWordLists(ch.id).sort((a, b) => a.name.localeCompare(b.name, 'fr'));
+    const isOpen = expandedChapters.has(ch.id);
+
+    const block = document.createElement('div');
+    block.className = 'chapter-lists-block';
+    block.style.borderLeft = `4px solid ${ch.color || 'var(--purple)'}`;
+    block.innerHTML = `
+      <button type="button" class="chapter-lists-header ${isOpen ? 'open' : ''}">
+        <span class="chapter-lists-title">${ch.icon} ${escapeHtml(ch.name)}</span>
+        <span class="chapter-lists-count">${lists.length} list${lists.length !== 1 ? 's' : ''}</span>
+        <span class="chapter-lists-chevron">${isOpen ? '▲' : '▼'}</span>
+      </button>
+      <div class="chapter-lists-body ${isOpen ? '' : 'hidden'}"></div>
+    `;
+
+    const header = block.querySelector('.chapter-lists-header');
+    const body = block.querySelector('.chapter-lists-body');
+
+    header.onclick = () => {
+      const isHidden = body.classList.toggle('hidden');
+      header.classList.toggle('open', !isHidden);
+      block.querySelector('.chapter-lists-chevron').textContent = isHidden ? '▼' : '▲';
+      if (isHidden) expandedChapters.delete(ch.id);
+      else expandedChapters.add(ch.id);
+    };
+
+    lists.forEach(list => body.appendChild(renderListEditor(list)));
+
+    const addBtn = document.createElement('button');
+    addBtn.type = 'button';
+    addBtn.className = 'btn btn-secondary btn-sm add-list-chapter';
+    addBtn.textContent = `+ New list in ${ch.name}`;
+    addBtn.onclick = () => {
+      expandedChapters.add(ch.id);
+      body.classList.remove('hidden');
+      header.classList.add('open');
+      block.querySelector('.chapter-lists-chevron').textContent = '▲';
+      body.prepend(renderListEditor({ name: '', words: [], chapterId: ch.id }, { startOpen: true }));
+    };
+    body.appendChild(addBtn);
+
+    return block;
+  }
+
+  CHAPTERS.forEach(ch => root.appendChild(renderChapterBlock(ch)));
+
+  const uncategorized = getWordLists().filter(l => !l.chapterId || !CHAPTERS.some(c => c.id === l.chapterId));
+  if (uncategorized.length) {
+    const block = document.createElement('div');
+    block.className = 'chapter-lists-block';
+    block.innerHTML = `
+      <button type="button" class="chapter-lists-header open">
+        <span class="chapter-lists-title">📋 Other lists</span>
+        <span class="chapter-lists-count">${uncategorized.length} list${uncategorized.length !== 1 ? 's' : ''}</span>
+        <span class="chapter-lists-chevron">▲</span>
+      </button>
+      <div class="chapter-lists-body"></div>
+    `;
+    const body = block.querySelector('.chapter-lists-body');
+    uncategorized.forEach(list => body.appendChild(renderListEditor(list)));
+    root.appendChild(block);
+  }
+}
+
+function renderQuizTab(container) {
+  const expandedChapters = new Set(CHAPTERS.map(c => c.id));
+
+  container.innerHTML = `
+    <p class="lists-tab-intro card-desc">
+      Edit <strong>Quick Quiz</strong> questions (sport rules in English) for each chapter. Students get 5 random questions from your bank.
+    </p>
+    <div id="quiz-by-chapter" class="lists-by-chapter"></div>`;
+  const root = container.querySelector('#quiz-by-chapter');
+
+  function addQuestionRow(questionsContainer, q = { question: '', options: ['', '', '', ''], correctIndex: 0 }) {
+    if (questionsContainer.children.length >= 30) return toast('Maximum 30 questions per chapter', 'error');
+    const opts = [...(q.options || []), '', '', '', ''].slice(0, 4);
+    const row = document.createElement('div');
+    row.className = 'quiz-question-row';
+    if (q.id) row.dataset.qid = q.id;
+    row.innerHTML = `
+      <div class="form-group" style="margin-bottom:0.5rem">
+        <label>Question (English)</label>
+        <input type="text" class="q-text" value="${escapeHtml(q.question || '')}" placeholder="e.g. How do you win a point in badminton?">
+      </div>
+      <div class="quiz-options-grid">
+        ${opts.map((opt, i) => `
+          <div class="form-group" style="margin-bottom:0.35rem">
+            <label>Option ${['A', 'B', 'C', 'D'][i]}</label>
+            <input type="text" class="q-opt" data-i="${i}" value="${escapeHtml(opt)}" placeholder="Answer ${['A', 'B', 'C', 'D'][i]}">
+          </div>
+        `).join('')}
+      </div>
+      <div class="form-group" style="margin-bottom:0.5rem">
+        <label>Correct answer</label>
+        <select class="q-correct">
+          ${[0, 1, 2, 3].map(i => `
+            <option value="${i}" ${(q.correctIndex ?? 0) === i ? 'selected' : ''}>${['A', 'B', 'C', 'D'][i]}</option>
+          `).join('')}
+        </select>
+      </div>
+      <button type="button" class="btn btn-ghost btn-sm remove-question">Remove question</button>
+    `;
+    row.querySelector('.remove-question').onclick = () => row.remove();
+    questionsContainer.appendChild(row);
+  }
+
+  function renderChapterQuizBlock(ch) {
+    const bank = getQuizBank(ch.id) || { id: `quiz_${ch.id}`, chapterId: ch.id, questions: [] };
+    const questions = bank.questions || [];
+    const isOpen = expandedChapters.has(ch.id);
+
+    const block = document.createElement('div');
+    block.className = 'chapter-lists-block';
+    block.style.borderLeft = `4px solid ${ch.color || 'var(--purple)'}`;
+    block.innerHTML = `
+      <button type="button" class="chapter-lists-header ${isOpen ? 'open' : ''}">
+        <span class="chapter-lists-title">${ch.icon} ${escapeHtml(ch.name)} — Quick Quiz</span>
+        <span class="chapter-lists-count">${questions.length} question${questions.length !== 1 ? 's' : ''}</span>
+        <span class="chapter-lists-chevron">${isOpen ? '▲' : '▼'}</span>
+      </button>
+      <div class="chapter-lists-body ${isOpen ? '' : 'hidden'}">
+        <p class="card-desc" style="margin-bottom:0.75rem">Add or edit questions below, then click Save.</p>
+        <div class="quiz-questions-container"></div>
+        <button type="button" class="btn btn-secondary btn-sm add-quiz-question" style="margin-bottom:0.75rem">+ Add question</button>
+        <button type="button" class="btn btn-primary btn-sm save-quiz-bank">Save ${escapeHtml(ch.name)} quiz</button>
+      </div>
+    `;
+
+    const header = block.querySelector('.chapter-lists-header');
+    const body = block.querySelector('.chapter-lists-body');
+    const questionsContainer = block.querySelector('.quiz-questions-container');
+
+    header.onclick = () => {
+      const isHidden = body.classList.toggle('hidden');
+      header.classList.toggle('open', !isHidden);
+      block.querySelector('.chapter-lists-chevron').textContent = isHidden ? '▼' : '▲';
+      if (isHidden) expandedChapters.delete(ch.id);
+      else expandedChapters.add(ch.id);
+    };
+
+    if (questions.length) questions.forEach(q => addQuestionRow(questionsContainer, q));
+    else addQuestionRow(questionsContainer);
+
+    block.querySelector('.add-quiz-question').onclick = () => addQuestionRow(questionsContainer);
+
+    block.querySelector('.save-quiz-bank').onclick = () => {
+      const parsed = [...questionsContainer.querySelectorAll('.quiz-question-row')].map((row, idx) => {
+        const options = [...row.querySelectorAll('.q-opt')].map(inp => inp.value.trim());
+        return {
+          id: row.dataset.qid || `q_${ch.id}_${idx}`,
+          question: row.querySelector('.q-text').value.trim(),
+          options,
+          correctIndex: parseInt(row.querySelector('.q-correct').value, 10) || 0,
+        };
+      }).filter(q => q.question && q.options.some(o => o));
+
+      if (!parsed.length) return toast('Add at least one complete question', 'error');
+
+      for (const q of parsed) {
+        if (q.options.filter(o => o).length < 2) {
+          return toast('Each question needs at least 2 answer options', 'error');
+        }
+        while (q.options.length < 4) q.options.push('');
+        if (q.correctIndex < 0 || q.correctIndex > 3 || !q.options[q.correctIndex]?.trim()) {
+          return toast('Select a correct answer that is not empty', 'error');
+        }
+      }
+
+      saveQuizBank({
+        id: bank.id || `quiz_${ch.id}`,
+        chapterId: ch.id,
+        questions: parsed,
+      });
+      toast(`${ch.name} quiz saved!`, 'success');
+      renderQuizTab(container);
+    };
+
+    return block;
+  }
+
+  CHAPTERS.forEach(ch => root.appendChild(renderChapterQuizBlock(ch)));
+}
+
+function renderVideosTab(container) {
+  const expandedChapters = new Set(['badminton']);
+
+  container.innerHTML = `
+    <p class="lists-tab-intro card-desc">
+      Add <strong>YouTube videos</strong> for each chapter. Students see them on the <strong>Videos</strong> page.
+    </p>
+    <div id="videos-by-chapter" class="lists-by-chapter"></div>`;
+  const root = container.querySelector('#videos-by-chapter');
+
+  function addVideoRow(videosContainer, video = { title: '', url: '' }) {
+    if (videosContainer.children.length >= 15) return toast('Maximum 15 videos per chapter', 'error');
+    const row = document.createElement('div');
+    row.className = 'video-edit-row';
+    if (video.id) row.dataset.vid = video.id;
+    row.innerHTML = `
+      <div class="form-group" style="margin-bottom:0.5rem">
+        <label>Title (English)</label>
+        <input type="text" class="v-title" value="${escapeHtml(video.title || '')}" placeholder="e.g. Badminton referee signals">
+      </div>
+      <div class="form-group" style="margin-bottom:0.5rem">
+        <label>YouTube link</label>
+        <input type="url" class="v-url" value="${escapeHtml(video.url || '')}" placeholder="https://www.youtube.com/watch?v=...">
+      </div>
+      <button type="button" class="btn btn-ghost btn-sm remove-video">Remove video</button>
+    `;
+    row.querySelector('.remove-video').onclick = () => row.remove();
+    videosContainer.appendChild(row);
+  }
+
+  function renderChapterVideoBlock(ch) {
+    const bank = getChapterVideoBanks().find(b => b.chapterId === ch.id) || { chapterId: ch.id, videos: [] };
+    const videos = bank.videos || [];
+    const isOpen = expandedChapters.has(ch.id);
+
+    const block = document.createElement('div');
+    block.className = 'chapter-lists-block';
+    block.style.borderLeft = `4px solid ${ch.color || 'var(--purple)'}`;
+    block.innerHTML = `
+      <button type="button" class="chapter-lists-header ${isOpen ? 'open' : ''}">
+        <span class="chapter-lists-title">${ch.icon} ${escapeHtml(ch.name)} — Videos</span>
+        <span class="chapter-lists-count">${videos.length} video${videos.length !== 1 ? 's' : ''}</span>
+        <span class="chapter-lists-chevron">${isOpen ? '▲' : '▼'}</span>
+      </button>
+      <div class="chapter-lists-body ${isOpen ? '' : 'hidden'}">
+        <p class="card-desc" style="margin-bottom:0.75rem">Add YouTube links for this sport, then click Save.</p>
+        <div class="video-rows-container"></div>
+        <button type="button" class="btn btn-secondary btn-sm add-video-row" style="margin-bottom:0.75rem">+ Add video</button>
+        <button type="button" class="btn btn-primary btn-sm save-video-bank">Save ${escapeHtml(ch.name)} videos</button>
+      </div>
+    `;
+
+    const header = block.querySelector('.chapter-lists-header');
+    const body = block.querySelector('.chapter-lists-body');
+    const videosContainer = block.querySelector('.video-rows-container');
+
+    header.onclick = () => {
+      const isHidden = body.classList.toggle('hidden');
+      header.classList.toggle('open', !isHidden);
+      block.querySelector('.chapter-lists-chevron').textContent = isHidden ? '▼' : '▲';
+      if (isHidden) expandedChapters.delete(ch.id);
+      else expandedChapters.add(ch.id);
+    };
+
+    if (videos.length) videos.forEach(v => addVideoRow(videosContainer, v));
+    else addVideoRow(videosContainer);
+
+    block.querySelector('.add-video-row').onclick = () => addVideoRow(videosContainer);
+
+    block.querySelector('.save-video-bank').onclick = () => {
+      const parsed = [...videosContainer.querySelectorAll('.video-edit-row')].map(row => ({
+        id: row.dataset.vid || uid('vid'),
+        title: row.querySelector('.v-title').value.trim(),
+        url: row.querySelector('.v-url').value.trim(),
+      })).filter(v => v.title && v.url);
+
+      for (const v of parsed) {
+        if (!parseYoutubeVideoId(v.url)) {
+          return toast(`Invalid YouTube link: ${v.title}`, 'error');
+        }
+      }
+
+      saveChapterVideoBank({ chapterId: ch.id, videos: parsed });
+      toast(`${ch.name} videos saved!`, 'success');
+      renderVideosTab(container);
+    };
+
+    return block;
+  }
+
+  CHAPTERS.forEach(ch => root.appendChild(renderChapterVideoBlock(ch)));
+}
+
+function renderAssignTab(container) {
+  const allActivities = Object.keys(ACTIVITY_LABELS);
+  container.innerHTML = getClasses().map(cls => `
+    <div class="card" data-class="${cls.id}">
+      <h3 class="section-title">${escapeHtml(cls.name)}</h3>
+      ${CHAPTERS.map(ch => {
+        const lists = getWordLists(ch.id).filter(l => cls.assignedListIds.includes(l.id));
+        const stories = getStories().filter(s => s.chapterId === ch.id && cls.assignedStoryIds.includes(s.id));
+        if (!lists.length && !stories.length) return '';
+        return `
+          <div class="assign-chapter-block">
+            <h4 class="assign-chapter-title">${ch.icon} ${escapeHtml(ch.name)}</h4>
+            ${lists.length ? `
+              <div class="form-group">
+                <label>Word lists</label>
+                ${lists.map(l => `
+                  <label style="display:flex;align-items:center;gap:0.5rem;font-weight:400;margin-bottom:0.35rem">
+                    <input type="checkbox" class="assign-list" value="${l.id}" checked disabled>
+                    ${escapeHtml(l.name)} (${l.words.length} words)
+                  </label>
+                `).join('')}
+              </div>
+            ` : ''}
+            ${stories.length ? `
+              <div class="form-group">
+                <label>Stories</label>
+                ${stories.map(s => `
+                  <label style="display:flex;align-items:center;gap:0.5rem;font-weight:400;margin-bottom:0.35rem">
+                    <input type="checkbox" class="assign-story" value="${s.id}" ${cls.assignedStoryIds.includes(s.id) ? 'checked' : ''}>
+                    ${escapeHtml(s.title)}
+                  </label>
+                `).join('')}
+              </div>
+            ` : ''}
+          </div>
+        `;
+      }).join('')}
+      <div class="form-group">
+        <label>Activities (all chapters)</label>
+        ${allActivities.map(a => {
+          const info = ACTIVITY_LABELS[a];
+          const chapterNote = info?.chapters ? ` (${info.chapters.join(', ')} only)` : '';
+          return `
+          <label style="display:flex;align-items:center;gap:0.5rem;font-weight:400;margin-bottom:0.35rem">
+            <input type="checkbox" class="assign-activity" value="${a}" ${cls.assignedActivities.includes(a) ? 'checked' : ''}>
+            ${info.icon} ${escapeHtml(info.title)}${chapterNote}
+          </label>`;
+        }).join('')}
+      </div>
+      <button class="btn btn-primary btn-sm save-assign">Save assignments</button>
+    </div>
+  `).join('');
+
+  container.querySelectorAll('.save-assign').forEach(btn => {
+    btn.onclick = () => {
+      const card = btn.closest('.card');
+      updateClass(card.dataset.class, {
+        assignedStoryIds: [...card.querySelectorAll('.assign-story:checked')].map(c => c.value),
+        assignedActivities: [...card.querySelectorAll('.assign-activity:checked')].map(c => c.value),
+      });
+      toast('Assignments saved!', 'success');
+    };
+  });
+}
+
+function getStudentTotals(student) {
+  migrateStudentToChapters(student);
+  let learned = 0;
+  let actAttempts = 0;
+  let storiesDone = 0;
+  for (const ch of Object.values(student.chapterData || {})) {
+    learned += Object.values(ch.wordProgress || {}).filter(w => w.correctCount >= 3).length;
+    actAttempts += Object.values(ch.activityScores || {}).reduce((sum, a) => sum + (a.attempts || 0), 0);
+    storiesDone += Object.keys(ch.storyScores || {}).length;
+  }
+  return { points: getTotalPoints(student), learned, actAttempts, storiesDone };
+}
+
+function renderResultsTab(container) {
+  container.innerHTML = getClasses().map(cls => {
+    const roster = getRosterByClass(cls.id);
+    const progressMap = Object.fromEntries(getStudentsByClass(cls.id).map(s => [s.rosterId, s]));
+    return `
+      <div class="card">
+        <h3 class="section-title">${escapeHtml(cls.name)} — Results (all sports)</h3>
+        ${roster.length ? `
+          <table class="data-table">
+            <thead><tr><th>Student</th><th>Points</th><th>Words mastered</th><th>Activities</th><th>Stories</th></tr></thead>
+            <tbody>
+              ${roster.map(r => {
+                const s = progressMap[r.id];
+                if (!s) {
+                  return `
+                    <tr>
+                      <td>${escapeHtml(r.firstName)} ${escapeHtml(r.lastName.charAt(0))}.</td>
+                      <td colspan="4" style="color:var(--text-muted)">Not started yet</td>
+                    </tr>
+                  `;
+                }
+                const totals = getStudentTotals(s);
+                return `
+                  <tr>
+                    <td>${escapeHtml(r.firstName)} ${escapeHtml(r.lastName.charAt(0))}.</td>
+                    <td><strong>${totals.points}</strong></td>
+                    <td>${totals.learned}</td>
+                    <td>${totals.actAttempts} attempts</td>
+                    <td>${totals.storiesDone} completed</td>
+                  </tr>
+                `;
+              }).join('')}
+            </tbody>
+          </table>
+        ` : '<p class="card-desc">Add students in the Classes tab first.</p>'}
+      </div>
+    `;
+  }).join('');
+}
+
+function showFatalError(err) {
+  const msg = err?.message || String(err || 'Unknown error');
+  if (!app) {
+    document.body.innerHTML = `<div style="padding:2rem;font-family:sans-serif"><h1>SportWord — erreur</h1><p>${escapeHtml(msg)}</p></div>`;
+    return;
+  }
+  app.innerHTML = `
+    <div class="page" style="max-width:520px;margin:2rem auto">
+      <h1 class="page-title">SportWord — erreur au démarrage</h1>
+      <div class="card">
+        <p class="card-desc">L'application n'a pas pu se charger. Essayez <strong>Ctrl+Shift+R</strong> ou videz les données du site pour ce lien.</p>
+        <p class="card-desc" style="font-family:monospace;font-size:0.85rem;word-break:break-word">${escapeHtml(msg)}</p>
+        <button type="button" class="btn btn-primary btn-block" id="retry-load">Réessayer</button>
+        <button type="button" class="btn btn-secondary btn-block" id="clear-data" style="margin-top:0.5rem">Effacer les données locales et recharger</button>
+      </div>
+    </div>
+  `;
+  app.querySelector('#retry-load')?.addEventListener('click', () => location.reload());
+  app.querySelector('#clear-data')?.addEventListener('click', () => {
+    try {
+      localStorage.removeItem(CONFIG.STORAGE_KEY);
+      localStorage.removeItem(CONFIG.SESSION_KEY);
+    } catch { /* ignore */ }
+    location.reload();
+  });
+}
+
+function showLoading(message = 'Loading SportWord…') {
+  if (!app) return;
+  app.innerHTML = `
+    <div class="loading-screen">
+      <div class="loading-spinner"></div>
+      <p class="loading-text">${escapeHtml(message)}</p>
+    </div>
+  `;
+}
+
+async function bootstrap() {
+  if (!app) {
+    showFatalError(new Error('Page element #app not found — open index.html via the web server or GitHub Pages link, not as a local file.'));
+    return;
+  }
+  showLoading('Loading SportWord…');
+  try {
+    await initStorage();
+    const sync = getSyncStatus();
+    if (sync.cloudEnabled && sync.syncError) {
+      toast('Synchronisation en ligne indisponible — vous pouvez quand même utiliser l\'application', 'info');
+    }
+    const session = getSession();
+    if (session?.studentId) {
+      if (session.chapterId) navigate('studentDashboard');
+      else navigate('studentChapterSelect');
+    }
+    else if (session?.isTeacher) navigate('teacherDashboard');
+    else navigate('home');
+  } catch (err) {
+    console.error(err);
+    showFatalError(err);
+  }
+}
+
+bootstrap().catch(showFatalError);
+
+window.addEventListener('error', e => {
+  if (app && !app.innerHTML.trim()) showFatalError(e.error || new Error(e.message));
+});
+window.addEventListener('unhandledrejection', e => {
+  if (app && !app.querySelector('.page, .loading-screen')) showFatalError(e.reason);
+});
+
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'hidden') flushStorage();
+});

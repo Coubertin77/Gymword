@@ -45,6 +45,67 @@ function pickRicherDataset(local, remote) {
   return contentRichness(local) >= contentRichness(remote) ? local : remote;
 }
 
+/** Always overlay shared classroom catalogs onto local data (phones keep their own progress). */
+function applySharedClassroom(local, shared) {
+  if (!shared || typeof shared !== 'object') return local;
+  const hasCatalog = shared.wordLists?.length
+    || shared.chapterVideoBanks?.some(b => b.videos?.length)
+    || shared.quizBanks?.some(b => b.questions?.length)
+    || shared.stories?.length;
+  if (!hasCatalog && !shared.exportedAt) return local;
+
+  const base = migrateData(JSON.parse(JSON.stringify(local || getSeedData())));
+
+  if (shared.wordLists?.length) {
+    const byId = new Map((base.wordLists || []).map(l => [l.id, l]));
+    for (const list of shared.wordLists) {
+      if (list?.id) byId.set(list.id, list);
+    }
+    base.wordLists = [...byId.values()];
+  }
+
+  if (shared.chapterVideoBanks?.length) {
+    const byCh = new Map((base.chapterVideoBanks || []).map(b => [b.chapterId, b]));
+    for (const bank of shared.chapterVideoBanks) {
+      if (bank?.chapterId) byCh.set(bank.chapterId, bank);
+    }
+    base.chapterVideoBanks = [...byCh.values()];
+  }
+
+  if (shared.quizBanks?.length) {
+    const byCh = new Map((base.quizBanks || []).map(b => [b.chapterId, b]));
+    for (const bank of shared.quizBanks) {
+      if (bank?.chapterId) byCh.set(bank.chapterId, bank);
+    }
+    base.quizBanks = [...byCh.values()];
+  }
+
+  if (shared.stories?.length) {
+    const byId = new Map((base.stories || []).map(s => [s.id, s]));
+    for (const story of shared.stories) {
+      if (story?.id) byId.set(story.id, story);
+    }
+    base.stories = [...byId.values()];
+  }
+
+  if (shared.classes?.length) {
+    for (const sc of shared.classes) {
+      const localCls = (base.classes || []).find(c => c.id === sc.id);
+      if (localCls) {
+        if (sc.assignedListIds) localCls.assignedListIds = [...sc.assignedListIds];
+        if (sc.assignedStoryIds) localCls.assignedStoryIds = [...sc.assignedStoryIds];
+        if (sc.assignedChapterIds) localCls.assignedChapterIds = [...sc.assignedChapterIds];
+        if (sc.assignedActivities) localCls.assignedActivities = [...sc.assignedActivities];
+      } else {
+        base.classes.push({ ...sc, roster: Array.isArray(sc.roster) ? sc.roster : [] });
+      }
+    }
+  }
+
+  base.sharedImportedAt = shared.exportedAt || new Date().toISOString();
+  return migrateData(base);
+}
+
 function normalizeChapterVideoBanks(data) {
   const byChapter = new Map();
   for (const bank of data.chapterVideoBanks || []) {
@@ -260,13 +321,8 @@ export async function initStorage() {
   // Shared file on GitHub Pages (works even when Supabase is blocked at school).
   try {
     const shared = await withTimeout(fetchSharedClassroomFile(), 8000);
-    const hasShared = shared && (
-      shared.wordLists?.length
-      || shared.chapterVideoBanks?.some(b => b.videos?.length)
-      || shared.quizBanks?.some(b => b.questions?.length)
-    );
-    if (hasShared) {
-      cache = migrateData(pickRicherDataset(cache, shared));
+    if (shared) {
+      cache = applySharedClassroom(cache, shared);
       writeLocalCache();
     }
   } catch (err) {
