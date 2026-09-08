@@ -392,26 +392,6 @@ function renderStudentDashboard() {
         </div>
         ${counts.review > 0 ? `<p class="progress-hint">📌 ${counts.review} word${counts.review > 1 ? 's' : ''} to review today</p>` : ''}
       </div>
-      <div class="card">
-        <p class="section-title">My best scores</p>
-        ${activityProgress.length
-          ? `<div class="score-list">${activityProgress.map(a => `
-              <div class="score-row">
-                <span class="score-label">${a.icon} ${escapeHtml(a.title)}</span>
-                <div class="score-bar-track">
-                  <div class="score-bar-fill" style="width:${a.best ?? 0}%"></div>
-                </div>
-                <span class="score-value">${a.attempts ? `${a.best}%` : '—'}</span>
-              </div>
-            `).join('')}</div>`
-          : '<p class="progress-hint">Complete an activity to see your scores here.</p>'}
-      </div>
-      <div class="card">
-        <p class="section-title">My Badges</p>
-        <div class="badges-row">
-          ${badges.map(b => `<span class="badge ${b.earned ? '' : 'locked'}" title="${escapeHtml(b.desc)}">${b.icon} ${escapeHtml(b.name)}</span>`).join('')}
-        </div>
-      </div>
       ${chapterId === 'musculation' ? `
       <div class="card card-clickable anatomy-preview-card" id="go-anatomy">
         <p class="section-title">Muscle map (English)</p>
@@ -438,6 +418,26 @@ function renderStudentDashboard() {
           <div class="card-icon">🎬</div>
           <div class="card-label">Videos</div>
           <div class="card-desc">Watch lesson videos for this sport</div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:1.5rem">
+        <p class="section-title">My best scores</p>
+        ${activityProgress.length
+          ? `<div class="score-list">${activityProgress.map(a => `
+              <div class="score-row">
+                <span class="score-label">${a.icon} ${escapeHtml(a.title)}</span>
+                <div class="score-bar-track">
+                  <div class="score-bar-fill" style="width:${a.best ?? 0}%"></div>
+                </div>
+                <span class="score-value">${a.attempts ? `${a.best}%` : '—'}</span>
+              </div>
+            `).join('')}</div>`
+          : '<p class="progress-hint">Complete an activity to see your scores here.</p>'}
+      </div>
+      <div class="card">
+        <p class="section-title">My Badges</p>
+        <div class="badges-row">
+          ${badges.map(b => `<span class="badge ${b.earned ? '' : 'locked'}" title="${escapeHtml(b.desc)}">${b.icon} ${escapeHtml(b.name)}</span>`).join('')}
         </div>
       </div>
     </div>
