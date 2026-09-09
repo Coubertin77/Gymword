@@ -28,6 +28,24 @@ function withTimeout(promise, ms = CLOUD_TIMEOUT_MS) {
   ]);
 }
 
+export function friendlyCloudError(err) {
+  const msg = err?.message || String(err || '');
+  const lower = msg.toLowerCase();
+  if (/enotfound|err_name|dns|name_not_resolved|nxdomain/i.test(lower)) {
+    return 'Serveur cloud introuvable. Sur supabase.com, cliquez Restore project (ou creez un nouveau projet).';
+  }
+  if (/failed to fetch|load failed|networkerror|network request failed/i.test(lower)) {
+    return 'Impossible de joindre le cloud. Projet Supabase en pause/supprime, ou reseau bloque.';
+  }
+  if (/timeout|délai|depass/i.test(lower)) {
+    return 'Le cloud ne repond pas. Reessayez hors Wi-Fi du lycee.';
+  }
+  if (/401|403|jwt|invalid api key/i.test(lower)) {
+    return 'Cles cloud invalides. Verifiez js/supabase-config.js.';
+  }
+  return msg || 'Connexion au cloud impossible';
+}
+
 function contentRichness(data) {
   if (!data) return 0;
   const wordCount = (data.wordLists || []).reduce((n, l) => n + (l.words?.length || 0), 0);
@@ -626,7 +644,7 @@ export async function initStorage() {
   } catch (err) {
     console.error('GymWord cloud load error:', err);
     cloudSynced = false;
-    syncError = err.message || 'Connexion au cloud impossible';
+    syncError = friendlyCloudError(err);
     cache = local || cache || getSeedData();
     if (sharedSnapshot) cache = applySharedClassroom(cache, sharedSnapshot);
     writeLocalCache();
@@ -744,11 +762,44 @@ export async function syncProgressFromCloud() {
       });
     return true;
   } catch (err) {
-    syncError = err.message || 'Connexion au cloud impossible';
+    syncError = friendlyCloudError(err);
     cloudSynced = false;
     return false;
   } finally {
     progressSyncInFlight = false;
+  }
+}
+
+/** Force a new cloud attempt (home-screen retry). */
+export async function retryCloudConnection() {
+  lastProgressSyncAt = 0;
+  progressSyncInFlight = false;
+  if (!isCloudConfigured()) {
+    cloudSynced = false;
+    syncError = 'Cloud non configure.';
+    return false;
+  }
+  cloudEnabled = true;
+  try {
+    const remote = await withTimeout(fetchCloudData());
+    if (remote && typeof remote === 'object') {
+      cache = mergeClassRosters(cache, remote);
+      mergeStudentsAndResults(cache, remote);
+      writeLocalCache();
+    }
+    cloudSynced = true;
+    syncError = null;
+    lastSyncAt = new Date();
+    if (cache) {
+      withTimeout(pushCloudData(cache), CLOUD_TIMEOUT_MS).catch(err => {
+        syncError = friendlyCloudError(err);
+      });
+    }
+    return true;
+  } catch (err) {
+    cloudSynced = false;
+    syncError = friendlyCloudError(err);
+    return false;
   }
 }
 

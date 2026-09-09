@@ -1,4 +1,4 @@
-import { CONFIG, ACTIVITY_LABELS, getWordImage, CHAPTERS, getChapterById, getActivitiesForChapter, APP_VERSION, APP_URL, APP_QR_IMAGE } from './config-v262.js?v=2.6.4';
+import { CONFIG, ACTIVITY_LABELS, getWordImage, CHAPTERS, getChapterById, getActivitiesForChapter, APP_VERSION, APP_URL, APP_QR_IMAGE } from './config-v262.js?v=2.6.5';
 import {
   initStorage, loadData, getClasses, getClassById, getWordsForClass, getStories, getStoryById,
   getStoriesForClass, getChaptersForClass,
@@ -7,8 +7,8 @@ import {
   getWordLists, saveWordList, deleteWordList, getQuizBank, saveQuizBank, updateClass,
   getChapterVideoBanks, saveChapterVideoBank, getVideosForChapter,
   getSession, setSession, clearSession, addActivityResult,
-  getSyncStatus, reloadFromCloud, flushStorage, getSharedImportInfo, syncProgressFromCloud,
-} from './storage-v262.js?v=2.6.4';
+  getSyncStatus, reloadFromCloud, flushStorage, getSharedImportInfo, syncProgressFromCloud, retryCloudConnection,
+} from './storage-v262.js?v=2.6.5';
 import {
   getLevel, countWordsByStatus, recordWordAttempt, awardPoints,
   recordActivityScore, recordStoryScore, checkBadges, getLeaderboard, getVocabularyProgress, getActivityProgress,
@@ -210,6 +210,8 @@ function renderHome() {
       <p class="app-version" aria-label="Application version">v${APP_VERSION}</p>
       <p class="shared-status">${escapeHtml(sharedLabel)}</p>
       ${cloudStatusHtml(sync)}
+      ${sync.syncError ? `<p class="shared-status" style="max-width:400px">${escapeHtml(sync.syncError)}</p>
+      <button type="button" class="btn btn-ghost btn-sm" id="retry-cloud" style="margin-bottom:0.75rem">Réessayer le cloud</button>` : ''}
       <div class="card" style="width:100%;max-width:400px">
         <button class="btn btn-primary btn-block" id="btn-student" style="margin-bottom:0.75rem">I'm a Student 💪</button>
         <button class="btn btn-secondary btn-block" id="btn-teacher">I'm a Teacher 👩‍🏫</button>
@@ -228,6 +230,16 @@ function renderHome() {
   `;
   app.querySelector('#btn-student').onclick = () => navigate('studentLogin');
   app.querySelector('#btn-teacher').onclick = () => navigate('teacherLogin');
+  app.querySelector('#retry-cloud')?.addEventListener('click', async () => {
+    const btn = app.querySelector('#retry-cloud');
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = 'Connexion…';
+    }
+    const ok = await retryCloudConnection();
+    toast(ok ? 'Cloud connecte' : (getSyncStatus().syncError || 'Toujours hors ligne'), ok ? 'success' : 'error');
+    navigate('home');
+  });
 }
 
 function looksLikeFamilyName(s) {

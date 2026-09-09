@@ -15,7 +15,13 @@ export async function fetchCloudData() {
   if (!isCloudConfigured()) return null;
 
   const url = `${SUPABASE_URL}/rest/v1/gymword_data?id=eq.main&select=payload`;
-  const res = await fetch(url, { headers: supabaseHeaders() });
+  let res;
+  try {
+    res = await fetch(url, { headers: supabaseHeaders({ Accept: 'application/json' }) });
+  } catch (err) {
+    const cause = err?.cause?.code || err?.cause?.message || err?.message || 'Failed to fetch';
+    throw new Error(String(cause));
+  }
   if (!res.ok) {
     throw new Error(`Cloud lecture impossible (${res.status})`);
   }
