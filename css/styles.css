@@ -216,6 +216,10 @@ body {
   transition: border-color 0.2s;
 }
 
+.form-group input[type="search"] {
+  font-size: 1.05rem;
+}
+
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {

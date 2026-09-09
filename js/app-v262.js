@@ -1,4 +1,4 @@
-import { CONFIG, ACTIVITY_LABELS, getWordImage, CHAPTERS, getChapterById, getActivitiesForChapter, APP_VERSION, APP_URL, APP_QR_IMAGE } from './config-v262.js';
+import { CONFIG, ACTIVITY_LABELS, getWordImage, CHAPTERS, getChapterById, getActivitiesForChapter, APP_VERSION, APP_URL, APP_QR_IMAGE } from './config-v262.js?v=2.6.3';
 import {
   initStorage, loadData, getClasses, getClassById, getWordsForClass, getStories, getStoryById,
   getStoriesForClass, getChaptersForClass,
@@ -8,7 +8,7 @@ import {
   getChapterVideoBanks, saveChapterVideoBank, getVideosForChapter,
   getSession, setSession, clearSession, addActivityResult,
   getSyncStatus, reloadFromCloud, flushStorage, getSharedImportInfo,
-} from './storage-v262.js';
+} from './storage-v262.js?v=2.6.3';
 import {
   getLevel, countWordsByStatus, recordWordAttempt, awardPoints,
   recordActivityScore, recordStoryScore, checkBadges, getLeaderboard, getVocabularyProgress, getActivityProgress,
@@ -58,7 +58,7 @@ function downloadSharedClassroomFile() {
       stories: data.stories || [],
       classes: (data.classes || []).map(c => ({
         ...c,
-        // Keep class structure / assignments for phones; roster optional
+        roster: Array.isArray(c.roster) ? c.roster : [],
       })),
       students: [],
       activityResults: [],
@@ -181,7 +181,7 @@ function renderHome() {
   const sync = getSyncStatus();
   const shared = getSharedImportInfo();
   const sharedLabel = shared.importedAt
-    ? `Contenu classe charge: ${shared.listCount} listes, ${shared.videoCount} video(s) — ${new Date(shared.importedAt).toLocaleString('fr-FR')}`
+    ? `Contenu classe charge: ${shared.listCount} listes, ${shared.videoCount} video(s), ${shared.rosterCount || 0} eleve(s) — ${new Date(shared.importedAt).toLocaleString('fr-FR')}`
     : 'Contenu classe: fichier partage non charge (ouvrez v262.html)';
   app.innerHTML = `
     <div class="page" style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100dvh">
@@ -214,16 +214,57 @@ function renderHome() {
   app.querySelector('#btn-teacher').onclick = () => navigate('teacherLogin');
 }
 
+function looksLikeFamilyName(s) {
+  const t = (s || '').trim();
+  return t.length >= 2 && t === t.toUpperCase() && /[A-ZÀ-Ÿ]/.test(t);
+}
+
+function givenName(r) {
+  const fn = (r.firstName || '').trim();
+  const ln = (r.lastName || '').trim();
+  if (looksLikeFamilyName(fn) && ln && !looksLikeFamilyName(ln)) return ln;
+  return fn || ln;
+}
+
+function formatRosterName(r) {
+  const fn = (r.firstName || '').trim();
+  const ln = (r.lastName || '').trim();
+  if (looksLikeFamilyName(fn) && ln && !looksLikeFamilyName(ln)) {
+    return `${ln} ${fn}`;
+  }
+  return `${fn} ${ln}`.trim();
+}
+
+function normalizeForSearch(s) {
+  return (s || '')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .trim();
+}
+
+function rosterMatchesQuery(r, query) {
+  const q = normalizeForSearch(query);
+  if (!q) return true;
+  const fn = normalizeForSearch(r.firstName);
+  const ln = normalizeForSearch(r.lastName);
+  return fn.includes(q) || ln.includes(q) || `${fn} ${ln}`.includes(q) || `${ln} ${fn}`.includes(q);
+}
+
 function renderStudentLogin() {
   const classes = getClasses();
 
-  function studentOptions(classId) {
+  function studentOptions(classId, query = '') {
     const roster = getRosterByClass(classId);
     if (!roster.length) {
       return '<option value="">No students in this class yet — ask your teacher</option>';
     }
-    return '<option value="">Select your name…</option>' + roster.map(r =>
-      `<option value="${r.id}">${escapeHtml(r.firstName)} ${escapeHtml(r.lastName)}</option>`
+    const matches = roster.filter(r => rosterMatchesQuery(r, query));
+    if (!matches.length) {
+      return '<option value="">No name matches — try another spelling</option>';
+    }
+    return '<option value="">Select your name…</option>' + matches.map(r =>
+      `<option value="${r.id}">${escapeHtml(formatRosterName(r))}</option>`
     ).join('');
   }
 
@@ -239,6 +280,10 @@ function renderStudentLogin() {
               <option value="">Select your class…</option>
               ${classes.map(c => `<option value="${c.id}">${escapeHtml(c.name)}</option>`).join('')}
             </select>
+          </div>
+          <div class="form-group">
+            <label>Find your name</label>
+            <input type="search" id="nameFilter" placeholder="Type your first or last name…" autocomplete="off" disabled>
           </div>
           <div class="form-group">
             <label>Your name</label>
@@ -258,17 +303,29 @@ function renderStudentLogin() {
 
   const classSelect = app.querySelector('#classId');
   const rosterSelect = app.querySelector('#rosterId');
+  const nameFilter = app.querySelector('#nameFilter');
 
-  classSelect.onchange = () => {
+  function refreshRosterOptions() {
     const classId = classSelect.value;
     if (!classId) {
       rosterSelect.disabled = true;
+      nameFilter.disabled = true;
+      nameFilter.value = '';
       rosterSelect.innerHTML = '<option value="">Select your class first…</option>';
       return;
     }
+    nameFilter.disabled = false;
     rosterSelect.disabled = false;
-    rosterSelect.innerHTML = studentOptions(classId);
+    rosterSelect.innerHTML = studentOptions(classId, nameFilter.value);
+    const options = [...rosterSelect.options].filter(o => o.value);
+    if (options.length === 1) rosterSelect.value = options[0].value;
+  }
+
+  classSelect.onchange = () => {
+    nameFilter.value = '';
+    refreshRosterOptions();
   };
+  nameFilter.oninput = refreshRosterOptions;
 
   app.querySelector('#back').onclick = () => navigate('home');
   app.querySelector('#login-form').onsubmit = e => {
@@ -282,7 +339,7 @@ function renderStudentLogin() {
     student.gdprAccepted = true;
     updateStudent(student);
     setSession({ studentId: student.id, classId });
-    toast(`Welcome, ${student.firstName}! 💪`, 'success');
+    toast(`Welcome, ${givenName(student)}! 💪`, 'success');
     navigate('studentChapterSelect');
   };
 }
@@ -299,7 +356,7 @@ function renderStudentChapterSelect() {
     <div class="page">
       <button class="nav-back" id="back">← Back</button>
       <h1 class="page-title">Choose your sport 🏆</h1>
-      <p class="page-subtitle">Hi ${escapeHtml(student.firstName)}! Pick a chapter to start.</p>
+      <p class="page-subtitle">Hi ${escapeHtml(givenName(student))}! Pick a chapter to start.</p>
       <div class="chapter-grid">
         ${chapters.map(ch => `
           <button type="button" class="card card-clickable chapter-card" data-chapter="${ch.id}" style="--chapter-color:${ch.color}">
@@ -367,7 +424,7 @@ function renderStudentDashboard() {
       <div class="page-header">
         <div>
           <h1 class="page-title">${chapter.icon} ${escapeHtml(chapter.name)}</h1>
-          <p class="page-subtitle">Hi, ${escapeHtml(student.firstName)}! · <span class="level-badge">⭐ Level ${level}</span></p>
+          <p class="page-subtitle">Hi, ${escapeHtml(givenName(student))}! · <span class="level-badge">⭐ Level ${level}</span></p>
         </div>
         <button class="btn btn-ghost btn-sm" id="logout">Logout</button>
       </div>
@@ -714,7 +771,7 @@ function renderTeacherDashboard() {
             1) Try <strong>Publish to cloud</strong> (needs internet / 4G).<br>
             2) If it fails: click <strong>Download shared file</strong>, replace
             <code>data/shared-classroom.json</code> in the project, then commit + push.
-            Students reload the app to see your vocabulary and videos.
+            Students reload the app to see your vocabulary, videos, and student names.
           </p>
           <div class="btn-group">
             <button type="button" class="btn btn-primary" id="publish-cloud">Publish to cloud</button>

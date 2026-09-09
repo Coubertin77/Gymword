@@ -45,6 +45,59 @@ function pickRicherDataset(local, remote) {
   return contentRichness(local) >= contentRichness(remote) ? local : remote;
 }
 
+function rosterPersonKey(r) {
+  const fn = (r?.firstName || '').trim().toLowerCase();
+  const ln = (r?.lastName || '').trim().toLowerCase();
+  return `${fn}|${ln}`;
+}
+
+/** Merge student lists without dropping names already present on this device. */
+function unionRosters(primary = [], extra = []) {
+  const out = [];
+  const ids = new Set();
+  const names = new Set();
+
+  const push = (r) => {
+    if (!r || typeof r !== 'object') return;
+    const firstName = (r.firstName || '').trim();
+    const lastName = (r.lastName || '').trim();
+    if (!firstName && !lastName) return;
+    const nameKey = rosterPersonKey({ firstName, lastName });
+    if (r.id && ids.has(r.id)) return;
+    if (nameKey !== '|' && names.has(nameKey)) return;
+    const copy = { ...r, firstName, lastName };
+    if (!copy.id) copy.id = 'roster_' + Date.now() + '_' + Math.random().toString(36).slice(2, 7);
+    out.push(copy);
+    if (copy.id) ids.add(copy.id);
+    if (nameKey !== '|') names.add(nameKey);
+  };
+
+  for (const r of primary || []) push(r);
+  for (const r of extra || []) push(r);
+
+  out.sort((a, b) =>
+    (a.lastName || '').localeCompare(b.lastName || '', 'fr', { sensitivity: 'base' })
+    || (a.firstName || '').localeCompare(b.firstName || '', 'fr', { sensitivity: 'base' })
+  );
+  return out;
+}
+
+function mergeClassRosters(into, from) {
+  if (!into || !from?.classes?.length) return into;
+  if (!Array.isArray(into.classes)) into.classes = [];
+  for (const srcCls of from.classes) {
+    if (!srcCls?.id) continue;
+    const destCls = into.classes.find(c => c.id === srcCls.id);
+    const srcRoster = Array.isArray(srcCls.roster) ? srcCls.roster : [];
+    if (destCls) {
+      destCls.roster = unionRosters(destCls.roster, srcRoster);
+    } else if (srcRoster.length) {
+      into.classes.push({ ...srcCls, roster: unionRosters([], srcRoster) });
+    }
+  }
+  return into;
+}
+
 /** Always overlay shared classroom catalogs onto local data (phones keep their own progress). */
 function applySharedClassroom(local, shared) {
   if (!shared || typeof shared !== 'object') return local;
@@ -96,8 +149,11 @@ function applySharedClassroom(local, shared) {
         if (sc.assignedStoryIds) localCls.assignedStoryIds = [...sc.assignedStoryIds];
         if (sc.assignedChapterIds) localCls.assignedChapterIds = [...sc.assignedChapterIds];
         if (sc.assignedActivities) localCls.assignedActivities = [...sc.assignedActivities];
+        if (Array.isArray(sc.roster) && sc.roster.length) {
+          localCls.roster = unionRosters(localCls.roster, sc.roster);
+        }
       } else {
-        base.classes.push({ ...sc, roster: Array.isArray(sc.roster) ? sc.roster : [] });
+        base.classes.push({ ...sc, roster: Array.isArray(sc.roster) ? [...sc.roster] : [] });
       }
     }
   }
@@ -338,8 +394,11 @@ export async function initStorage() {
       && (remote.classes?.length || remote.students?.length || remote.wordLists?.length);
 
     if (hasRemote) {
-      // Compare against current cache (already includes shared), not the raw pre-shared local copy.
+      // Keep the richer catalog, but always union class lists so teacher names reach phones.
+      const previous = cache;
       cache = migrateData(pickRicherDataset(cache, remote));
+      cache = mergeClassRosters(cache, previous);
+      cache = mergeClassRosters(cache, remote);
     } else if (!local) {
       cache = getSeedData();
     }
@@ -381,10 +440,12 @@ export function loadData() {
 export function getSharedImportInfo() {
   const data = loadData();
   const videoCount = (data.chapterVideoBanks || []).reduce((n, b) => n + (b.videos?.length || 0), 0);
+  const rosterCount = (data.classes || []).reduce((n, c) => n + (c.roster?.length || 0), 0);
   return {
     importedAt: data.sharedImportedAt || null,
     listCount: data.wordLists?.length || 0,
     videoCount,
+    rosterCount,
   };
 }
 
