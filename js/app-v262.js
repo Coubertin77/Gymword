@@ -1,4 +1,4 @@
-import { CONFIG, ACTIVITY_LABELS, getWordImage, CHAPTERS, getChapterById, getActivitiesForChapter, APP_VERSION, APP_URL, APP_QR_IMAGE } from './config-v262.js?v=2.6.3';
+import { CONFIG, ACTIVITY_LABELS, getWordImage, CHAPTERS, getChapterById, getActivitiesForChapter, APP_VERSION, APP_URL, APP_QR_IMAGE } from './config-v262.js?v=2.6.4';
 import {
   initStorage, loadData, getClasses, getClassById, getWordsForClass, getStories, getStoryById,
   getStoriesForClass, getChaptersForClass,
@@ -7,8 +7,8 @@ import {
   getWordLists, saveWordList, deleteWordList, getQuizBank, saveQuizBank, updateClass,
   getChapterVideoBanks, saveChapterVideoBank, getVideosForChapter,
   getSession, setSession, clearSession, addActivityResult,
-  getSyncStatus, reloadFromCloud, flushStorage, getSharedImportInfo,
-} from './storage-v262.js?v=2.6.3';
+  getSyncStatus, reloadFromCloud, flushStorage, getSharedImportInfo, syncProgressFromCloud,
+} from './storage-v262.js?v=2.6.4';
 import {
   getLevel, countWordsByStatus, recordWordAttempt, awardPoints,
   recordActivityScore, recordStoryScore, checkBadges, getLeaderboard, getVocabularyProgress, getActivityProgress,
@@ -111,8 +111,13 @@ function cloudStatusHtml(sync, { compact = false } = {}) {
   return `<${tag} class="${cls}">☁️ Connexion en cours…</${tag}>`;
 }
 
+let currentView = 'home';
+let currentViewParams = {};
+
 export function navigate(view, params = {}) {
   if ('speechSynthesis' in window) window.speechSynthesis.cancel();
+  currentView = view;
+  currentViewParams = params;
   const routes = {
     home: renderHome,
     studentLogin: renderStudentLogin,
@@ -128,6 +133,17 @@ export function navigate(view, params = {}) {
   };
   (routes[view] || renderHome)();
   window.scrollTo(0, 0);
+}
+
+function isLiveExerciseView() {
+  return currentView === 'studentActivity' || currentView === 'studentStory';
+}
+
+function refreshOpenProgressView() {
+  if (isLiveExerciseView()) return;
+  if (currentView === 'studentDashboard' || currentView === 'studentLeaderboard' || currentView === 'teacherDashboard') {
+    navigate(currentView, currentViewParams);
+  }
 }
 
 function requireStudentSession() {
@@ -339,6 +355,7 @@ function renderStudentLogin() {
     student.gdprAccepted = true;
     updateStudent(student);
     setSession({ studentId: student.id, classId });
+    flushStorage().catch(() => {});
     toast(`Welcome, ${givenName(student)}! 💪`, 'success');
     navigate('studentChapterSelect');
   };
@@ -538,6 +555,7 @@ function handleActivityComplete(student, chapterId, type, words, result) {
   });
   updateStudent(student);
   addActivityResult({ studentId: student.id, classId: student.classId, chapterId, activityType: type, ...result, points: pts });
+  flushStorage().catch(() => {});
   return { pts, newBadges };
 }
 
@@ -639,6 +657,7 @@ function renderStudentStory(storyId) {
     recordStoryScore(progress, storyId, result.score, result.total);
     checkBadges(progress, { storyCompleted: true, perfectScore: result.perfect });
     updateStudent(student);
+    flushStorage().catch(() => {});
     area.classList.add('hidden');
     const resultArea = app.querySelector('#result-area');
     resultArea.classList.remove('hidden');
@@ -1625,5 +1644,11 @@ window.addEventListener('unhandledrejection', e => {
 });
 
 document.addEventListener('visibilitychange', () => {
-  if (document.visibilityState === 'hidden') flushStorage();
+  if (document.visibilityState === 'hidden') {
+    flushStorage().catch(() => {});
+    return;
+  }
+  syncProgressFromCloud()
+    .then(ok => { if (ok) refreshOpenProgressView(); })
+    .catch(() => {});
 });

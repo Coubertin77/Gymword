@@ -3,7 +3,7 @@ import { getSeedData, getSeedCatalog, getSeedStories } from './seed.js';
 import { getSportStoryIds } from './seed-sports.js';
 import { getSeedQuizBanks } from './chapter-rules.js';
 import { getSeedChapterVideos } from './chapter-videos.js';
-import { migrateStudentToChapters } from './chapter-progress.js';
+import { migrateStudentToChapters, emptyChapterProgress } from './chapter-progress.js';
 import { CHAPTERS } from './config.js';
 import { shuffle } from './gamification.js';
 import { isCloudConfigured } from './supabase-config.js';
@@ -95,6 +95,203 @@ function mergeClassRosters(into, from) {
       into.classes.push({ ...srcCls, roster: unionRosters([], srcRoster) });
     }
   }
+  return into;
+}
+
+function cloneJson(value) {
+  return JSON.parse(JSON.stringify(value));
+}
+
+function studentMergeKeys(s) {
+  const keys = [];
+  if (s?.rosterId) keys.push('roster:' + s.rosterId);
+  const fn = (s?.firstName || '').trim().toLowerCase();
+  const ln = (s?.lastName || '').trim().toLowerCase();
+  const classId = s?.classId || '';
+  if (fn || ln) keys.push(`name:${classId}:${fn}|${ln}`);
+  if (fn && ln) keys.push(`name:${classId}:${ln}|${fn}`);
+  if (s?.id) keys.push('id:' + s.id);
+  return keys;
+}
+
+function mergeChapterProgress(a = {}, b = {}) {
+  const out = emptyChapterProgress();
+  out.badges = [...new Set([...(a.badges || []), ...(b.badges || [])])];
+
+  const wordKeys = new Set([
+    ...Object.keys(a.wordProgress || {}),
+    ...Object.keys(b.wordProgress || {}),
+  ]);
+  out.wordProgress = {};
+  for (const key of wordKeys) {
+    const wa = a.wordProgress?.[key];
+    const wb = b.wordProgress?.[key];
+    if (!wa) { out.wordProgress[key] = { ...wb }; continue; }
+    if (!wb) { out.wordProgress[key] = { ...wa }; continue; }
+    const later = (wa.lastSeen || '') >= (wb.lastSeen || '') ? wa : wb;
+    out.wordProgress[key] = {
+      correctCount: Math.max(wa.correctCount || 0, wb.correctCount || 0),
+      wrongCount: Math.max(wa.wrongCount || 0, wb.wrongCount || 0),
+      lastSeen: later.lastSeen || null,
+      nextReview: later.nextReview || null,
+    };
+  }
+
+  const actKeys = new Set([
+    ...Object.keys(a.activityScores || {}),
+    ...Object.keys(b.activityScores || {}),
+  ]);
+  out.activityScores = {};
+  for (const key of actKeys) {
+    const sa = a.activityScores?.[key] || { best: 0, attempts: 0, totalScore: 0 };
+    const sb = b.activityScores?.[key] || { best: 0, attempts: 0, totalScore: 0 };
+    out.activityScores[key] = {
+      best: Math.max(sa.best || 0, sb.best || 0),
+      attempts: Math.max(sa.attempts || 0, sb.attempts || 0),
+      totalScore: Math.max(sa.totalScore || 0, sb.totalScore || 0),
+    };
+  }
+
+  const storyKeys = new Set([
+    ...Object.keys(a.storyScores || {}),
+    ...Object.keys(b.storyScores || {}),
+  ]);
+  out.storyScores = {};
+  for (const key of storyKeys) {
+    const sa = a.storyScores?.[key] || {};
+    const sb = b.storyScores?.[key] || {};
+    out.storyScores[key] = {
+      best: Math.max(sa.best || 0, sb.best || 0),
+      lastScore: Math.max(sa.lastScore || 0, sb.lastScore || 0),
+    };
+  }
+
+  const histMap = new Map();
+  for (const h of [...(a.scoreHistory || []), ...(b.scoreHistory || [])]) {
+    if (!h) continue;
+    const key = `${h.date || ''}|${h.activityType || ''}`;
+    const prev = histMap.get(key);
+    if (!prev || (h.points || 0) > (prev.points || 0)) histMap.set(key, { ...h });
+  }
+  out.scoreHistory = [...histMap.values()].sort((x, y) => (x.date || '').localeCompare(y.date || ''));
+  out.points = Math.max(
+    a.points || 0,
+    b.points || 0,
+    out.scoreHistory.reduce((sum, h) => sum + (h.points || 0), 0)
+  );
+  return out;
+}
+
+function mergeStudentPair(primary, extra) {
+  const a = cloneJson(primary);
+  const b = cloneJson(extra);
+  migrateStudentToChapters(a);
+  migrateStudentToChapters(b);
+  const chapterIds = new Set([
+    ...Object.keys(a.chapterData || {}),
+    ...Object.keys(b.chapterData || {}),
+  ]);
+  const chapterData = {};
+  for (const id of chapterIds) {
+    chapterData[id] = mergeChapterProgress(a.chapterData?.[id], b.chapterData?.[id]);
+  }
+  return {
+    ...a,
+    id: primary.id,
+    rosterId: a.rosterId || b.rosterId || null,
+    classId: a.classId || b.classId,
+    firstName: a.firstName || b.firstName,
+    lastName: a.lastName || b.lastName,
+    gdprAccepted: Boolean(a.gdprAccepted || b.gdprAccepted),
+    createdAt: [a.createdAt, b.createdAt].filter(Boolean).sort()[0] || a.createdAt,
+    chapterData,
+  };
+}
+
+function mergeStudentLists(primary = [], extra = []) {
+  const students = [];
+  const byKey = new Map();
+
+  const indexStudent = (student) => {
+    for (const key of studentMergeKeys(student)) byKey.set(key, student);
+  };
+
+  const absorb = (incoming) => {
+    if (!incoming) return;
+    const copy = cloneJson(incoming);
+    migrateStudentToChapters(copy);
+    let existing = null;
+    for (const key of studentMergeKeys(copy)) {
+      existing = byKey.get(key);
+      if (existing) break;
+    }
+    if (!existing) {
+      students.push(copy);
+      indexStudent(copy);
+      return;
+    }
+    const merged = mergeStudentPair(existing, copy);
+    const idx = students.indexOf(existing);
+    if (idx >= 0) students[idx] = merged;
+    for (const [key, value] of [...byKey.entries()]) {
+      if (value === existing) byKey.delete(key);
+    }
+    indexStudent(merged);
+  };
+
+  for (const student of primary || []) absorb(student);
+  for (const student of extra || []) absorb(student);
+  return students;
+}
+
+function resultFingerprint(result) {
+  if (result?.id) return 'id:' + result.id;
+  return [
+    result?.studentId || '',
+    result?.date || '',
+    result?.activityType || '',
+    result?.chapterId || '',
+    result?.score ?? '',
+    result?.total ?? '',
+  ].join('|');
+}
+
+function mergeActivityResults(primary = [], extra = [], studentIdMap = {}) {
+  const seen = new Set();
+  const out = [];
+  for (const result of [...(primary || []), ...(extra || [])]) {
+    if (!result) continue;
+    const copy = { ...result };
+    if (copy.studentId && studentIdMap[copy.studentId]) {
+      copy.studentId = studentIdMap[copy.studentId];
+    }
+    const fp = resultFingerprint(copy);
+    if (seen.has(fp)) continue;
+    seen.add(fp);
+    out.push(copy);
+  }
+  out.sort((a, b) => (a.date || '').localeCompare(b.date || ''));
+  return out;
+}
+
+/** Keep this device's student ids, absorb progress / results from another dataset. */
+function mergeStudentsAndResults(into, from) {
+  if (!into || !from) return into;
+  const idMap = {};
+  const primaryByKey = new Map();
+  for (const student of into.students || []) {
+    for (const key of studentMergeKeys(student)) primaryByKey.set(key, student);
+  }
+  for (const student of from.students || []) {
+    let local = null;
+    for (const key of studentMergeKeys(student)) {
+      local = primaryByKey.get(key);
+      if (local) break;
+    }
+    if (local && student.id && local.id !== student.id) idMap[student.id] = local.id;
+  }
+  into.students = mergeStudentLists(into.students, from.students);
+  into.activityResults = mergeActivityResults(into.activityResults, from.activityResults, idMap);
   return into;
 }
 
@@ -298,6 +495,7 @@ function migrateData(data) {
     for (const student of data.students || []) {
       migrateStudentToChapters(student);
     }
+    data.students = mergeStudentLists([], data.students);
   } catch (err) {
     console.error('GymWord chapter migration error:', err);
   }
@@ -394,11 +592,19 @@ export async function initStorage() {
       && (remote.classes?.length || remote.students?.length || remote.wordLists?.length);
 
     if (hasRemote) {
-      // Keep the richer catalog, but always union class lists so teacher names reach phones.
+      // Keep the richer catalog, union class lists, and merge student progress from both devices.
       const previous = cache;
-      cache = migrateData(pickRicherDataset(cache, remote));
+      cache = migrateData(cloneJson(pickRicherDataset(cache, remote)));
       cache = mergeClassRosters(cache, previous);
       cache = mergeClassRosters(cache, remote);
+      const studentHost = {
+        students: cloneJson(previous?.students || []),
+        activityResults: cloneJson(previous?.activityResults || []),
+      };
+      mergeStudentsAndResults(studentHost, remote);
+      mergeStudentsAndResults(studentHost, cache);
+      cache.students = studentHost.students;
+      cache.activityResults = studentHost.activityResults;
     } else if (!local) {
       cache = getSeedData();
     }
@@ -491,7 +697,12 @@ export async function reloadFromCloud() {
   try {
     const remote = await fetchCloudData();
     if (remote && Object.keys(remote).length > 0) {
-      cache = migrateData(remote);
+      const previous = cache;
+      cache = migrateData(cloneJson(remote));
+      if (previous) {
+        cache = mergeClassRosters(cache, previous);
+        mergeStudentsAndResults(cache, previous);
+      }
       writeLocalCache();
       lastSyncAt = new Date();
       syncError = null;
@@ -503,6 +714,42 @@ export async function reloadFromCloud() {
     cloudSynced = false;
   }
   return false;
+}
+
+let progressSyncInFlight = false;
+let lastProgressSyncAt = 0;
+
+/** Pull cloud progress into this device without dropping local results. */
+export async function syncProgressFromCloud() {
+  if (!isCloudConfigured() || !cache || progressSyncInFlight) return false;
+  cloudEnabled = true;
+  const now = Date.now();
+  if (now - lastProgressSyncAt < 4000) return false;
+  progressSyncInFlight = true;
+  lastProgressSyncAt = now;
+  try {
+    const remote = await withTimeout(fetchCloudData());
+    if (!remote || typeof remote !== 'object') return false;
+    cache = mergeClassRosters(cache, remote);
+    mergeStudentsAndResults(cache, remote);
+    writeLocalCache();
+    lastSyncAt = new Date();
+    syncError = null;
+    cloudSynced = true;
+    withTimeout(pushCloudData(cache), CLOUD_TIMEOUT_MS)
+      .then(() => { lastSyncAt = new Date(); syncError = null; })
+      .catch(err => {
+        syncError = err.message || 'Échec de la synchronisation';
+        cloudSynced = false;
+      });
+    return true;
+  } catch (err) {
+    syncError = err.message || 'Connexion au cloud impossible';
+    cloudSynced = false;
+    return false;
+  } finally {
+    progressSyncInFlight = false;
+  }
 }
 
 export function resetData() {
@@ -738,9 +985,20 @@ export function updateStudent(student) {
   const data = loadData();
   const idx = data.students.findIndex(s => s.id === student.id);
   if (idx >= 0) {
-    data.students[idx] = student;
+    data.students[idx] = mergeStudentPair(data.students[idx], student);
     saveData();
+    return;
   }
+  const byRoster = student.rosterId
+    ? data.students.findIndex(s => s.rosterId === student.rosterId)
+    : -1;
+  if (byRoster >= 0) {
+    data.students[byRoster] = mergeStudentPair(data.students[byRoster], student);
+    saveData();
+    return;
+  }
+  data.students.push(student);
+  saveData();
 }
 
 export function deleteStudent(id) {
