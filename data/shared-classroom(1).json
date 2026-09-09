@@ -1,5 +1,5 @@
 {
-  "exportedAt": "2026-09-07T15:01:46.467Z",
+  "exportedAt": "2026-09-09T13:03:01.808Z",
   "wordLists": [
     {
       "id": "list_equipment",
@@ -4502,6 +4502,11 @@
           "id": "roster_1788789613588_m1omk",
           "firstName": "BOUGOIN",
           "lastName": "Faustine"
+        },
+        {
+          "id": "roster_1788958596449_pizef",
+          "firstName": "Mme",
+          "lastName": "Fenrich"
         },
         {
           "id": "roster_1788789613588_oc5b0",
