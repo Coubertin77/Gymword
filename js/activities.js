@@ -13,7 +13,7 @@ export function renderActivity(type, words, container, onComplete, chapterId = '
       container.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>No rules quiz available for this sport yet.</p></div>';
       return;
     }
-    const finish = (score, total) => onComplete({ score, total, perfect: score === total });
+    const finish = (score, total) => onComplete({ score, total, perfect: score === total, words: [] });
     return renderQCM(questions, container, finish);
   }
 
@@ -23,7 +23,7 @@ export function renderActivity(type, words, container, onComplete, chapterId = '
       container.innerHTML = '<div class="empty-state"><div class="icon">📭</div><p>No muscles available.</p></div>';
       return;
     }
-    const finish = (score, total) => onComplete({ score, total, perfect: score === total });
+    const finish = (score, total) => onComplete({ score, total, perfect: score === total, words: [] });
     return renderMuscleRegionMatch(muscles, container, finish);
   }
 
@@ -40,7 +40,7 @@ export function renderActivity(type, words, container, onComplete, chapterId = '
   }
 
   const finish = (score, total) => {
-    onComplete({ score, total, perfect: score === total });
+    onComplete({ score, total, perfect: score === total, words: subset });
   };
 
   switch (type) {

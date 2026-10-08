@@ -160,6 +160,36 @@ const RULES_BANK = {
       options: ['Defenders rush the quarterback quickly after the snap', 'A long rest break', 'A type of touchdown dance', 'Changing sides'],
       correctIndex: 0,
     },
+    {
+      question: 'What is the end zone?',
+      options: ['The scoring area at each end of the field', 'The middle of the pitch', 'The coach’s bench', 'A rest area for substitutes'],
+      correctIndex: 0,
+    },
+    {
+      question: 'What is a handoff?',
+      options: ['Throwing the ball high in the air', 'Giving the ball directly to a running teammate', 'Pulling your own flag', 'Changing the scoreboard'],
+      correctIndex: 1,
+    },
+    {
+      question: 'What starts each play?',
+      options: ['A whistle from the crowd', 'The snap — a backward pass to the quarterback', 'A kick from midfield', 'A coin toss every time'],
+      correctIndex: 1,
+    },
+    {
+      question: 'What is the main job of the defence?',
+      options: ['To score as many touchdowns as possible', 'To pull flags and stop the attack from scoring', 'To referee the game', 'To hold the ball for the whole match'],
+      correctIndex: 1,
+    },
+    {
+      question: 'Why do players wear a flag belt?',
+      options: ['For decoration only', 'So defenders can stop the play by pulling a flag', 'To run faster', 'To replace the ball'],
+      correctIndex: 1,
+    },
+    {
+      question: 'What is a catch in flag football?',
+      options: ['Receiving the ball in the air before it hits the ground', 'Pulling a flag', 'Sitting on the bench', 'Changing sides after a score'],
+      correctIndex: 0,
+    },
   ],
   baseball: [
     {

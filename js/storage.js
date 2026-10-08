@@ -196,8 +196,18 @@ function migrateData(data) {
     }
 
     for (const seedBank of getSeedQuizBanks()) {
-      if (!data.quizBanks.some(b => b.chapterId === seedBank.chapterId)) {
+      const existing = data.quizBanks.find(b => b.chapterId === seedBank.chapterId);
+      if (!existing) {
         data.quizBanks.push(JSON.parse(JSON.stringify(seedBank)));
+        continue;
+      }
+      if (!Array.isArray(existing.questions)) existing.questions = [];
+      const seen = new Set(existing.questions.map(q => q.id || q.question));
+      for (const q of seedBank.questions) {
+        const key = q.id || q.question;
+        if (seen.has(key)) continue;
+        existing.questions.push(JSON.parse(JSON.stringify(q)));
+        seen.add(key);
       }
     }
     for (const bank of data.quizBanks) {

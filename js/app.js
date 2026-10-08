@@ -503,7 +503,7 @@ function renderStudentActivity(type) {
   const area = app.querySelector('#activity-area');
 
   renderActivity(type, words, area, result => {
-    const quizWords = (type === 'qcm' || type === 'muscle_region') ? [] : words.slice(0, 5);
+    const quizWords = Array.isArray(result.words) ? result.words : [];
     const { pts, newBadges } = handleActivityComplete(student, chapterId, type, quizWords, result);
     area.classList.add('hidden');
     const resultArea = app.querySelector('#result-area');

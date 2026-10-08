@@ -27,7 +27,7 @@ export const CONFIG = {
 };
 
 /** Bump when publishing — shown on home screen to confirm the latest version loaded. */
-export const APP_VERSION = '2.6.2';
+export const APP_VERSION = '2.6.3';
 
 /** Public GitHub Pages URL — used for the classroom QR code. */
 export const APP_URL = 'https://coubertin77.github.io/Gymword/v262.html';
@@ -125,54 +125,54 @@ export const IMAGE_BANK = {
   'pull-up': P(6388459),
   'bicep curl': P(1638336),
 
-  // Badminton
+  // Badminton — distinct URLs where possible for Match Images
   'shuttlecock': P(3660420),
   'badminton racket': P(3660204),
   'badminton net': P(6550872),
   'badminton court': P(1171084),
-  'serve': P(3660204),
-  'smash': P(3660420),
-  'drop shot': P(1171084),
+  'serve': P(4754006),
+  'smash': P(3621105),
+  'drop shot': P(841130),
 
-  // Basketball
-  'basketball': P(33204406),
+  // Basketball — distinct URLs for Match Images
+  'basketball': P(358042),
   'hoop': P(1752757),
-  'dribble': P(33204406),
-  'basketball court': P(1752757),
-  'rebound': P(33204406),
-  'lay-up': P(1752757),
+  'dribble': P(863988),
+  'basketball court': P(135526),
+  'rebound': P(945406),
+  'lay-up': P(33204406),
 
-  // Touch rugby
+  // Touch rugby — distinct URLs for Match Images
   'rugby ball': P(47730),
-  'try line': P(47730),
+  'try line': P(159515),
   'touch': P(3621105),
-  'rugby pitch': P(3621105),
-  'offload': P(47730),
-  'sidestep': P(3621105),
+  'rugby pitch': P(163516),
+  'offload': P(399187),
+  'sidestep': P(4428565),
 
-  // Flag football
+  // Flag football — each word needs a distinct URL (Match Images dedupes by image)
   'flag belt': P(1618269),
-  'quarterback': P(1618269),
-  'touchdown': P(1618269),
-  'end zone': P(1618269),
-  'football field': P(1618269),
-  'helmet': P(1618269),
+  'quarterback': P(4428565),
+  'touchdown': P(159515),
+  'end zone': P(399187),
+  'football field': P(163516),
+  'helmet': P(257013),
 
-  // Baseball
-  'baseball bat': P(6724492),
-  'baseball glove': P(6724492),
-  'home plate': P(6724492),
-  'pitcher': P(6724492),
-  'catcher': P(6724492),
+  // Baseball — distinct URLs for Match Images
+  'baseball bat': P(163271),
+  'baseball glove': P(209841),
+  'home plate': P(1308713),
+  'pitcher': P(257447),
+  'catcher': P(163444),
   'baseball field': P(6724492),
 
-  // Laser run
+  // Laser run — distinct URLs for Match Images
   'laser pistol': P(5690931),
-  'shooting target': P(5690931),
+  'shooting target': P(4498200),
   'obstacle course': P(3621105),
-  'fencing piste': P(5690931),
-  'laser run course': P(3621105),
-  'transition zone': P(3621105),
+  'fencing piste': P(4761667),
+  'laser run course': P(863988),
+  'transition zone': P(791763),
 
   default: P(841130),
 };
